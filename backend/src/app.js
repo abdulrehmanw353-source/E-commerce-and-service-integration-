@@ -1,13 +1,12 @@
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { FRONTEND_URI } from "./constants.js";
 
-dotenv.config();
 const app = express();
 
 const corsOptions = {
-   origin: process.env.FRONTEND_URI,
+   origin: FRONTEND_URI,
    credentials: true,
 };
 
