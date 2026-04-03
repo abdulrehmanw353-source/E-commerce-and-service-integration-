@@ -10,3 +10,10 @@
 - mongodb atlas connected
 - odm: mongoose
 ```
+
+### By "Pull Requests"
+
+#### Backend
+```
+- creating constants.js for defining .env variables
+```
