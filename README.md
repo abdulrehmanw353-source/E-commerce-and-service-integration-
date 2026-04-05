@@ -12,6 +12,7 @@
 - creating folder structure
 - creating core utilities
 - defining error handling middleware
+- creating user model
 ```
 
 ### By "Pull Requests"
