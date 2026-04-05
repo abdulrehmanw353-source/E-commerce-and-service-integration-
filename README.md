@@ -9,6 +9,7 @@
 - dev packages: nodemon
 - mongodb atlas connected
 - odm: mongoose
+- creating folder structure
 ```
 
 ### By "Pull Requests"
