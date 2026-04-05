@@ -10,6 +10,8 @@
 - mongodb atlas connected
 - odm: mongoose
 - creating folder structure
+- creating core utilities
+- defining error handling middleware
 ```
 
 ### By "Pull Requests"
