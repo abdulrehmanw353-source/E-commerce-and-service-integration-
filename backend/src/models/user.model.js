@@ -58,10 +58,9 @@ const userSchema = new Schema(
 
 // ------ PRE-MIDDLEWARE FOR PASSWORD HASHING
 
-userSchema.pre("save", async function (next) {
-   if (!this.isModified("password")) return;
+userSchema.pre("save", async function () {
+   if (!this.isModified("password")) return next();
    this.password = await bcrypt.hash(this.password, 10);
-   next();
 });
 
 // ------ COMPARE PASSWORD METHOD
@@ -69,6 +68,29 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (password) {
    return await bcrypt.compare(password, this.password);
 };
+
+// ------ SCHEMA TRANSFORMATION BEFORE SENDING RESPONSE
+
+const options = {
+   transform: function (doc, ret) {
+      delete ret.password;
+      delete ret.refreshToken;
+      delete ret.__v;
+      return ret;
+   },
+};
+
+userSchema.set("toJSON", options);
+userSchema.set("toObject", options);
+
+/*
+   NOTE: The "toJSON" just trigger on res.json()
+   when its mongoose document not for plain JS object,
+   and remove password!
+   The "toObject" triggers when we manually convert
+   mongoose document into plain JS object using .toObject()
+   method.
+*/
 
 // ------ USER MODEL
 

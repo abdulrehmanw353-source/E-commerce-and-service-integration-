@@ -6,6 +6,7 @@ import { FRONTEND_URI } from "./constants.js";
 // ------ FILES IMPORTING
 
 import errorHandler from "./middlewares/error.middleware.js";
+import authRouter from "./routes/auth.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -21,6 +22,10 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+// ------ ROUTES
+
+app.use("/api/v1/auth", authRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 
