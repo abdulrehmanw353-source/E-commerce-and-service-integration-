@@ -1,7 +1,14 @@
+// ------ EXPORTING FROM FILES
+
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import User from "../models/user.model.js";
+import {
+   generateAccessToken,
+   generateRefreshToken,
+} from "../utils/token.utils.js";
+import { NODE_ENV } from "../constants.js";
 
 // ------ CUSTOMER REGISTER
 
@@ -64,7 +71,7 @@ const loginCustomer = asyncHandler(async (req, res) => {
    );
 
    if (!user) {
-      throw new ApiError(404, "User didn't exist");
+      throw new ApiError(404, "User not found");
    }
 
    // ------ comparing password
@@ -74,15 +81,38 @@ const loginCustomer = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Incorrect credentials");
    }
 
+   // ------ generating access and refresh tokens
+   const refreshToken = generateRefreshToken(user);
+   const accessToken = generateAccessToken(user);
+
+   // ------ saving refresh token in DB
+   user.refreshToken = refreshToken;
+   await user.save({ validateBeforeSave: false });
+
    // ------ converting mongoose document into JS object
    const userObj = user.toObject();
 
+   // ------ sending tokens in cookies
+   const options = {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      sameSite: "strict",
+   };
+
+   res.cookie("refreshToken", refreshToken, options);
+
    // ------ returning response
-   return res
-      .status(200)
-      .json(
-         new ApiResponse(200, { user: userObj }, "User logged-in successfully"),
-      );
+   return res.status(200).json(
+      new ApiResponse(
+         200,
+         {
+            user: userObj,
+            accessToken: accessToken,
+         },
+         "User logged-in successfully",
+      ),
+   );
 });
 
 // ------ EXPORTING CONTROLLERS
