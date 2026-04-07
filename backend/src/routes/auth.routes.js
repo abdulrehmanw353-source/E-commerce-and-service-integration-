@@ -6,11 +6,15 @@ const router = Router();
 
 // ------ IMPORTING CONTROLLERS
 
-import { registerCustomer } from "../controllers/auth.controller.js";
+import {
+   registerCustomer,
+   loginCustomer,
+} from "../controllers/auth.controller.js";
 
 // ------ CUSTOMER ROUTES
 
 router.post("/customer/register", registerCustomer);
+router.post("/customer/login", loginCustomer);
 
 // ------ EXPORTING ROUTER
 
