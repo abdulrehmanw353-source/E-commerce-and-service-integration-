@@ -19,6 +19,9 @@
 - customer (user) login route and controller is implemented
 - access and refresh tokens generators are defined and used
 - creating role middleware
+- new refresh and access token route and controller is implemented for customer
+- customer logout route and controller is implemented
+- do some fixes/improvements
 ```
 
 ### By "Pull Requests"
