@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 // ------ IMPORTING FROM FILES
 
 import Product from "../models/product.model.js";
@@ -56,6 +58,29 @@ const getAllProductsService = async (query) => {
    };
 };
 
+// ------ GET SINGLE PRODUCT BY ID (ADMIN)
+
+const getSingleProductService = async (id) => {
+   // ------ validate mongodb id
+   if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new ApiError(400, "Invalid product ID");
+   }
+
+   // ------ find product
+   const product = await Product.findById(id).populate(
+      "createdBy",
+      "firstName email",
+   );
+
+   // ------ not found check
+   if (!product) {
+      throw new ApiError(404, "Product not found");
+   }
+
+   // returning product data
+   return product;
+};
+
 // ------ EXPORTING SERVICES
 
-export { createProductService, getAllProductsService };
+export { createProductService, getAllProductsService, getSingleProductService };

@@ -5,6 +5,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import {
    createProductService,
    getAllProductsService,
+   getSingleProductService,
 } from "../services/product.service.js";
 
 // ------ CREATE PRODUCT
@@ -31,6 +32,18 @@ const getAllProducts = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, result, "Products fetched successfully"));
 });
 
+// ------ GET SINGLE PRODUCT
+
+const getSingleProduct = asyncHandler(async (req, res) => {
+   // ------ getting single product from product service
+   const product = await getSingleProductService(req.params.id);
+
+   // ------ returning response
+   return res
+      .status(200)
+      .json(new ApiResponse(200, product, "Product fetched successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { createProduct, getAllProducts };
+export { createProduct, getAllProducts, getSingleProduct };

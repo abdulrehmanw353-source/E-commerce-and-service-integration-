@@ -26,6 +26,7 @@
 - defining product creation service, route & controller for admin is implemented
 - do some fixes/improvements
 - getting all products service, route & controller for admin is implemented
+- getting single product service, route & controller for admin is implemented
 ```
 
 ### By "Pull Requests"

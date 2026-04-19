@@ -11,12 +11,14 @@ import authorizeRoles from "../middlewares/role.middleware.js";
 import {
    createProduct,
    getAllProducts,
+   getSingleProduct,
 } from "../controllers/product.controller.js";
 
 // ------ PRODUCT ROUTES
 
 router.post("/", verifyJWT, authorizeRoles("admin"), createProduct);
 router.get("/", verifyJWT, authorizeRoles("admin"), getAllProducts);
+router.get("/:id", verifyJWT, authorizeRoles("admin"), getSingleProduct);
 
 // ------ EXPORTING ROUTER
 
