@@ -23,8 +23,9 @@
 - customer logout route and controller is implemented
 - do some fixes/improvements
 - creating product model
-- defining product creation route & controller for admin
+- defining product creation service, route & controller for admin is implemented
 - do some fixes/improvements
+- getting all products service, route & controller for admin is implemented
 ```
 
 ### By "Pull Requests"

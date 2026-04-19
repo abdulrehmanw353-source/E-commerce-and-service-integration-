@@ -27,7 +27,7 @@ app.use(cookieParser());
 // ------ ROUTES
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/products", productRouter);
+app.use("/api/v1/admin/products", productRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 

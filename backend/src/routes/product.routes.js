@@ -8,11 +8,15 @@ const router = Router();
 
 import verifyJWT from "../middlewares/auth.middleware.js";
 import authorizeRoles from "../middlewares/role.middleware.js";
-import { createProduct } from "../controllers/product.controller.js";
+import {
+   createProduct,
+   getAllProducts,
+} from "../controllers/product.controller.js";
 
 // ------ PRODUCT ROUTES
 
 router.post("/", verifyJWT, authorizeRoles("admin"), createProduct);
+router.get("/", verifyJWT, authorizeRoles("admin"), getAllProducts);
 
 // ------ EXPORTING ROUTER
 
