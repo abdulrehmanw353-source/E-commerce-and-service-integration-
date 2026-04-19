@@ -58,7 +58,7 @@ const getAllProductsService = async (query) => {
    };
 };
 
-// ------ GET SINGLE PRODUCT BY ID (ADMIN)
+// ------ GET SINGLE PRODUCT BY ID FROM DB (ADMIN)
 
 const getSingleProductService = async (id) => {
    // ------ validate mongodb id
@@ -77,10 +77,55 @@ const getSingleProductService = async (id) => {
       throw new ApiError(404, "Product not found");
    }
 
-   // returning product data
+   // ------ returning product data
+   return product;
+};
+
+// ------ UPDATE PRODUCT IN DB (ADMIN)
+
+const updateProductService = async (id, payload) => {
+   // ------ validate mongodb ID
+   if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new ApiError(400, "Invalid product ID");
+   }
+
+   // ------ find product
+   const product = await Product.findById(id);
+
+   if (!product) {
+      throw new ApiError(404, "Product not found");
+   }
+
+   // ------ allowed fields only
+   const allowedFields = [
+      "title",
+      "description",
+      "price",
+      "stock",
+      "images",
+      "category",
+      "brand",
+   ];
+
+   // ------ update fields safely
+   allowedFields.forEach((field) => {
+      if (payload[field] !== undefined) {
+         product[field] = payload[field];
+      }
+   });
+
+   // ------ save updated product
+   await product.save();
+
+   // ------ returning product data
    return product;
 };
 
 // ------ EXPORTING SERVICES
 
-export { createProductService, getAllProductsService, getSingleProductService };
+export {
+   createProductService,
+   getAllProductsService,
+   getSingleProductService,
+   updateProductService,
+};
