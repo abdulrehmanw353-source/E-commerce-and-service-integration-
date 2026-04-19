@@ -7,6 +7,7 @@ import {
    getAllProductsService,
    getSingleProductService,
    updateProductService,
+   deleteProductService,
 } from "../services/product.service.js";
 
 // ------ CREATE PRODUCT
@@ -57,6 +58,24 @@ const updateProduct = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, product, "Product updated successfully"));
 });
 
+// ------ DELETE PRODUCT
+
+const deleteProduct = asyncHandler(async (req, res) => {
+   // ------ deleting product using product service
+   await deleteProductService(req.params.id);
+
+   // ------ returning response
+   return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Product deleted successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { createProduct, getAllProducts, getSingleProduct, updateProduct };
+export {
+   createProduct,
+   getAllProducts,
+   getSingleProduct,
+   updateProduct,
+   deleteProduct,
+};

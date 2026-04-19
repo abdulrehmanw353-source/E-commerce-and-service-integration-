@@ -28,6 +28,7 @@
 - getting all products service, route & controller for admin is implemented
 - getting single product service, route & controller for admin is implemented
 - updating product service, route & controller for admin is implemented
+- deleting product service, route & controller for admin is implemented (soft delete)
 ```
 
 ### By "Pull Requests"

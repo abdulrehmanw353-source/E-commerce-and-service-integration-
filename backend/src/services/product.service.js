@@ -34,7 +34,7 @@ const getAllProductsService = async (query) => {
    const skip = (page - 1) * limit;
 
    // ------ fetching limited products
-   const products = await Product.find()
+   const products = await Product.find({ isDeleted: false })
       .select("title price stock images category createdBy")
       .populate("createdBy", "firstName email")
       .sort({ createdAt: -1 })
@@ -47,7 +47,7 @@ const getAllProductsService = async (query) => {
    }
 
    // ------ counting the total products stored in DB
-   const totalProducts = await Product.countDocuments();
+   const totalProducts = await Product.countDocuments({ isDeleted: false });
 
    // ------ returning data
    return {
@@ -67,10 +67,10 @@ const getSingleProductService = async (id) => {
    }
 
    // ------ find product
-   const product = await Product.findById(id).populate(
-      "createdBy",
-      "firstName email",
-   );
+   const product = await Product.findOne({
+      _id: id,
+      isDeleted: false,
+   }).populate("createdBy", "firstName email");
 
    // ------ not found check
    if (!product) {
@@ -90,7 +90,7 @@ const updateProductService = async (id, payload) => {
    }
 
    // ------ find product
-   const product = await Product.findById(id);
+   const product = await Product.findOne({ _id: id, isDeleted: false });
 
    if (!product) {
       throw new ApiError(404, "Product not found");
@@ -121,6 +121,31 @@ const updateProductService = async (id, payload) => {
    return product;
 };
 
+// ------ DELETE PRODUCT FROM DB (SOFT DELETE)
+
+const deleteProductService = async (id) => {
+   // ------ validate mongodb id
+   if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new ApiError(400, "Invalid product ID");
+   }
+
+   // ------ find product
+   const product = await Product.findOne({ _id: id, isDeleted: false });
+
+   if (!product) {
+      throw new ApiError(404, "Product not found");
+   }
+
+   // ------ Soft delete
+   product.isDeleted = true;
+
+   // ------ saving new changes in DB
+   await product.save();
+
+   // ------ returning deleted product
+   return product;
+};
+
 // ------ EXPORTING SERVICES
 
 export {
@@ -128,4 +153,5 @@ export {
    getAllProductsService,
    getSingleProductService,
    updateProductService,
+   deleteProductService,
 };

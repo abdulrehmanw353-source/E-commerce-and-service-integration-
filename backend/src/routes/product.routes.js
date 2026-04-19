@@ -13,6 +13,7 @@ import {
    getAllProducts,
    getSingleProduct,
    updateProduct,
+   deleteProduct,
 } from "../controllers/product.controller.js";
 
 // ------ PRODUCT ROUTES
@@ -21,6 +22,7 @@ router.post("/", verifyJWT, authorizeRoles("admin"), createProduct);
 router.get("/", verifyJWT, authorizeRoles("admin"), getAllProducts);
 router.get("/:id", verifyJWT, authorizeRoles("admin"), getSingleProduct);
 router.patch("/:id", verifyJWT, authorizeRoles("admin"), updateProduct);
+router.delete("/:id", verifyJWT, authorizeRoles("admin"), deleteProduct);
 
 // ------ EXPORTING ROUTER
 

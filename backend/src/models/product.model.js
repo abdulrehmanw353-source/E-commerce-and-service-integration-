@@ -57,6 +57,12 @@ const productSchema = new Schema(
          ref: "User",
          required: true,
       },
+      // ------- helps to behave like product is deleted or not
+      isDeleted: {
+         type: Boolean,
+         default: false,
+         index: true,
+      },
    },
    {
       timestamps: true,
