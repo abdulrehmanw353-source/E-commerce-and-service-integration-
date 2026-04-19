@@ -22,6 +22,7 @@
 - new refresh and access token route and controller is implemented for customer
 - customer logout route and controller is implemented
 - do some fixes/improvements
+- creating product model
 ```
 
 ### By "Pull Requests"
