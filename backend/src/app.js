@@ -7,6 +7,7 @@ import { FRONTEND_URI } from "./constants.js";
 
 import errorHandler from "./middlewares/error.middleware.js";
 import authRouter from "./routes/auth.routes.js";
+import productRouter from "./routes/product.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 // ------ ROUTES
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/products", productRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 

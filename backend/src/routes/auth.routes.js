@@ -4,7 +4,7 @@ import { Router } from "express";
 
 const router = Router();
 
-// ------ IMPORTING CONTROLLERS
+// ------ IMPORTING FROM FILES
 
 import {
    registerCustomer,

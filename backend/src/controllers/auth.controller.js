@@ -41,6 +41,9 @@ const registerCustomer = asyncHandler(async (req, res) => {
       role: "customer",
    });
 
+   // ------ converting mongoose document into JS object
+   const userObj = user.toObject();
+
    // ------ returning response
    return res
       .status(201)
