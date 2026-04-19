@@ -18,6 +18,7 @@
 - set userSchema transform function to remove password field from response
 - customer (user) login route and controller is implemented
 - access and refresh tokens generators are defined and used
+- creating role middleware
 ```
 
 ### By "Pull Requests"
