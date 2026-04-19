@@ -29,6 +29,8 @@
 - getting single product service, route & controller for admin is implemented
 - updating product service, route & controller for admin is implemented
 - deleting product service, route & controller for admin is implemented (soft delete)
+- FIX: make the product title unique in product model
+- FIX: correcting the product create route endpoint
 ```
 
 ### By "Pull Requests"

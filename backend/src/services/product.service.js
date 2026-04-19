@@ -13,6 +13,16 @@ const createProductService = async (payload, userId) => {
       throw new ApiError(400, "Missing required product fields");
    }
 
+   // ------ to check product title is unique
+   const existingProduct = await Product.findOne({
+      title: payload.title,
+      isDeleted: false,
+   });
+
+   if (existingProduct) {
+      throw new ApiError(409, "Product already exist with this name");
+   }
+
    // ------ creating & saving product in DB
    const product = await Product.create({
       ...payload,
