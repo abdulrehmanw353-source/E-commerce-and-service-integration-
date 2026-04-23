@@ -31,6 +31,8 @@
 - deleting product service, route & controller for admin is implemented (soft delete)
 - FIX: make the product title unique in product model
 - FIX: correcting the product create route endpoint
+- creating public products routes, services & controller to get all products
+- creating public products routes, services & controller to get single product
 ```
 
 ### By "Pull Requests"
