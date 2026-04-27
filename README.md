@@ -42,6 +42,7 @@
 - adding the review models and its routes for the products
 - implementing cart create & get model, services, controllers & routes
 - implementing update, remove & clear cart routes, services & controllers
+- implementing get all orders, single order, create order routes, services & controllers
 ```
 
 ### By "Pull Requests"

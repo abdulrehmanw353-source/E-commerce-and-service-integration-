@@ -11,6 +11,7 @@ import productRouter from "./routes/product.routes.js";
 import publicProductRouter from "./routes/public.product.routes.js";
 import reviewRouter from "./routes/review.routes.js";
 import cartRouter from "./routes/cart.routes.js";
+import orderRouter from "./routes/order.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -34,6 +35,7 @@ app.use("/api/v1/admin/products", productRouter);
 app.use("/api/v1/products", publicProductRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/orders", orderRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 
