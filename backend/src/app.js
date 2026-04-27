@@ -9,6 +9,7 @@ import errorHandler from "./middlewares/error.middleware.js";
 import authRouter from "./routes/auth.routes.js";
 import productRouter from "./routes/product.routes.js";
 import publicProductRouter from "./routes/public.product.routes.js";
+import reviewRouter from "./routes/review.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin/products", productRouter);
 app.use("/api/v1/products", publicProductRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 
