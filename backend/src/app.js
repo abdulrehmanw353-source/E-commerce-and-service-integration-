@@ -10,6 +10,7 @@ import authRouter from "./routes/auth.routes.js";
 import productRouter from "./routes/product.routes.js";
 import publicProductRouter from "./routes/public.product.routes.js";
 import reviewRouter from "./routes/review.routes.js";
+import cartRouter from "./routes/cart.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -32,6 +33,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin/products", productRouter);
 app.use("/api/v1/products", publicProductRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/cart", cartRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 

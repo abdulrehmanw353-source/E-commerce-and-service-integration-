@@ -39,6 +39,8 @@
 - improving sorting with allowed fields validation
 - implementing relevance-based sorting for search queries
 - fixing pagination and query handling for public products API
+- adding the review models and its routes for the products
+- implementing cart create & get model, services, controllers & routes
 ```
 
 ### By "Pull Requests"
