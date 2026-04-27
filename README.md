@@ -41,6 +41,7 @@
 - fixing pagination and query handling for public products API
 - adding the review models and its routes for the products
 - implementing cart create & get model, services, controllers & routes
+- implementing update, remove & clear cart routes, services & controllers
 ```
 
 ### By "Pull Requests"
