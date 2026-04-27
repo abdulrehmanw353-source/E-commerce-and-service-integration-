@@ -8,7 +8,6 @@ const productSchema = new Schema(
          type: String,
          required: true,
          trim: true,
-         unique: true,
          index: true,
       },
       description: {
@@ -62,13 +61,18 @@ const productSchema = new Schema(
       isDeleted: {
          type: Boolean,
          default: false,
-         index: true,
       },
    },
    {
       timestamps: true,
    },
 );
+
+// ------ ADDING INDEX
+
+productSchema.index({ title: 1, isDeleted: 1 }, { unique: true });
+productSchema.index({ title: "text", description: "text" });
+productSchema.index({ category: 1 });
 
 // ------ PRODUCT MODEL
 

@@ -33,6 +33,12 @@
 - FIX: correcting the product create route endpoint
 - creating public products routes, services & controller to get all products
 - creating public products routes, services & controller to get single product
+- fixing product unique constraint using compound index (title + isDeleted)
+- implementing mongodb text search for product search functionality
+- adding case-insensitive category filtering
+- improving sorting with allowed fields validation
+- implementing relevance-based sorting for search queries
+- fixing pagination and query handling for public products API
 ```
 
 ### By "Pull Requests"
