@@ -6,6 +6,7 @@ import {
    createOrderFromCartService,
    getUserOrdersService,
    getSingleOrderService,
+   updateOrderStatusService,
 } from "../services/order.service.js";
 
 // ------ CREATE ORDER
@@ -38,6 +39,26 @@ const getSingleOrder = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, order, "Order fetched successfully"));
 });
 
+// ------ UPDATE ORDER STATUS
+
+const updateOrderStatus = asyncHandler(async (req, res) => {
+   const { status, paymentStatus } = req.body;
+
+   if (!status && !paymentStatus) {
+      throw new ApiError(400, "status or paymentStatus is required");
+   }
+
+   const order = await updateOrderStatusService(
+      req.params.id,
+      status,
+      paymentStatus,
+   );
+
+   return res
+      .status(200)
+      .json(new ApiResponse(200, order, "Order status updated successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { createOrder, getUserOrders, getSingleOrder };
+export { createOrder, getUserOrders, getSingleOrder, updateOrderStatus };

@@ -96,10 +96,55 @@ const getSingleOrderService = async (orderId, userId) => {
    return order;
 };
 
+// ------ UPDATE ORDER STATUS (ADMIN)
+
+const updateOrderStatusService = async (orderId, status, paymentStatus) => {
+   if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      throw new ApiError(400, "Invalid order ID");
+   }
+
+   const order = await Order.findById(orderId);
+
+   if (!order) {
+      throw new ApiError(404, "Order not found");
+   }
+
+   const allowedStatus = [
+      "pending",
+      "paid",
+      "shipped",
+      "delivered",
+      "cancelled",
+   ];
+
+   const allowedPaymentStatus = ["pending", "paid", "failed"];
+
+   if (status && !allowedStatus.includes(status)) {
+      throw new ApiError(400, "Invalid order status");
+   }
+
+   if (paymentStatus && !allowedPaymentStatus.includes(paymentStatus)) {
+      throw new ApiError(400, "Invalid payment status");
+   }
+
+   if (status) {
+      order.status = status;
+   }
+
+   if (paymentStatus) {
+      order.paymentStatus = paymentStatus;
+   }
+
+   await order.save();
+
+   return order;
+};
+
 // ------ EXPORTING SERVICES
 
 export {
    createOrderFromCartService,
    getUserOrdersService,
    getSingleOrderService,
+   updateOrderStatusService,
 };
