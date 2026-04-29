@@ -50,6 +50,9 @@
 - implementing customer get profile service, controller & route
 - implementing customer update profile service, controller & route (firstName, lastName, phoneNo, address)
 - implementing customer change password service, controller & route (with current password verification)
+- implementing admin get all users service, controller & route (paginated, searchable by name/email, filterable by role)
+- implementing admin get single user service, controller & route
+- implementing admin update user role service, controller & route
 ```
 
 ### By "Pull Requests"
