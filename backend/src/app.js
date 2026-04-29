@@ -13,6 +13,7 @@ import reviewRouter from "./routes/review.routes.js";
 import cartRouter from "./routes/cart.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import adminOrderRouter from "./routes/admin.order.routes.js";
+import customerRouter from "./routes/customer.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -32,6 +33,7 @@ app.use(cookieParser());
 // ------ ROUTES
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/customer", customerRouter);
 app.use("/api/v1/admin/products", productRouter);
 app.use("/api/v1/products", publicProductRouter);
 app.use("/api/v1/reviews", reviewRouter);

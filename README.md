@@ -47,6 +47,9 @@
 - FIX: adding missing ApiError import in order controller
 - implementing admin get all orders service, controller & route (paginated, filterable by status/paymentStatus)
 - implementing admin get single order service, controller & route (with user details)
+- implementing customer get profile service, controller & route
+- implementing customer update profile service, controller & route (firstName, lastName, phoneNo, address)
+- implementing customer change password service, controller & route (with current password verification)
 ```
 
 ### By "Pull Requests"
