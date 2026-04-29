@@ -44,6 +44,9 @@
 - implementing update, remove & clear cart routes, services & controllers
 - implementing get all orders, single order, create order routes, services & controllers
 - implementing admin auth login, logout, refresh-roken routes & controllers
+- FIX: adding missing ApiError import in order controller
+- implementing admin get all orders service, controller & route (paginated, filterable by status/paymentStatus)
+- implementing admin get single order service, controller & route (with user details)
 ```
 
 ### By "Pull Requests"
