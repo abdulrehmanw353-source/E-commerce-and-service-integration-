@@ -56,6 +56,11 @@
 - implementing admin dashboard stats API (total customers, products, orders, revenue, pending/delivered/cancelled)
 - implementing admin dashboard activity APIs (recent orders, recent customers, recent reviews)
 - implementing admin dashboard analytics APIs (revenue, orders, product performance, category distribution)
+- creating booking model (problem details, device details, images, scheduling, status lifecycle, admin assignment, pricing)
+- implementing customer create booking service, controller & route (with future date validation)
+- implementing customer get bookings service, controller & route (paginated, filterable by status)
+- implementing customer get single booking service, controller & route (scoped to owner)
+- implementing customer cancel booking service, controller & route (pending only)
 ```
 
 ### By "Pull Requests"
