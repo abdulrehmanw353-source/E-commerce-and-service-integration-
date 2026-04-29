@@ -73,6 +73,11 @@
 - implementing Cloudinary upload/delete utilities (single, multiple, buffer-based)
 - integrating image upload with booking creation (multipart/form-data with up to 5 images)
 - adding CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to environment config
+- creating conversation model (customer, admin, status, lastMessage tracking)
+- creating message model (conversation, sender, senderRole, content, isRead tracking)
+- implementing chat service (start/get conversation, send message, get messages, mark read, close)
+- implementing customer chat routes (start conversation, list conversations, send/get messages, mark read)
+- implementing admin chat routes (list all conversations, get/send messages, close conversation)
 ```
 
 ### By "Pull Requests"

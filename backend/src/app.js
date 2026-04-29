@@ -19,6 +19,8 @@ import adminDashboardRouter from "./routes/admin.dashboard.routes.js";
 import bookingRouter from "./routes/booking.routes.js";
 import adminBookingRouter from "./routes/admin.booking.routes.js";
 import timeSlotRouter from "./routes/timeSlot.routes.js";
+import chatRouter from "./routes/chat.routes.js";
+import adminChatRouter from "./routes/admin.chat.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -50,6 +52,8 @@ app.use("/api/v1/admin/dashboard", adminDashboardRouter);
 app.use("/api/v1/bookings", bookingRouter);
 app.use("/api/v1/admin/bookings", adminBookingRouter);
 app.use("/api/v1/time-slots", timeSlotRouter);
+app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/admin/chat", adminChatRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 
