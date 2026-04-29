@@ -53,6 +53,9 @@
 - implementing admin get all users service, controller & route (paginated, searchable by name/email, filterable by role)
 - implementing admin get single user service, controller & route
 - implementing admin update user role service, controller & route
+- implementing admin dashboard stats API (total customers, products, orders, revenue, pending/delivered/cancelled)
+- implementing admin dashboard activity APIs (recent orders, recent customers, recent reviews)
+- implementing admin dashboard analytics APIs (revenue, orders, product performance, category distribution)
 ```
 
 ### By "Pull Requests"
