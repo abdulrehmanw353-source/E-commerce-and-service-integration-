@@ -78,6 +78,9 @@
 - implementing chat service (start/get conversation, send message, get messages, mark read, close)
 - implementing customer chat routes (start conversation, list conversations, send/get messages, mark read)
 - implementing admin chat routes (list all conversations, get/send messages, close conversation)
+- setting up Socket.io server with JWT authentication middleware
+- implementing real-time messaging events (joinConversation, sendMessage, typing indicators, markRead)
+- updating server.js to use HTTP server with Socket.io attached
 ```
 
 ### By "Pull Requests"
