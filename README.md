@@ -81,6 +81,8 @@
 - setting up Socket.io server with JWT authentication middleware
 - implementing real-time messaging events (joinConversation, sendMessage, typing indicators, markRead)
 - updating server.js to use HTTP server with Socket.io attached
+- creating admin seed script (npm run seed:admin) for default admin user creation
+- packages: multer, cloudinary, socket.io are added
 ```
 
 ### By "Pull Requests"
