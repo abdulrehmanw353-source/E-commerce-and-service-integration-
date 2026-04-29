@@ -61,6 +61,14 @@
 - implementing customer get bookings service, controller & route (paginated, filterable by status)
 - implementing customer get single booking service, controller & route (scoped to owner)
 - implementing customer cancel booking service, controller & route (pending only)
+- creating timeSlot model (date, startTime, endTime, availability, capacity tracking)
+- implementing time slot CRUD services, controllers & routes (admin: create, list, update, delete)
+- implementing public get available slots by date route
+- implementing admin get all bookings service, controller & route (paginated, filterable by status, with customer details)
+- implementing admin get single booking service, controller & route (with customer & timeSlot details)
+- implementing admin approve/reject booking services, controllers & routes (pending only)
+- implementing admin assign technician service, controller & route
+- implementing admin update booking status service, controller & route
 ```
 
 ### By "Pull Requests"
