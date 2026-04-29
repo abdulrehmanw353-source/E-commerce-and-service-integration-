@@ -4,10 +4,11 @@ import mongoose from "mongoose";
 
 import Booking from "../models/booking.model.js";
 import ApiError from "../utils/ApiError.js";
+import { uploadMultipleToCloudinary } from "../utils/cloudinary.upload.js";
 
 // ------ CREATE BOOKING SERVICE
 
-const createBookingService = async (userId, payload) => {
+const createBookingService = async (userId, payload, files) => {
    // ------ validate required fields
    if (!payload.problemTitle || !payload.problemDescription) {
       throw new ApiError(400, "Problem title and description are required");
@@ -28,6 +29,13 @@ const createBookingService = async (userId, payload) => {
       throw new ApiError(400, "Preferred date must be in the future");
    }
 
+   // ------ upload images to Cloudinary (if provided)
+   let imageUrls = [];
+
+   if (files && files.length > 0) {
+      imageUrls = await uploadMultipleToCloudinary(files, "bookings");
+   }
+
    // ------ create booking
    const booking = await Booking.create({
       customer: userId,
@@ -36,7 +44,7 @@ const createBookingService = async (userId, payload) => {
       deviceType: payload.deviceType,
       deviceBrand: payload.deviceBrand,
       deviceModel: payload.deviceModel,
-      images: payload.images || [],
+      images: imageUrls,
       preferredDate,
       preferredTimeSlot: payload.preferredTimeSlot || undefined,
       status: "pending",

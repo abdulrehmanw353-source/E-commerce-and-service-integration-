@@ -12,7 +12,7 @@ import {
 // ------ CREATE BOOKING
 
 const createBooking = asyncHandler(async (req, res) => {
-   const booking = await createBookingService(req.user._id, req.body);
+   const booking = await createBookingService(req.user._id, req.body, req.files);
 
    return res
       .status(201)

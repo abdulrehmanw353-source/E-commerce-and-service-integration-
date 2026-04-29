@@ -69,6 +69,10 @@
 - implementing admin approve/reject booking services, controllers & routes (pending only)
 - implementing admin assign technician service, controller & route
 - implementing admin update booking status service, controller & route
+- setting up Cloudinary configuration and Multer memory storage (image upload system)
+- implementing Cloudinary upload/delete utilities (single, multiple, buffer-based)
+- integrating image upload with booking creation (multipart/form-data with up to 5 images)
+- adding CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to environment config
 ```
 
 ### By "Pull Requests"
