@@ -197,6 +197,87 @@ const logoutCustomer = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
+// ------ ADMIN LOGIN
+
+const loginAdmin = asyncHandler(async (req, res) => {
+   const { email, password } = req.body;
+
+   if (!email || !password) {
+      throw new ApiError(400, "Required fields are missing");
+   }
+
+   // ------ only admin allowed
+   const admin = await User.findOne({
+      email,
+      role: "admin",
+   }).select("+password");
+
+   if (!admin) {
+      throw new ApiError(404, "Admin not found");
+   }
+
+   const isPasswordValid = await admin.comparePassword(password);
+
+   if (!isPasswordValid) {
+      throw new ApiError(401, "Invalid credentials");
+   }
+
+   const refreshToken = generateRefreshToken(admin);
+   const accessToken = generateAccessToken(admin);
+
+   admin.refreshToken = refreshToken;
+   await admin.save({ validateBeforeSave: false });
+
+   const adminObj = admin.toObject();
+
+   const options = {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      sameSite: "strict",
+   };
+
+   res.cookie("refreshToken", refreshToken, options);
+
+   return res.status(200).json(
+      new ApiResponse(
+         200,
+         {
+            user: adminObj,
+            accessToken,
+         },
+         "Admin logged-in successfully",
+      ),
+   );
+});
+
+// ------ ADMIN LOGOUT
+
+const logoutAdmin = asyncHandler(async (req, res) => {
+   const adminId = req.user._id;
+
+   await User.findByIdAndUpdate(adminId, {
+      $unset: { refreshToken: 1 },
+   });
+
+   res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      sameSite: "strict",
+   });
+
+   return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Admin logged out successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { registerCustomer, loginCustomer, refreshAccessToken, logoutCustomer };
+export {
+   registerCustomer,
+   loginCustomer,
+   refreshAccessToken,
+   logoutCustomer,
+   loginAdmin,
+   logoutAdmin,
+};

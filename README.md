@@ -43,6 +43,7 @@
 - implementing cart create & get model, services, controllers & routes
 - implementing update, remove & clear cart routes, services & controllers
 - implementing get all orders, single order, create order routes, services & controllers
+- implementing admin auth login, logout, refresh-roken routes & controllers
 ```
 
 ### By "Pull Requests"
