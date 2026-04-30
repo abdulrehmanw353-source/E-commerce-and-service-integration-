@@ -85,6 +85,23 @@
 - packages: multer, cloudinary, socket.io are added
 ```
 
+#### Frontend
+
+```
+- initializing Vite + React project in frontend/ folder
+- installing approved packages: axios, react-router-dom, @tanstack/react-query, zustand, react-hook-form, yup, @hookform/resolvers, tailwindcss, @tailwindcss/vite, lucide-react, react-hot-toast, socket.io-client
+- configuring Vite with Tailwind CSS v4 plugin and API/WebSocket proxy to backend
+- setting up Apple HIG design system (system font stack, semantic light-mode colors, glassmorphism, Apple-style buttons and cards)
+- creating Axios instance with withCredentials and response interceptor (auto token refresh on 401, request queuing and retry)
+- creating Zustand auth store with localStorage persistence for user data (access token kept in-memory only)
+- setting up React Query client with QueryClientProvider
+- creating useInitAuth hook for session restoration on app load via refresh token
+- building App shell with React Router, QueryClientProvider, and Apple-styled Toaster
+- building HomePage with Apple HIG UI (frosted glass nav, hero section, feature cards, trust strip, footer)
+- building NotFoundPage with Apple-style minimal design
+- building LoadingScreen component with subtle spinner
+```
+
 ### By "Pull Requests"
 
 #### Backend
