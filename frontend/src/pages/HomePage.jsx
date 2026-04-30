@@ -1,5 +1,5 @@
 import { ShoppingBag, Wrench, MessageCircle, ChevronRight, Truck, Shield, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
 
 const features = [
   {
@@ -30,49 +30,7 @@ const features = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-bg-primary">
-      {/* ─── Navigation ─────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 apple-glass border-b border-separator" id="main-nav">
-        <div className="apple-section-wide">
-          <div className="flex items-center justify-between h-[48px]">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-1.5" id="nav-logo">
-              <span className="text-[21px] font-semibold tracking-tight text-label-primary">
-                TechStore
-              </span>
-            </Link>
-
-            {/* Nav Links */}
-            <div className="hidden md:flex items-center gap-7">
-              {['Products', 'Services', 'Support'].map((item) => (
-                <button
-                  key={item}
-                  id={`nav-${item.toLowerCase()}`}
-                  className="text-[13px] font-normal text-label-secondary hover:text-label-primary transition-colors duration-200"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            {/* Auth */}
-            <div className="flex items-center gap-5">
-              <button
-                id="nav-signin"
-                className="text-[13px] font-normal text-apple-blue hover:text-[#0071E3] transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                id="nav-bag"
-                className="text-label-secondary hover:text-label-primary transition-colors"
-              >
-                <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="bg-bg-primary">
 
       {/* ─── Hero ───────────────────────────────────────── */}
       <section className="pt-16 pb-10 sm:pt-24 sm:pb-16 text-center" id="hero-section">
@@ -95,7 +53,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               id="hero-shop-btn"
-              className="apple-btn apple-btn-primary text-[17px] px-8 py-3 rounded-full"
+              className="apple-btn apple-btn-primary text-[17px] px-8 py-3"
             >
               Start Shopping
               <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
@@ -119,7 +77,7 @@ export default function HomePage() {
               <div
                 key={feature.title}
                 id={`feature-card-${i}`}
-                className="group rounded-2xl bg-bg-secondary p-8 sm:p-10 transition-all duration-300 hover:shadow-lg animate-slide-up"
+                className="group rounded-[20px] bg-bg-secondary p-8 sm:p-10 transition-transform duration-300 hover:scale-[1.02] animate-slide-up"
                 style={{ animationDelay: `${i * 0.08}s` }}
               >
                 {/* Icon */}
@@ -180,42 +138,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Footer ──────────────────────────────────────── */}
-      <footer className="border-t border-separator py-6 mt-auto" id="main-footer">
-        <div className="apple-section-wide">
-          {/* Breadcrumb-style links */}
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4">
-            {['Products', 'Services', 'Support', 'About', 'Contact'].map((link) => (
-              <button
-                key={link}
-                className="text-[12px] text-label-quaternary hover:text-label-primary transition-colors"
-              >
-                {link}
-              </button>
-            ))}
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-separator mb-4" />
-
-          {/* Bottom */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <p className="text-[12px] text-label-quaternary">
-              Copyright &copy; {new Date().getFullYear()} TechStore. All rights reserved.
-            </p>
-            <div className="flex items-center gap-4">
-              {['Privacy Policy', 'Terms of Use'].map((link) => (
-                <button
-                  key={link}
-                  className="text-[12px] text-label-quaternary hover:text-label-primary transition-colors"
-                >
-                  {link}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

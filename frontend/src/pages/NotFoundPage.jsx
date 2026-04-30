@@ -23,7 +23,7 @@ export default function NotFoundPage() {
           <Link
             to="/"
             id="not-found-home-btn"
-            className="apple-btn apple-btn-primary rounded-full px-6 py-2.5 text-[15px]"
+            className="apple-btn apple-btn-primary px-6 py-2.5 text-[15px]"
           >
             <Home className="w-4 h-4" strokeWidth={1.5} />
             Go Home
@@ -31,7 +31,7 @@ export default function NotFoundPage() {
           <button
             onClick={() => window.history.back()}
             id="not-found-back-btn"
-            className="apple-btn apple-btn-secondary rounded-full px-6 py-2.5 text-[15px]"
+            className="apple-btn apple-btn-secondary px-6 py-2.5 text-[15px]"
           >
             <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
             Go Back

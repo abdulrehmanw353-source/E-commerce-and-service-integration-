@@ -100,6 +100,7 @@
 - building HomePage with Apple HIG UI (frosted glass nav, hero section, feature cards, trust strip, footer)
 - building NotFoundPage with Apple-style minimal design
 - building LoadingScreen component with subtle spinner
+- creating reusable Navbar, Footer, and Sidebar layout components with Apple styling, and setting up React Router with MainLayout wrapper
 ```
 
 ### By "Pull Requests"

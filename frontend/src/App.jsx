@@ -10,6 +10,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // Components
 import LoadingScreen from './components/ui/LoadingScreen';
+import MainLayout from './components/layout/MainLayout';
 
 function AppContent() {
   const { isLoading } = useInitAuth();
@@ -20,7 +21,9 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
