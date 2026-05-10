@@ -147,6 +147,41 @@
 - UI FIX: Admin login inline style margins (24px fields, 32px before button, 48px header/footer)
 - UI FIX: Customer login explicit margin spacing (24px, 32px) with inline styles
 - UI FIX: Register page explicit margins (20px fields, 28px sections) with shipping address separator
+- PHASE 4A: installed recharts for admin charts
+- PHASE 4A: building AdminLayout (dark shell, collapsible sidebar, topbar) for all /admin/* routes
+- PHASE 4A: building AdminSidebar with nav links (Dashboard, Products, Orders, Bookings, Users, Support), user info and sign out
+- PHASE 4A: building AdminTopbar with page title and sidebar toggle
+- PHASE 4A: building StatusBadge component for color-coded status pills (orders, bookings, users)
+- PHASE 4A: building AdminDashboardPage with 4 stat cards (revenue, orders, users, bookings), revenue area chart, category pie chart, orders bar chart, recent orders + recent customers panels
+- PHASE 4A: building AdminProductsPage with full CRUD (create, edit, delete modals), search, image preview, pagination
+- PHASE 4A: building AdminOrdersPage with status filter tabs, table, pagination
+- PHASE 4A: building AdminOrderDetailPage with order items, payment summary and inline status update dropdown
+- PHASE 4A: building AdminUsersPage with search and promote-to-admin action
+- PHASE 4A: building AdminBookingsPage with status filter tabs, approve/reject quick actions
+- PHASE 4A: building AdminBookingDetailPage with device details, problem description, images gallery, admin notes, rejection reason
+- PHASE 4A: building AdminChatPage with conversations sidebar and message thread (polling every 5s)
+- PHASE 4A: registering all admin routes in App.jsx under AdminRoute guard using AdminLayout
+- PHASE 4A: BUG FIX - corrected order field names to match backend schema (totalAmount, items instead of totalPrice, orderItems)
+- PHASE 4A: BUG FIX - corrected booking field names to match backend schema (problemTitle, preferredDate, deviceType, adminNotes, rejectionReason)
+- PHASE 4B: building ServicesPage with hero banner, 6-service catalog grid, full repair booking form (device picker, brand/model, problem, preferred date, time slot picker)
+- PHASE 4B: building AccountPage with profile edit form and password change (tabbed layout)
+- PHASE 4B: building MyOrdersPage with order list, status badges, and items count
+- PHASE 4B: building MyBookingsPage with device icon, status, cancel action, admin notes display
+- PHASE 4B: registering /services, /account, /account/orders, /account/bookings routes in App.jsx (account routes protected by CustomerRoute)
+- PHASE 6 REBUILD: AdminProductsPage rebuilt as list-only with edit/delete row actions linking to dedicated full pages (Shopify-style)
+- PHASE 6 REBUILD: AdminProductCreatePage — dedicated full page with sidebar layout (product info, images URL list with preview, pricing, inventory, category, discard/save)
+- PHASE 6 REBUILD: AdminProductEditPage — dedicated full page edit form auto-populated from API, image list, delete from page header
+- PHASE 6: AdminTopbar updated with dynamic route-based page titles for all paths including /create and /:id/edit
+- PHASE 6: registered /admin/products/create and /admin/products/:id/edit routes in App.jsx
+- PLAN UPDATE: FRONTEND_INTEGRATION_GUIDE.md updated with all phases checked/unchecked accurately
+- PLAN CREATE: FRONTEND_DEVELOPMENT_PLAN.md created in project root with full detailed task-level plan
+- PHASE 4A: creating store/cartStore.js — Zustand cart UI store (open/close slide-out drawer)
+- PHASE 4A: creating hooks/useCart.js — useGetCart, useCartItemCount, useAddToCart, useUpdateCartItem, useRemoveCartItem, useClearCart (React Query)
+- PHASE 4A: creating components/cart/CartItem.jsx — image, title, price, quantity stepper (±), line total, remove button
+- PHASE 4A: creating components/cart/CartSlideOut.jsx — Apple slide-out drawer, ESC close, body scroll lock, loading skeletons, empty state, authenticated guard, subtotal, checkout CTA, clear cart
+- PHASE 4A: wiring MainLayout.jsx to render CartSlideOut globally on all storefront pages
+- PHASE 4A: wiring Navbar cart icon → CartSlideOut open, live item count badge (blue pill, 9+ cap)
+- PHASE 4A: wiring ProductDetailPage Add to Cart → useAddToCart hook, opens CartSlideOut on success
 ```
 
 ### By "Pull Requests"

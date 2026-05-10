@@ -8,21 +8,42 @@ import { useInitAuth } from './hooks/useInitAuth';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import ServicesPage from './pages/ServicesPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Pages — Customer Auth
 import CustomerLoginPage from './pages/auth/CustomerLoginPage';
 import CustomerRegisterPage from './pages/auth/CustomerRegisterPage';
 
+// Pages — Customer Account
+import AccountPage from './pages/account/AccountPage';
+import MyOrdersPage from './pages/account/MyOrdersPage';
+import MyBookingsPage from './pages/account/MyBookingsPage';
+
 // Pages — Admin Auth
 import AdminLoginPage from './pages/admin/auth/AdminLoginPage';
 
-// Components
+// Pages — Admin Dashboard
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminProductCreatePage from './pages/admin/AdminProductCreatePage';
+import AdminProductEditPage from './pages/admin/AdminProductEditPage';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminBookingsPage from './pages/admin/AdminBookingsPage';
+import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage';
+import AdminChatPage from './pages/admin/AdminChatPage';
+
+// Components / Layout
 import LoadingScreen from './components/ui/LoadingScreen';
 import MainLayout from './components/layout/MainLayout';
+import AdminLayout from './components/admin/AdminLayout';
 
 // Guards
 import GuestRoute from './components/guards/GuestRoute';
+import AdminRoute from './components/guards/AdminRoute';
+import CustomerRoute from './components/guards/CustomerRoute';
 
 function AppContent() {
   const { isLoading } = useInitAuth();
@@ -38,6 +59,11 @@ function AppContent() {
         <Route index element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
+        <Route path="services" element={<ServicesPage />} />
+        {/* Protected customer routes */}
+        <Route path="account" element={<CustomerRoute><AccountPage /></CustomerRoute>} />
+        <Route path="account/orders" element={<CustomerRoute><MyOrdersPage /></CustomerRoute>} />
+        <Route path="account/bookings" element={<CustomerRoute><MyBookingsPage /></CustomerRoute>} />
       </Route>
 
       {/* ─── Customer Auth (standalone, no main layout) ─── */}
@@ -54,6 +80,24 @@ function AppContent() {
 
       {/* ─── Admin Auth (standalone, dark theme) ─── */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
+
+      {/* ─── Admin Dashboard (protected, dark layout) ─── */}
+      <Route path="/admin" element={
+        <AdminRoute>
+          <AdminLayout />
+        </AdminRoute>
+      }>
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="products" element={<AdminProductsPage />} />
+        <Route path="products/create" element={<AdminProductCreatePage />} />
+        <Route path="products/:id/edit" element={<AdminProductEditPage />} />
+        <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="orders/:id" element={<AdminOrderDetailPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="bookings" element={<AdminBookingsPage />} />
+        <Route path="bookings/:id" element={<AdminBookingDetailPage />} />
+        <Route path="chat" element={<AdminChatPage />} />
+      </Route>
 
       {/* ─── 404 ─── */}
       <Route path="*" element={<NotFoundPage />} />

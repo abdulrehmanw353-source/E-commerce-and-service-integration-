@@ -4,6 +4,7 @@ import AnnouncementBar from './AnnouncementBar';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
+import CartSlideOut from '../cart/CartSlideOut';
 
 export default function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,13 +14,15 @@ export default function MainLayout() {
       <AnnouncementBar />
       <Navbar onOpenSidebar={() => setIsSidebarOpen(true)} />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      
+      <CartSlideOut />
+
       {/* Main Content Area */}
       <main className="flex-grow">
         <Outlet />
       </main>
-      
+
       <Footer />
     </div>
   );
 }
+

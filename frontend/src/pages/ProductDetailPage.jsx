@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 import { useProduct } from '../hooks/useProducts';
+import { useAddToCart } from '../hooks/useCart';
+import { useCartStore } from '../store/cartStore';
 import Button from '../components/ui/Button';
 import api from '../lib/axios';
 
@@ -17,7 +19,8 @@ export default function ProductDetailPage() {
   const { data: product, isLoading, isError } = useProduct(id);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [addingToCart, setAddingToCart] = useState(false);
+  const addToCart = useAddToCart();
+  const openCart  = useCartStore(s => s.open);
 
   // Fetch reviews
   const { data: reviewsData } = useQuery({
@@ -31,17 +34,11 @@ export default function ProductDetailPage() {
 
   const reviews = reviewsData?.reviews || reviewsData || [];
 
-  const handleAddToCart = async () => {
-    setAddingToCart(true);
-    try {
-      await api.post('/cart', { productId: id, quantity });
-      toast.success('Added to cart!');
-    } catch (err) {
-      const msg = err.response?.data?.message || 'Please sign in to add items to cart.';
-      toast.error(msg);
-    } finally {
-      setAddingToCart(false);
-    }
+  const handleAddToCart = () => {
+    addToCart.mutate({ productId: id, quantity }, {
+      onSuccess: () => { toast.success('Added to cart!'); openCart(); },
+      onError: (err) => toast.error(err.response?.data?.message || 'Sign in to add to cart.'),
+    });
   };
 
   // Loading
@@ -230,7 +227,7 @@ export default function ProductDetailPage() {
                   variant="primary"
                   size="lg"
                   onClick={handleAddToCart}
-                  loading={addingToCart}
+                  loading={addToCart.isPending}
                   className="flex-1"
                 >
                   <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />

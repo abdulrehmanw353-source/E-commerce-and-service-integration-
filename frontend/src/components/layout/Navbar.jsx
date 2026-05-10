@@ -2,12 +2,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Menu, User, LogOut, ChevronDown, Search, Package, Wrench } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
+import { useCartStore } from '../../store/cartStore';
+import { useCartItemCount } from '../../hooks/useCart';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
 
 export default function Navbar({ onOpenSidebar }) {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
+  const openCart = useCartStore(s => s.open);
+  const cartCount = useCartItemCount();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const menuRef = useRef(null);
@@ -193,9 +197,15 @@ export default function Navbar({ onOpenSidebar }) {
             {/* Cart */}
             <button
               id="nav-bag"
-              className="text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
+              onClick={openCart}
+              className="relative text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
             >
               <ShoppingBag className="w-[17px] h-[17px]" strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#0071E3] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none tabular-nums">
+                  {cartCount > 9 ? '9+' : cartCount}
+                </span>
+              )}
             </button>
             
             {/* Mobile Menu Toggle */}
