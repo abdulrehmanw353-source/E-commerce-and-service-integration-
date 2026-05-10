@@ -128,6 +128,25 @@
 - enhancing Navbar with search dropdown, quick links, My Orders/My Bookings in user menu
 - enhancing Footer with 4-column layout (Shop, Repair, Account, Support), repair mini-banner
 - integrating AnnouncementBar into MainLayout above Navbar
+- SPACING FIX: increased card padding (px-7 py-8 / sm:px-10 sm:py-10) on auth forms
+- SPACING FIX: increased field gaps (gap-7), button margin (mt-3), separator margins
+- SPACING FIX: changed input bg from #F5F5F7 to white for clear visibility on white cards
+- SPACING FIX: homepage repair promo section proper padding (py-14/20), trust strip gaps
+- creating ProductCard component (Apple-styled, image, title, price, ratings, hover cart icon)
+- creating ProductGrid component (responsive 2/3/4 cols, loading skeletons, empty state)
+- creating useProducts hooks (useProducts, useFeaturedProducts, useProduct) with React Query
+- adding "Featured Products" section to HomePage with useFeaturedProducts integration
+- adding "Shop by Category" section with 6 category tiles (Laptops, Phones, Desktops, Tablets, Audio, Gaming)
+- PHASE 3C: creating ProductsPage with search, category filter, sort, URL params sync, pagination
+- PHASE 3C: creating ProductFilters component (search input, category/sort dropdowns, mobile responsive)
+- PHASE 3C: creating Pagination component (circular page buttons, prev/next, active state)
+- PHASE 3C: creating ProductDetailPage (breadcrumb, image gallery, quantity selector, add-to-cart, reviews)
+- PHASE 3C: adding /products and /products/:id routes to App.jsx inside MainLayout
+- UI FIX: AuthFormWrapper card padding via inline styles (40px 44px) with visible border
+- UI FIX: InputField bg changed to #FAFAFA with inline styles to prevent CSS specificity override
+- UI FIX: Admin login inline style margins (24px fields, 32px before button, 48px header/footer)
+- UI FIX: Customer login explicit margin spacing (24px, 32px) with inline styles
+- UI FIX: Register page explicit margins (20px fields, 28px sections) with shipping address separator
 ```
 
 ### By "Pull Requests"

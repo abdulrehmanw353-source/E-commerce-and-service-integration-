@@ -6,6 +6,8 @@ import { useInitAuth } from './hooks/useInitAuth';
 
 // Pages — Storefront
 import HomePage from './pages/HomePage';
+import ProductsPage from './pages/ProductsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Pages — Customer Auth
@@ -34,6 +36,8 @@ function AppContent() {
       {/* ─── Storefront (with Navbar + Footer) ─── */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="products/:id" element={<ProductDetailPage />} />
       </Route>
 
       {/* ─── Customer Auth (standalone, no main layout) ─── */}
@@ -78,16 +82,10 @@ export default function App() {
               boxShadow: '0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
             },
             success: {
-              iconTheme: {
-                primary: '#34C759',
-                secondary: '#FFFFFF',
-              },
+              iconTheme: { primary: '#34C759', secondary: '#FFFFFF' },
             },
             error: {
-              iconTheme: {
-                primary: '#FF3B30',
-                secondary: '#FFFFFF',
-              },
+              iconTheme: { primary: '#FF3B30', secondary: '#FFFFFF' },
             },
           }}
         />

@@ -12,16 +12,9 @@ import Button from '../../components/ui/Button';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/axios';
 
-// ─── Validation Schema ─────────────────────
 const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('Please enter a valid email address.')
-    .required('Email is required.'),
-  password: yup
-    .string()
-    .min(6, 'Password must be at least 6 characters.')
-    .required('Password is required.'),
+  email: yup.string().email('Please enter a valid email address.').required('Email is required.'),
+  password: yup.string().min(6, 'Password must be at least 6 characters.').required('Password is required.'),
 });
 
 export default function CustomerLoginPage() {
@@ -29,11 +22,7 @@ export default function CustomerLoginPage() {
   const setAuth = useAuthStore((s) => s.setAuth);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
@@ -46,60 +35,47 @@ export default function CustomerLoginPage() {
       toast.success(`Welcome back, ${data.data.user.firstName}!`);
       navigate('/', { replace: true });
     } catch (err) {
-      const message = err.response?.data?.message || 'Login failed. Please try again.';
-      toast.error(message);
+      toast.error(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <AuthFormWrapper
-      title="Sign in."
-      subtitle="Access your TechStore account."
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7" id="customer-login-form">
-        <InputField
-          label="Email Address"
-          type="email"
-          name="email"
-          placeholder="name@example.com"
-          register={register}
-          error={errors.email?.message}
-        />
+    <AuthFormWrapper title="Sign in." subtitle="Access your TechStore account.">
+      <form onSubmit={handleSubmit(onSubmit)} id="customer-login-form">
+        <div style={{ marginBottom: '24px' }}>
+          <InputField
+            label="Email Address"
+            type="email"
+            name="email"
+            placeholder="name@example.com"
+            register={register}
+            error={errors.email?.message}
+          />
+        </div>
 
-        <InputField
-          label="Password"
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          register={register}
-          error={errors.password?.message}
-        />
+        <div style={{ marginBottom: '32px' }}>
+          <InputField
+            label="Password"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            register={register}
+            error={errors.password?.message}
+          />
+        </div>
 
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          fullWidth
-          loading={isLoading}
-          id="customer-login-btn"
-          className="mt-3"
-        >
+        <Button type="submit" variant="primary" size="lg" fullWidth loading={isLoading} id="customer-login-btn">
           Sign In
           <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
         </Button>
       </form>
 
-      {/* Register Link */}
-      <div className="mt-8 pt-7 border-t border-[#E8E8ED] text-center">
+      <div className="text-center" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #E8E8ED' }}>
         <p className="text-[15px] text-[#86868B]">
           Don't have an account?{' '}
-          <Link
-            to="/register"
-            className="text-apple-blue font-medium hover:underline"
-            id="login-to-register-link"
-          >
+          <Link to="/register" className="text-apple-blue font-medium hover:underline" id="login-to-register-link">
             Create one now
           </Link>
         </p>
