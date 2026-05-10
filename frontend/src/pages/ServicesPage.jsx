@@ -48,8 +48,8 @@ const SERVICES = [
 function Field({ label, error, children, hint }) {
   return (
     <div>
-      <label className="block text-[13px] font-semibold text-[#1D1D1F] mb-1.5">{label}</label>
-      {hint && <p className="text-[12px] text-[#86868B] mb-1.5">{hint}</p>}
+      <label className="block text-[13px] font-semibold text-white/85 mb-1.5">{label}</label>
+      {hint && <p className="text-[12px] text-white/55 mb-1.5">{hint}</p>}
       {children}
       {error && <p className="text-[12px] text-red-500 mt-1">{error}</p>}
     </div>

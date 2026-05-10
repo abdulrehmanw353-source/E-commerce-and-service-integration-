@@ -1,8 +1,8 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft, ShoppingBag, Package, MapPin, User, Calendar,
-  AlertCircle, ChevronRight, Clock
+  AlertCircle, Clock, ChevronDown
 } from 'lucide-react';
 import adminApi from '../../lib/adminAxios';
 
@@ -182,29 +182,35 @@ export default function AdminOrderDetailPage() {
             <div className="space-y-3">
               <div>
                 <label className="text-[11px] text-white/35 uppercase tracking-wider mb-1.5 block">Order Status</label>
-                <select
-                  defaultValue={order.status}
-                  onChange={e => statusMut.mutate({ id, status: e.target.value })}
-                  disabled={statusMut.isPending}
-                  className="w-full bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2.5 text-[13px] text-white outline-none focus:border-[#0071E3] transition-all cursor-pointer"
-                >
-                  {ORDER_STATUSES.map(s => (
-                    <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    defaultValue={order.status}
+                    onChange={e => statusMut.mutate({ id, status: e.target.value })}
+                    disabled={statusMut.isPending}
+                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer"
+                  >
+                    {ORDER_STATUSES.map(s => (
+                      <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-white/70 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
               </div>
               <div>
                 <label className="text-[11px] text-white/35 uppercase tracking-wider mb-1.5 block">Payment Status</label>
-                <select
-                  defaultValue={order.paymentStatus ?? 'pending'}
-                  onChange={e => statusMut.mutate({ id, paymentStatus: e.target.value })}
-                  disabled={statusMut.isPending}
-                  className="w-full bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2.5 text-[13px] text-white outline-none focus:border-[#0071E3] transition-all cursor-pointer"
-                >
-                  {PAYMENT_STATUSES.map(s => (
-                    <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    defaultValue={order.paymentStatus ?? 'pending'}
+                    onChange={e => statusMut.mutate({ id, paymentStatus: e.target.value })}
+                    disabled={statusMut.isPending}
+                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer"
+                  >
+                    {PAYMENT_STATUSES.map(s => (
+                      <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-white/70 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
               </div>
               {statusMut.isPending && (
                 <p className="text-[12px] text-white/35 flex items-center gap-1.5">

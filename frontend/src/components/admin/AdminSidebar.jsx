@@ -1,7 +1,8 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
   LayoutDashboard, ShoppingBag, Package, Users, Calendar,
-  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, Settings
+  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, ChevronUp
 } from 'lucide-react';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import adminApi from '../../lib/adminAxios';
@@ -16,13 +17,13 @@ const navItems = [
   { label: 'Customers',   to: '/admin/customers',    icon: Users },
   { label: 'Technicians', to: '/admin/technicians',  icon: Wrench },
   { label: 'Analytics',   to: '/admin/analytics',    icon: BarChart3 },
-  { label: 'Settings',    to: '/admin/settings',     icon: Settings },
   { label: 'Support',     to: '/admin/chat',         icon: MessageSquare },
 ];
 
 export default function AdminSidebar({ collapsed }) {
   const navigate = useNavigate();
   const { logout, user } = useAdminAuthStore();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleLogout = async () => {
     try { await adminApi.post('/auth/admin/logout'); } catch {}
@@ -77,7 +78,12 @@ export default function AdminSidebar({ collapsed }) {
       {/* User + Logout */}
       <div className="px-2 py-3 border-t border-white/[0.08] space-y-1 flex-shrink-0">
         {!collapsed && user && (
-          <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
+          <div className="relative">
+          <button
+            onClick={() => setShowProfileMenu((s) => !s)}
+            className="w-full flex items-center justify-between gap-2.5 px-3 py-2 mb-1 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.06] transition-all"
+          >
+            <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-[#7a5cff] flex items-center justify-center flex-shrink-0">
               <span className="text-[11px] font-bold text-white">{user.firstName?.[0]?.toUpperCase()}</span>
             </div>
@@ -85,20 +91,37 @@ export default function AdminSidebar({ collapsed }) {
               <p className="text-[12px] font-medium text-white/80 truncate leading-tight">{user.firstName} {user.lastName}</p>
               <p className="text-[10px] text-white/35 truncate leading-tight capitalize">{user.role}</p>
             </div>
+            </div>
+            <ChevronUp className={`w-3.5 h-3.5 text-white/55 transition-transform ${showProfileMenu ? '' : 'rotate-180'}`} />
+          </button>
+          {showProfileMenu && (
+            <div className="absolute left-0 right-0 bottom-[52px] rounded-xl border border-white/10 bg-[#11182e] shadow-2xl overflow-hidden z-20">
+              <Link to="/admin/settings" className="block px-3 py-2.5 text-[12px] text-white/85 hover:bg-white/[0.06]">
+                Profile Settings
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2.5 text-[12px] text-[#ffd1db] hover:bg-[#ff5e7d]/15"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
           </div>
         )}
-        <button
-          onClick={handleLogout}
-          className={`
-            w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium
-            text-[#ffc4d1] bg-[#ff5e7d]/10 border border-[#ff5e7d]/30 hover:bg-[#ff5e7d]/20 hover:text-white transition-all duration-150
-            ${collapsed ? 'justify-center px-2' : ''}
-          `}
-          title={collapsed ? 'Sign Out' : undefined}
-        >
-          <LogOut className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
-          {!collapsed && <span>Sign Out</span>}
-        </button>
+        {collapsed && (
+          <button
+            onClick={handleLogout}
+            className={`
+              w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium
+              text-[#ffc4d1] bg-[#ff5e7d]/10 border border-[#ff5e7d]/30 hover:bg-[#ff5e7d]/20 hover:text-white transition-all duration-150
+              justify-center px-2
+            `}
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
+          </button>
+        )}
       </div>
     </aside>
   );

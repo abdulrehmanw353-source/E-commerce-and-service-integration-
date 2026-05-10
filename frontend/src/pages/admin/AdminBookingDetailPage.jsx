@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Calendar, Check, X, Wrench, Save } from 'lucide-react';
+import { ArrowLeft, Calendar, Check, X, Wrench, Save, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
@@ -94,16 +94,19 @@ export default function AdminBookingDetailPage() {
               </div>
             )}
             {/* Status Dropdown */}
-            <select
-              value={b.status}
-              onChange={e => statusMut.mutate(e.target.value)}
-              disabled={statusMut.isPending}
-              className="bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2 text-[13px] text-white outline-none focus:border-[#0071E3] cursor-pointer transition-all"
-            >
-              {BOOKING_STATUSES.map(s => (
-                <option key={s} value={s}>{s.replace('-', ' ').charAt(0).toUpperCase() + s.replace('-', ' ').slice(1)}</option>
-              ))}
-            </select>
+            <div className="relative w-full sm:w-[210px]">
+              <select
+                value={b.status}
+                onChange={e => statusMut.mutate(e.target.value)}
+                disabled={statusMut.isPending}
+                className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2 pr-10 text-[13px] appearance-none text-white outline-none focus:border-[#a994ff] cursor-pointer transition-all"
+              >
+                {BOOKING_STATUSES.map(s => (
+                  <option key={s} value={s}>{s.replace('-', ' ').charAt(0).toUpperCase() + s.replace('-', ' ').slice(1)}</option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 text-white/70 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
@@ -159,18 +162,21 @@ export default function AdminBookingDetailPage() {
           <p className="text-[13px] text-white/60 mb-3">Current: <span className="text-white font-semibold">{currentTechnician}</span></p>
         )}
         <div className="flex flex-col sm:flex-row gap-2">
-          <select
-            value={technicianId}
-            onChange={(e) => setTechnicianId(e.target.value)}
-            className="flex-1 bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2.5 text-[13px] text-white outline-none focus:border-[#8f74ff]"
-          >
-            <option value="">Select technician</option>
-            {technicians.map((t) => (
-              <option key={t._id} value={t._id}>
-                {t.firstName} {t.lastName || ''} ({t.status})
-              </option>
-            ))}
-          </select>
+          <div className="relative flex-1">
+            <select
+              value={technicianId}
+              onChange={(e) => setTechnicianId(e.target.value)}
+              className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 text-[13px] appearance-none text-white outline-none focus:border-[#b09fff]"
+            >
+              <option value="">Select technician</option>
+              {technicians.map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.firstName} {t.lastName || ''} ({t.status})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-white/70 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
           <button
             onClick={() => assignMut.mutate(technicianId)}
             disabled={assignMut.isPending || !technicianId}

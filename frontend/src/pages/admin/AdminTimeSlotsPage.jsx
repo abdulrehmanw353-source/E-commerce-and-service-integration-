@@ -147,7 +147,7 @@ export default function AdminTimeSlotsPage() {
           <p className="text-[13px] text-white/35 mt-0.5">{slots.length} total slots</p>
         </div>
         <button onClick={() => setModal('create')}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071E3] hover:bg-[#0077ED] text-white text-[13px] font-semibold rounded-xl transition-all">
+          className="inline-flex items-center gap-2 px-4 py-2.5 ds-btn-primary text-[13px] font-semibold rounded-xl transition-all">
           <Plus className="w-4 h-4" strokeWidth={2} /> Add Time Slot
         </button>
       </div>

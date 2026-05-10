@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, ImageIcon, Plus, X, Trash2 } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Plus, X, Trash2, ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -124,7 +124,7 @@ export default function AdminProductEditPage() {
           </div>
         </div>
         <button onClick={() => setDeleteModal(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl text-red-400 border border-red-500/20 hover:bg-red-500/10 text-[13px] font-medium transition-all">
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-[#ffd8df] bg-[#ff5e7d]/20 border border-[#ff5e7d]/45 hover:bg-[#ff5e7d]/30 text-[13px] font-semibold transition-all shadow-[0_0_16px_rgba(255,94,125,0.25)]">
           <Trash2 className="w-4 h-4" strokeWidth={1.75} /> Delete
         </button>
       </div>
@@ -194,12 +194,15 @@ export default function AdminProductEditPage() {
 
             <FormSection title="Organization">
               <Field label="Category" required error={errors.category?.message}>
-                <select {...register('category')} className={`${INPUT} cursor-pointer`}>
-                  <option value="" className="bg-[#1C1C1E]">Select category</option>
-                  {CATEGORIES.map(c => (
-                    <option key={c} value={c.toLowerCase()} className="bg-[#1C1C1E]">{c}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select {...register('category')} className={`${INPUT} cursor-pointer appearance-none pr-10`}>
+                    <option value="" className="bg-[#1C1C1E]">Select category</option>
+                    {CATEGORIES.map(c => (
+                      <option key={c} value={c.toLowerCase()} className="bg-[#1C1C1E]">{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-white/70 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
               </Field>
             </FormSection>
 
@@ -223,7 +226,7 @@ export default function AdminProductEditPage() {
                 {updateMut.isPending ? 'Saving…' : 'Save Changes'}
               </button>
               <button type="button" onClick={() => navigate('/admin/products')}
-                className="w-full py-3.5 bg-white/[0.06] hover:bg-white/[0.1] text-white/80 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]">
+                className="w-full py-3.5 border border-[#9c89ff]/45 bg-[#2a2350]/35 hover:bg-[#352d62] text-[#efe9ff] rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
                 Discard
               </button>
             </div>

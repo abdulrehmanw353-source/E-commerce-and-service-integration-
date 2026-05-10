@@ -15,7 +15,6 @@ function getPageTitle(pathname) {
   if (/^\/admin\/customers\/.+$/.test(pathname)) return 'Customer Detail';
   if (pathname === '/admin/technicians') return 'Technicians';
   if (pathname === '/admin/analytics') return 'Analytics';
-  if (pathname === '/admin/settings') return 'Admin Settings';
   if (pathname === '/admin/chat') return 'Support Chat';
   return 'Admin';
 }
