@@ -44,10 +44,11 @@ export default function Navbar({ onOpenSidebar }) {
   };
 
   const navLinks = [
+    { label: 'Home', to: '/' },
+    { label: 'Catalog', to: '/products' },
     { label: 'Services', to: '/services' },
-    { label: 'Store', to: '/products' },
-    { label: 'About', to: '/' },
-    { label: 'Contact', to: '/account' },
+    { label: 'About', to: '/about' },
+    { label: 'Contact', to: '/contact' },
   ];
 
   return (

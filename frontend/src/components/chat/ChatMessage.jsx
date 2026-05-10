@@ -27,7 +27,7 @@ export default function ChatMessage({ message }) {
           px-3.5 py-2.5 rounded-2xl text-[14px] leading-relaxed break-words
           ${isOwn
             ? 'bg-[#0071E3] !text-white rounded-br-sm'
-            : 'bg-[#F5F5F7] text-[#1D1D1F] rounded-bl-sm'
+            : 'bg-[#2C2C2E] text-white/90 rounded-bl-sm border border-white/[0.06]'
           }
         `}>
           {message.content}

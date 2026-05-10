@@ -45,6 +45,21 @@ const orderSchema = new Schema(
          enum: ["pending", "paid", "failed"],
          default: "pending",
       },
+      
+      shippingAddress: {
+         street: String,
+         city: String,
+         state: String,
+         zip: String,
+         country: String,
+      },
+      
+      contact: {
+         firstName: String,
+         lastName: String,
+         email: String,
+         phone: String,
+      }
    },
    {
       timestamps: true,

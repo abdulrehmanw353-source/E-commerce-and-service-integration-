@@ -55,12 +55,12 @@ export default function ChatWidget() {
         onClick={() => { setIsOpen(o => !o); setHasUnread(false); }}
         className={`
           fixed bottom-4 right-4 sm:right-6 z-50
-          w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(0,113,227,0.4)]
+          w-14 h-14 rounded-full shadow-[0_0_20px_rgba(122,92,255,0.4)]
           flex items-center justify-center
           transition-all duration-300
           ${isOpen
-            ? 'bg-[#005BB5] hover:bg-[#004A99]'
-            : 'bg-[#0071E3] hover:bg-[#0077ED]'
+            ? 'bg-[#654add] hover:bg-[#523ac2]'
+            : 'bg-[#7a5cff] hover:bg-[#8c72ff]'
           }
           active:scale-95
         `}
@@ -68,8 +68,8 @@ export default function ChatWidget() {
       >
         <div className={`transition-all duration-200 ${isOpen ? 'rotate-0 scale-100' : 'rotate-0 scale-100'}`}>
           {isOpen
-            ? <X className="w-6 h-6 text-white" strokeWidth={2} />
-            : <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.75} />
+            ? <X className="w-6 h-6 text-[#0f1425]" strokeWidth={2.5} />
+            : <MessageCircle className="w-6 h-6 text-[#0f1425]" strokeWidth={2.25} />
           }
         </div>
 

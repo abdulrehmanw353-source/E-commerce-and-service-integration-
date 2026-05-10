@@ -9,7 +9,7 @@ import ApiError from "../utils/ApiError.js";
 
 // ------ CREATE ORDER FROM CART
 
-const createOrderFromCartService = async (userId) => {
+const createOrderFromCartService = async (userId, shippingAddress, contact) => {
    // ------ get cart
    const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
@@ -58,6 +58,8 @@ const createOrderFromCartService = async (userId) => {
       totalAmount,
       status: "pending",
       paymentStatus: "pending",
+      shippingAddress,
+      contact,
    });
 
    // ------ clear cart

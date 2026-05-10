@@ -1,40 +1,89 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+/**
+ * Socket manager — supports both customer and admin connections.
+ * Uses Vite's proxy for /socket.io, so we connect to same origin ('').
+ */
 
-let socket = null;
+let customerSocket = null;
+let adminSocket = null;
 
 /**
- * Initialize socket.io connection with JWT auth token.
- * Returns the connected socket instance.
+ * Initialize customer socket.io connection with JWT auth token.
  */
 export function initSocket(token) {
-  if (socket?.connected) return socket;
+  if (customerSocket?.connected) return customerSocket;
 
-  socket = io(SOCKET_URL, {
+  // Disconnect any stale socket before creating a new one
+  if (customerSocket) {
+    customerSocket.disconnect();
+  }
+
+  customerSocket = io('', {
+    path: '/socket.io',
     auth: { token },
     transports: ['websocket', 'polling'],
-    reconnectionAttempts: 5,
+    reconnectionAttempts: 10,
     reconnectionDelay: 2000,
     autoConnect: true,
   });
 
-  return socket;
+  return customerSocket;
 }
 
 /**
- * Return existing socket (may be null if not initialized).
+ * Return existing customer socket (may be null if not initialized).
  */
 export function getSocket() {
-  return socket;
+  return customerSocket;
 }
 
 /**
- * Disconnect and clear socket.
+ * Disconnect and clear customer socket.
  */
 export function destroySocket() {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
+  if (customerSocket) {
+    customerSocket.disconnect();
+    customerSocket = null;
+  }
+}
+
+/**
+ * Initialize admin socket.io connection with JWT auth token.
+ * Separate from customer socket to prevent conflicts.
+ */
+export function initAdminSocket(token) {
+  if (adminSocket?.connected) return adminSocket;
+
+  if (adminSocket) {
+    adminSocket.disconnect();
+  }
+
+  adminSocket = io('', {
+    path: '/socket.io',
+    auth: { token },
+    transports: ['websocket', 'polling'],
+    reconnectionAttempts: 10,
+    reconnectionDelay: 2000,
+    autoConnect: true,
+  });
+
+  return adminSocket;
+}
+
+/**
+ * Return existing admin socket.
+ */
+export function getAdminSocket() {
+  return adminSocket;
+}
+
+/**
+ * Disconnect and clear admin socket.
+ */
+export function destroyAdminSocket() {
+  if (adminSocket) {
+    adminSocket.disconnect();
+    adminSocket = null;
   }
 }

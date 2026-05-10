@@ -11,8 +11,8 @@ import { useAuthStore } from '../store/authStore';
 import { useServices } from '../hooks/useServices';
 
 // ─── Fetchers ────────────────────────────────────────────────
-const fetchSlots = (date, technicianId) =>
-  api.get('/time-slots/available', { params: { date, technicianId } }).then(r => r.data.data ?? r.data);
+const fetchSlots = (technicianId) =>
+  api.get('/time-slots/available', { params: { technicianId } }).then(r => r.data.data ?? r.data);
 const fetchTechnicians = () =>
   api.get('/technicians/available').then((r) => r.data.data ?? r.data);
 
@@ -23,7 +23,6 @@ const schema = yup.object({
   deviceType:         yup.string().oneOf(['laptop','desktop','mobile','tablet','other']).required('Select a device type'),
   deviceBrand:        yup.string().optional(),
   deviceModel:        yup.string().optional(),
-  preferredDate:      yup.string().required('Select a date'),
   technicianId:       yup.string().required('Please select a technician'),
   preferredTimeSlot:  yup.string().required('Please select a time slot'),
 });
@@ -41,9 +40,9 @@ function Field({ label, error, children, hint }) {
   return (
     <div>
       <label className="block text-[13px] font-semibold text-white/85 mb-1.5">{label}</label>
-      {hint && <p className="text-[12px] text-white/55 mb-1.5">{hint}</p>}
+      {hint && <p className="text-[12px] text-white/40 mb-1.5">{hint}</p>}
       {children}
-      {error && <p className="text-[12px] text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-[12px] text-[#ff5e7d] mt-1">{error}</p>}
     </div>
   );
 }
@@ -52,7 +51,6 @@ export default function ServicesPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
   const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
   const { data: servicesData, isLoading: servicesLoading } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : (servicesData?.services || []);
@@ -65,9 +63,9 @@ export default function ServicesPage() {
   const technicians = Array.isArray(techniciansData) ? techniciansData : (techniciansData?.technicians || []);
 
   const { data: slotsData } = useQuery({
-    queryKey: ['time-slots', selectedDate, selectedTechnicianId],
-    queryFn: () => fetchSlots(selectedDate, selectedTechnicianId),
-    enabled: !!selectedDate && !!selectedTechnicianId,
+    queryKey: ['time-slots', selectedTechnicianId],
+    queryFn: () => fetchSlots(selectedTechnicianId),
+    enabled: !!selectedTechnicianId,
     staleTime: 60_000,
   });
   const slots = Array.isArray(slotsData) ? slotsData : (slotsData?.slots ?? slotsData?.timeSlots ?? []);
@@ -80,17 +78,20 @@ export default function ServicesPage() {
   const deviceType = watch('deviceType');
 
   const bookMut = useMutation({
-    mutationFn: (body) => api.post('/bookings/', body).then(r => r.data),
+    mutationFn: (body) => {
+      // Find the selected slot to extract the date
+      const selectedSlotObj = slots.find(s => s._id === body.preferredTimeSlot);
+      if (selectedSlotObj) {
+        body.preferredDate = selectedSlotObj.date;
+      }
+      return api.post('/bookings/', body).then(r => r.data);
+    },
     onSuccess: (data) => {
       navigate('/booking-success', { state: { booking: data.data || data } });
     },
     onError: (err) => toast.error(err.response?.data?.message || 'Failed to submit booking.'),
   });
 
-  // Minimum date: tomorrow
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
-  const minDateStr = minDate.toISOString().split('T')[0];
 
   return (
     <div className="min-h-screen py-10 sm:py-14">
@@ -170,21 +171,19 @@ export default function ServicesPage() {
 
               {/* Device Type */}
               <Field label="Device Type" error={errors.deviceType?.message}>
-                <div className="grid grid-cols-5 gap-2">
-                  {DEVICE_TYPES.map(({ key, label, icon: Icon }) => (
-                    <button
-                      type="button" key={key}
-                      onClick={() => setValue('deviceType', key, { shouldValidate: true })}
-                      className={`flex flex-col items-center gap-2 py-3 px-2 rounded-xl border-2 transition-all text-center ${
-                        deviceType === key
-                          ? 'border-[#0071E3] bg-[#0071E3]/5 text-[#0071E3]'
-                          : 'border-[#E8E8ED] bg-white text-[#86868B] hover:border-[#D2D2D7]'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" strokeWidth={1.75} />
-                      <span className="text-[11px] font-semibold">{label}</span>
-                    </button>
-                  ))}
+                <div className="relative">
+                  <select
+                    {...register('deviceType')}
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>Select device type</option>
+                    {DEVICE_TYPES.map(({ key, label }) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                    <ChevronRight className="w-4 h-4 rotate-90" />
+                  </div>
                 </div>
               </Field>
 
@@ -193,12 +192,12 @@ export default function ServicesPage() {
                 <Field label="Brand (optional)" error={errors.deviceBrand?.message}>
                   <input placeholder="e.g. Apple, Dell, Samsung"
                     {...register('deviceBrand')}
-                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
                 </Field>
                 <Field label="Model (optional)" error={errors.deviceModel?.message}>
                   <input placeholder="e.g. MacBook Pro 2023"
                     {...register('deviceModel')}
-                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
                 </Field>
               </div>
 
@@ -206,76 +205,71 @@ export default function ServicesPage() {
               <Field label="Problem Title" error={errors.problemTitle?.message}>
                 <input placeholder="e.g. Cracked screen, won't turn on"
                   {...register('problemTitle')}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                  className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
               </Field>
 
               <Field label="Problem Description" error={errors.problemDescription?.message}
                 hint="Describe the issue in detail (minimum 20 characters)">
                 <textarea rows={4} placeholder="Tell us what's happening with your device..."
                   {...register('problemDescription')}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all resize-none" />
+                  className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all resize-none" />
               </Field>
 
               {/* Technician */}
               <Field label="Select Technician" error={errors.technicianId?.message}>
-                <div className="grid sm:grid-cols-2 gap-2.5">
-                  {technicians.map((tech) => (
-                    <button
-                      key={tech._id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedTechnicianId(tech._id);
-                        setValue('technicianId', tech._id, { shouldValidate: true });
-                        setValue('preferredTimeSlot', '');
-                      }}
-                      className={`text-left rounded-xl border px-3 py-3 transition-all ${
-                        selectedTechnicianId === tech._id
-                          ? 'border-[#7a5cff] bg-[#7a5cff]/10 text-[#7a5cff]'
-                          : 'border-[#E8E8ED] bg-white text-[#1D1D1F] hover:border-[#b7a7ff]'
-                      }`}
-                    >
-                      <p className="font-semibold text-[14px]">{tech.firstName} {tech.lastName || ''}</p>
-                      <p className="text-[11px] opacity-75 capitalize">{tech.status} • {(tech.expertise || []).join(', ') || 'General'}</p>
-                    </button>
-                  ))}
+                <div className="relative">
+                  <select
+                    {...register('technicianId')}
+                    onChange={(e) => {
+                      register('technicianId').onChange(e);
+                      setSelectedTechnicianId(e.target.value);
+                      setValue('preferredTimeSlot', '');
+                    }}
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>Select a technician</option>
+                    {technicians.map((tech) => (
+                      <option key={tech._id} value={tech._id}>
+                        {tech.firstName} {tech.lastName || ''} - {(tech.expertise || []).join(', ') || 'General'}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                    <ChevronRight className="w-4 h-4 rotate-90" />
+                  </div>
                 </div>
-              </Field>
-
-              {/* Date */}
-              <Field label="Preferred Date" error={errors.preferredDate?.message}>
-                <input type="date" min={minDateStr}
-                  {...register('preferredDate')}
-                  onChange={(e) => { register('preferredDate').onChange(e); setSelectedDate(e.target.value); }}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
               </Field>
 
               {/* Time Slots */}
               {selectedTechnicianId && slots.length > 0 && (
-                <Field label="Preferred Time Slot" error={errors.preferredTimeSlot?.message}>
-                  <div className="grid grid-cols-3 gap-2">
-                    {slots.map(slot => (
-                      <button type="button" key={slot._id}
-                        onClick={() => setValue('preferredTimeSlot', slot._id)}
-                        disabled={!slot.isAvailable}
-                        className={`py-2.5 px-3 rounded-xl border text-[13px] font-medium transition-all ${
-                          watch('preferredTimeSlot') === slot._id
-                            ? 'border-[#0071E3] bg-[#0071E3]/10 text-[#0071E3]'
-                            : slot.isAvailable
-                              ? 'border-[#E8E8ED] bg-white text-[#1D1D1F] hover:border-[#0071E3]'
-                              : 'border-[#F5F5F7] bg-[#F5F5F7] text-[#D2D2D7] cursor-not-allowed'
-                        }`}>
-                        {slot.startTime} – {slot.endTime}
-                      </button>
-                    ))}
+                <Field label="Available Appointments" error={errors.preferredTimeSlot?.message}>
+                  <div className="relative">
+                    <select
+                      {...register('preferredTimeSlot')}
+                      className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled>Select an available date & time</option>
+                      {slots.map((slot) => {
+                        const dateStr = new Date(slot.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+                        return (
+                          <option key={slot._id} value={slot._id} disabled={!slot.isAvailable}>
+                            {dateStr} — {slot.startTime} to {slot.endTime} {!slot.isAvailable ? '(Unavailable)' : ''}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                      <ChevronRight className="w-4 h-4 rotate-90" />
+                    </div>
                   </div>
                 </Field>
               )}
-              {selectedTechnicianId && selectedDate && slots.length === 0 && (
-                <p className="text-[12px] text-amber-600">No available slots for selected technician on this date.</p>
+              {selectedTechnicianId && slots.length === 0 && (
+                <p className="text-[12px] text-[#ff9aad]">No available slots for this technician.</p>
               )}
 
               <button type="submit" disabled={bookMut.isPending}
-                className="w-full py-4 mt-2 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-full text-[17px] font-semibold transition-all shadow-[0_4px_14px_rgba(0,113,227,0.3)] hover:shadow-[0_6px_20px_rgba(0,113,227,0.4)] active:scale-[0.98]">
+                className="w-full py-4 mt-2 bg-[#00f5d4] hover:bg-[#00f5d4]/90 disabled:opacity-60 text-[#0b0f1d] rounded-full text-[15px] font-bold transition-all shadow-[0_0_20px_rgba(0,245,212,0.25)] hover:shadow-[0_0_25px_rgba(0,245,212,0.4)] active:scale-[0.98]">
                 {bookMut.isPending ? 'Submitting…' : 'Submit Booking Request'}
               </button>
             </form>

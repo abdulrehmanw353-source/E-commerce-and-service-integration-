@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
 import adminApi from '../../lib/adminAxios';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
-import { initSocket, destroySocket, getSocket } from '../../lib/socket';
+import { initAdminSocket, destroyAdminSocket } from '../../lib/socket';
 
 // ─── API ──────────────────────────────────────────────────────
 const fetchConversations = () =>
@@ -84,7 +84,7 @@ export default function AdminChatPage() {
   // ─── Socket setup ────────────────────────────────────────────
   useEffect(() => {
     if (!accessToken) return;
-    const s = initSocket(accessToken);
+    const s = initAdminSocket(accessToken);
     socketRef.current = s;
 
     s.on('connect',    () => setSocketConnected(true));
@@ -142,15 +142,19 @@ export default function AdminChatPage() {
     : allConversations;
 
   // ─── Fetch messages on select ─────────────────────────────────
-  const { isLoading: msgLoading } = useQuery({
+  const { data: messagesData, isLoading: msgLoading } = useQuery({
     queryKey: ['admin-messages', selected?._id],
     queryFn: () => fetchMessages(selected._id),
     enabled: !!selected?._id,
-    onSuccess: (data) => {
-      const list = Array.isArray(data) ? data : (data?.messages ?? []);
-      setMessages(list);
-    },
   });
+
+  useEffect(() => {
+    if (messagesData) {
+      const list = Array.isArray(messagesData) ? messagesData : (messagesData?.messages ?? []);
+      // Reverse to show newest at bottom
+      setMessages([...list].reverse());
+    }
+  }, [messagesData]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

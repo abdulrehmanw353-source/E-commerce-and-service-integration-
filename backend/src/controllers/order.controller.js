@@ -13,7 +13,8 @@ import {
 // ------ CREATE ORDER
 
 const createOrder = asyncHandler(async (req, res) => {
-   const order = await createOrderFromCartService(req.user._id);
+   const { shippingAddress, contact } = req.body;
+   const order = await createOrderFromCartService(req.user._id, shippingAddress, contact);
 
    return res
       .status(201)

@@ -68,12 +68,36 @@ export default function CheckoutPage() {
     setPlacing(true);
     try {
       // Authenticated: sync cart to backend then create order
-      // First: push each local cart item to backend cart
-      for (const item of items) {
-        await api.post('/cart/', { productId: item.productId, quantity: item.quantity });
+      // First: clear backend cart (ignore error if it didn't exist)
+      try {
+        await api.delete('/cart/clear');
+      } catch (err) {
+        // ignore
       }
+
+      // Second: push each local cart item to backend cart
+      for (const item of items) {
+        await api.post('/cart/add', { productId: item.productId, quantity: item.quantity });
+      }
+      
       // Then: create order from backend cart
-      const { data } = await api.post('/orders/create');
+      const payload = {
+        contact: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+        },
+        shippingAddress: {
+          street: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zip: formData.zip,
+          country: formData.country,
+        }
+      };
+
+      const { data } = await api.post('/orders/create', payload);
       const order = data.data ?? data;
       clearCart();
       navigate(`/order-success?orderId=${order._id}`);

@@ -40,7 +40,7 @@ export default function ChatPanel({ onClose }) {
         setConvId(id);
         return fetchMessages(id).then(msgs => {
           const list = Array.isArray(msgs) ? msgs : (msgs?.messages ?? []);
-          setHistoryMsgs(list);
+          setHistoryMsgs([...list].reverse());
         });
       })
       .catch(err => console.warn('[chat] init error:', err))

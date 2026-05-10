@@ -14,6 +14,15 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import BookingSuccessPage from './pages/BookingSuccessPage';
 import NotFoundPage from './pages/NotFoundPage';
+import StaticPage from './pages/StaticPage';
+import { 
+  aboutContent, 
+  contactContent, 
+  privacyPolicyContent, 
+  termsOfUseContent, 
+  salesAndRefundsContent, 
+  legalContent 
+} from './pages/staticContent';
 
 // Pages — Customer Auth
 import CustomerLoginPage from './pages/auth/CustomerLoginPage';
@@ -22,6 +31,7 @@ import CustomerRegisterPage from './pages/auth/CustomerRegisterPage';
 // Pages — Customer Account
 import AccountPage from './pages/account/AccountPage';
 import MyOrdersPage from './pages/account/MyOrdersPage';
+import OrderDetailPage from './pages/account/OrderDetailPage';
 import MyBookingsPage from './pages/account/MyBookingsPage';
 import BookingDetailPage from './pages/account/BookingDetailPage';
 
@@ -82,9 +92,18 @@ function AppContent() {
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="order-success" element={<OrderSuccessPage />} />
         <Route path="booking-success" element={<CustomerRoute><BookingSuccessPage /></CustomerRoute>} />
+        {/* Static Pages */}
+        <Route path="about" element={<StaticPage title="About Us" content={aboutContent} />} />
+        <Route path="contact" element={<StaticPage title="Contact Us" content={contactContent} />} />
+        <Route path="privacy" element={<StaticPage title="Privacy Policy" content={privacyPolicyContent} />} />
+        <Route path="terms" element={<StaticPage title="Terms of Use" content={termsOfUseContent} />} />
+        <Route path="sales-refunds" element={<StaticPage title="Sales and Refunds" content={salesAndRefundsContent} />} />
+        <Route path="legal" element={<StaticPage title="Legal" content={legalContent} />} />
+
         {/* Protected customer account routes */}
         <Route path="account" element={<CustomerRoute><AccountPage /></CustomerRoute>} />
         <Route path="account/orders" element={<CustomerRoute><MyOrdersPage /></CustomerRoute>} />
+        <Route path="account/orders/:id" element={<CustomerRoute><OrderDetailPage /></CustomerRoute>} />
         <Route path="account/bookings" element={<CustomerRoute><MyBookingsPage /></CustomerRoute>} />
         <Route path="account/bookings/:id" element={<CustomerRoute><BookingDetailPage /></CustomerRoute>} />
       </Route>
@@ -149,21 +168,20 @@ export default function App() {
           toastOptions={{
             duration: 3000,
             style: {
-              background: '#FFFFFF',
-              color: '#000000',
-              border: '0.5px solid rgba(60, 60, 67, 0.12)',
+              background: '#1a1f33',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '12px',
               fontSize: '15px',
-              fontWeight: '400',
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif",
+              fontWeight: '500',
               padding: '12px 16px',
-              boxShadow: '0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 8px 28px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2)',
             },
             success: {
-              iconTheme: { primary: '#34C759', secondary: '#FFFFFF' },
+              iconTheme: { primary: '#00f5d4', secondary: '#1a1f33' },
             },
             error: {
-              iconTheme: { primary: '#FF3B30', secondary: '#FFFFFF' },
+              iconTheme: { primary: '#ff3b57', secondary: '#1a1f33' },
             },
           }}
         />

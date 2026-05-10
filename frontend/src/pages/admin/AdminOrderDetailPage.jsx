@@ -135,17 +135,19 @@ export default function AdminOrderDetailPage() {
             </div>
           </div>
 
-          {/* Customer */}
+          {/* Customer / Contact */}
           <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-4">
               <User className="w-4 h-4 text-white/40" strokeWidth={1.75} />
-              <h2 className="text-[13px] font-semibold text-white/50 uppercase tracking-wider">Customer</h2>
+              <h2 className="text-[13px] font-semibold text-white/50 uppercase tracking-wider">Contact Info</h2>
             </div>
             <p className="text-[15px] font-semibold text-white">
-              {customer.firstName} {customer.lastName}
+              {order.contact?.firstName || customer.firstName} {order.contact?.lastName || customer.lastName}
             </p>
-            <p className="text-[13px] text-white/40 mt-0.5">{customer.email}</p>
-            {customer.phoneNo && <p className="text-[13px] text-white/40 mt-0.5">{customer.phoneNo}</p>}
+            <p className="text-[13px] text-white/40 mt-0.5">{order.contact?.email || customer.email}</p>
+            {(order.contact?.phone || customer.phoneNo) && (
+              <p className="text-[13px] text-white/40 mt-0.5">{order.contact?.phone || customer.phoneNo}</p>
+            )}
           </div>
 
           {/* Shipping */}

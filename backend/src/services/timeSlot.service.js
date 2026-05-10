@@ -39,15 +39,21 @@ const createTimeSlotService = async (payload, userId) => {
 // ------ GET AVAILABLE SLOTS (PUBLIC)
 
 const getAvailableSlotsService = async (date, technicianId) => {
-   if (!date) {
-      throw new ApiError(400, "Date is required");
-   }
-
-   const slots = await TimeSlot.find({
-      date: new Date(date),
+   const filter = {
       isAvailable: true,
       $expr: { $lt: ["$currentBookings", "$maxBookings"] },
-   }).sort({ startTime: 1 });
+   };
+
+   if (date) {
+      filter.date = new Date(date);
+   } else {
+      // If no date, only show slots from today onwards
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      filter.date = { $gte: today };
+   }
+
+   const slots = await TimeSlot.find(filter).sort({ date: 1, startTime: 1 });
 
    if (!technicianId) return slots;
 
@@ -55,11 +61,14 @@ const getAvailableSlotsService = async (date, technicianId) => {
       throw new ApiError(400, "Invalid technician ID");
    }
 
-   const bookedSlots = await Booking.find({
+   // Find all active bookings for this technician (optionally filtered by date)
+   const bookingFilter = {
       technician: technicianId,
-      preferredDate: new Date(date),
       status: { $in: ACTIVE_BOOKING_STATUSES },
-   }).select("preferredTimeSlot");
+   };
+   if (date) bookingFilter.preferredDate = new Date(date);
+   
+   const bookedSlots = await Booking.find(bookingFilter).select("preferredTimeSlot");
 
    const bookedSlotIds = new Set(
       bookedSlots

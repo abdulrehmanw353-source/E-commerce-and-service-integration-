@@ -79,13 +79,19 @@ export default function Footer() {
             Copyright &copy; {new Date().getFullYear()} DoorSetFix. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            {['Privacy Policy', 'Terms of Use', 'Sales and Refunds', 'Legal'].map((link) => (
-              <button
-                key={link}
+            {[
+              { label: 'Privacy Policy', to: '/privacy' },
+              { label: 'Terms of Use', to: '/terms' },
+              { label: 'Sales and Refunds', to: '/sales-refunds' },
+              { label: 'Legal', to: '/legal' }
+            ].map((link) => (
+              <Link
+                key={link.label}
+                to={link.to}
                 className="text-[12px] text-white/40 hover:text-white transition-colors"
               >
-                {link}
-              </button>
+                {link.label}
+              </Link>
             ))}
           </div>
         </div>
