@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
 import CartSlideOut from '../cart/CartSlideOut';
+import ChatWidget from '../chat/ChatWidget';
 
 export default function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function MainLayout() {
       <Navbar onOpenSidebar={() => setIsSidebarOpen(true)} />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <CartSlideOut />
+      <ChatWidget />
 
       {/* Main Content Area */}
       <main className="flex-grow">
@@ -25,4 +27,3 @@ export default function MainLayout() {
     </div>
   );
 }
-

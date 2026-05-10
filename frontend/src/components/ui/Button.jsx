@@ -2,31 +2,38 @@ import { Loader2 } from 'lucide-react';
 
 /**
  * Apple-styled Button Component
- * 
- * Variants: primary (blue pill), secondary (gray fill), ghost (text only), danger (red)
+ *
+ * Variants: primary (blue fill, white text), secondary (gray fill, dark text),
+ *           ghost (transparent, blue text), danger (red fill, white text),
+ *           dark (dark fill, white text)
  * Supports: loading state, disabled, icons, full-width
  */
 
 const variants = {
   primary: `
-    !bg-[#0071E3] text-white
-    hover:!bg-[#0077ED]
-    active:scale-[0.97] active:!bg-[#0061C3]
+    bg-[#0071E3] !text-white
+    hover:bg-[#0077ED]
+    active:scale-[0.97] active:bg-[#0061C3]
   `,
   secondary: `
-    !bg-[#E8E8ED] text-[#0071E3]
-    hover:!bg-[#DCDCE2]
-    active:!bg-[#D2D2D7] active:scale-[0.97]
+    bg-[#E8E8ED] !text-[#1D1D1F]
+    hover:bg-[#DCDCE2]
+    active:bg-[#D2D2D7] active:scale-[0.97]
   `,
   ghost: `
-    !bg-transparent text-[#0071E3]
-    hover:!bg-[#F5F5F7]
-    active:!bg-[#E8E8ED] active:scale-[0.97]
+    bg-transparent !text-[#0071E3]
+    hover:bg-[#F5F5F7]
+    active:bg-[#E8E8ED] active:scale-[0.97]
   `,
   danger: `
-    !bg-[#FF3B30] text-white
-    hover:!bg-[#E8342B]
-    active:scale-[0.97] active:!bg-[#D12D25]
+    bg-[#FF3B30] !text-white
+    hover:bg-[#E8342B]
+    active:scale-[0.97] active:bg-[#D12D25]
+  `,
+  dark: `
+    bg-[#1D1D1F] !text-white
+    hover:bg-[#3A3A3C]
+    active:scale-[0.97] active:bg-[#2C2C2E]
   `,
 };
 
@@ -59,7 +66,7 @@ export default function Button({
       onClick={onClick}
       className={`
         inline-flex items-center justify-center
-        font-medium tracking-[-0.022em]
+        font-semibold tracking-[-0.022em]
         rounded-full
         transition-all duration-150 ease-out
         cursor-pointer select-none

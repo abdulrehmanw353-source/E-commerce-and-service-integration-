@@ -251,17 +251,17 @@
 
 ## 📋 Phase 7: Real-Time Chat & Final Polish — ⬜ PENDING
 
-### Part 7A — Chat System (Customer Side) ⬜
+### Part 7A — Chat System (Customer Side) ✅ COMPLETED
 
 | # | Task | Status |
 |---|------|--------|
-| 7A.1 | `lib/socket.js` — socket.io-client setup with auth token | ⬜ |
-| 7A.2 | `hooks/useSocket.js` — connect/disconnect, cleanup | ⬜ |
-| 7A.3 | `components/chat/ChatWidget.jsx` — floating bubble, unread badge | ⬜ |
-| 7A.4 | `components/chat/ChatPanel.jsx` — messages, input, send | ⬜ |
-| 7A.5 | `components/chat/ChatMessage.jsx` — bubbles, timestamp, read receipt | ⬜ |
-| 7A.6 | Typing indicators (emit/listen) | ⬜ |
-| 7A.7 | ChatWidget in `MainLayout` (authenticated only) | ⬜ |
+| 7A.1 | `lib/socket.js` — socket.io-client setup with auth token | ✅ |
+| 7A.2 | `hooks/useSocket.js` — useSocket + useConversation, typing, markRead | ✅ |
+| 7A.3 | `components/chat/ChatWidget.jsx` — floating bubble, unread badge, ESC close | ✅ |
+| 7A.4 | `components/chat/ChatPanel.jsx` — messages, auto-scroll, textarea, send | ✅ |
+| 7A.5 | `components/chat/ChatMessage.jsx` — own/agent bubbles, timestamp on hover | ✅ |
+| 7A.6 | Typing indicators (emit/listen, bounce dots) | ✅ |
+| 7A.7 | ChatWidget in `MainLayout` (authenticated only) | ✅ |
 
 ### Part 7B — Chat System (Admin Side) ✅ PARTIAL
 
