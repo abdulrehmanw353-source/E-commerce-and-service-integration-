@@ -97,7 +97,7 @@ export default function Navbar({ onOpenSidebar }) {
                         type="text"
                         placeholder="Search products..."
                         autoFocus
-                        className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none"
+                        className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none rounded-xl"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && e.target.value.trim()) {
                             navigate(`/products?keyword=${encodeURIComponent(e.target.value.trim())}`);

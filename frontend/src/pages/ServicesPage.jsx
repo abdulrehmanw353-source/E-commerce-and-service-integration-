@@ -100,7 +100,7 @@ export default function ServicesPage() {
             <aside className="ds-card p-5">
               <p className="text-white font-semibold text-[20px] mb-4">Service Categories</p>
               <div className="space-y-2 text-[15px]">
-                {['Home Maintenance', 'Installations', 'Repairs', 'Emergency Services', 'Commercial'].map((c) => (
+                {['Phone Repair', 'Laptop Repair', 'PC Builds & Repair', 'Tablet Repair', 'Data Recovery'].map((c) => (
                   <div key={c} className="px-3 py-2.5 rounded-xl border border-white/10 text-white/85 bg-white/[0.02]">{c}</div>
                 ))}
               </div>

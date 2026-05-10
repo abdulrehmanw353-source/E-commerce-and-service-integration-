@@ -128,74 +128,75 @@ async function seedDummyData() {
       })),
     );
 
+    // ─── Electronics Repair Services ───────────────────────
     const services = await Service.insertMany([
       {
-        title: "Plumbing Services",
-        slug: "plumbing-services",
-        shortDesc: "Leak repairs, pipe installations, and emergency plumbing.",
-        description: "From leaks to installations — fast, clean, and reliable plumbing service with transparent estimates.",
-        icon: "🔧",
-        startingPrice: 89,
+        title: "Phone Repair",
+        slug: "phone-repair",
+        shortDesc: "Screen replacement, battery swap, charging port fix, and water damage recovery.",
+        description: "Expert smartphone repairs for all brands — iPhone, Samsung, Xiaomi, OnePlus and more. Genuine parts with 90-day warranty.",
+        icon: "📱",
+        startingPrice: 49,
         isEnabled: true,
         sortOrder: 1,
         createdBy: admin._id,
         updatedBy: admin._id,
       },
       {
-        title: "Electrical Services",
-        slug: "electrical-services",
-        shortDesc: "Wiring, circuit repair, lighting setup, and safety checks.",
-        description: "Certified electrical troubleshooting, repairs, and new installations with safety-first workflows.",
-        icon: "⚡",
-        startingPrice: 99,
+        title: "Laptop Repair",
+        slug: "laptop-repair",
+        shortDesc: "Screen, keyboard, battery, and motherboard repairs for all laptop brands.",
+        description: "MacBook, Dell, HP, Lenovo, ASUS — we handle screen replacements, keyboard fixes, SSD upgrades, hinge repairs, and full diagnostics.",
+        icon: "💻",
+        startingPrice: 79,
         isEnabled: true,
         sortOrder: 2,
         createdBy: admin._id,
         updatedBy: admin._id,
       },
       {
-        title: "Carpentry Services",
-        slug: "carpentry-services",
-        shortDesc: "Furniture setup, wood repairs, and custom shelving.",
-        description: "Precision carpentry for doors, frames, cabinets, and custom work — built to last.",
-        icon: "🪚",
-        startingPrice: 79,
+        title: "PC Build & Repair",
+        slug: "pc-build-repair",
+        shortDesc: "Custom PC builds, hardware upgrades, OS installation, and troubleshooting.",
+        description: "From custom gaming rigs to office workstations — we build, upgrade, and repair desktops. GPU, RAM, PSU, thermal paste, and full diagnostics.",
+        icon: "🖥️",
+        startingPrice: 99,
         isEnabled: true,
         sortOrder: 3,
         createdBy: admin._id,
         updatedBy: admin._id,
       },
       {
-        title: "HVAC & AC Repair",
-        slug: "hvac-ac-repair",
-        shortDesc: "AC installation, heating fixes, and duct cleaning.",
-        description: "Diagnostics, repairs, and maintenance for HVAC systems with energy-saving recommendations.",
-        icon: "❄️",
-        startingPrice: 129,
+        title: "Tablet Repair",
+        slug: "tablet-repair",
+        shortDesc: "iPad and Android tablet screen, battery, and port repairs.",
+        description: "Cracked iPad screen? Tablet not charging? We repair all tablet brands with fast turnaround and quality replacement parts.",
+        icon: "📲",
+        startingPrice: 59,
         isEnabled: true,
         sortOrder: 4,
         createdBy: admin._id,
         updatedBy: admin._id,
       },
       {
-        title: "Appliance Repair",
-        slug: "appliance-repair",
-        shortDesc: "Washing machines, ovens, and dishwashers repaired.",
-        description: "Quick appliance diagnostics and repair with common parts on-hand for faster turnaround.",
-        icon: "🧺",
-        startingPrice: 69,
+        title: "Data Recovery",
+        slug: "data-recovery",
+        shortDesc: "Recover lost files from hard drives, SSDs, USB drives, and memory cards.",
+        description: "Accidentally deleted files? Drive not recognized? We recover data from damaged, corrupted, or formatted storage devices.",
+        icon: "💾",
+        startingPrice: 129,
         isEnabled: true,
         sortOrder: 5,
         createdBy: admin._id,
         updatedBy: admin._id,
       },
       {
-        title: "Door & Lock Services",
-        slug: "door-lock-services",
-        shortDesc: "Lock installation and smart security upgrades.",
-        description: "Lock replacement, keyless entry setup, alignment fixes, and smart lock upgrades.",
-        icon: "🔐",
-        startingPrice: 59,
+        title: "Software & OS Services",
+        slug: "software-os-services",
+        shortDesc: "OS installation, virus removal, driver updates, and performance tuning.",
+        description: "Windows, macOS, or Linux — fresh OS installs, malware cleanup, slow PC optimization, and software troubleshooting.",
+        icon: "⚙️",
+        startingPrice: 39,
         isEnabled: true,
         sortOrder: 6,
         createdBy: admin._id,
@@ -203,15 +204,16 @@ async function seedDummyData() {
       },
     ]);
 
+    // ─── Electronics Repair Technicians ────────────────────
     const technicians = await Technician.insertMany([
       {
-        firstName: "Sara",
-        lastName: "Khan",
-        email: "sara.tech@doorsetfix.com",
+        firstName: "Bilal",
+        lastName: "Ahmed",
+        email: "bilal.tech@doorsetfix.com",
         phoneNo: "03005550111",
         cnicImage: "https://images.unsplash.com/photo-1520975958225-2b4b85b2edb0?w=1200",
         address: { street: "Gulberg", city: "Lahore", state: "Punjab", country: "Pakistan" },
-        expertise: ["door lock", "smart lock", "home security"],
+        expertise: ["phone repair", "tablet repair", "screen replacement"],
         isAvailable: true,
         status: "available",
         activeTasks: 1,
@@ -224,33 +226,33 @@ async function seedDummyData() {
         phoneNo: "03005550222",
         cnicImage: "https://images.unsplash.com/photo-1520975682031-a0c5d0bca10d?w=1200",
         address: { street: "DHA", city: "Karachi", state: "Sindh", country: "Pakistan" },
-        expertise: ["appliance repair", "electrical"],
+        expertise: ["laptop repair", "motherboard", "data recovery"],
         isAvailable: true,
         status: "busy",
         activeTasks: 3,
         createdBy: admin._id,
       },
       {
-        firstName: "David",
-        lastName: "Lee",
-        email: "david.tech@doorsetfix.com",
+        firstName: "Sara",
+        lastName: "Khan",
+        email: "sara.tech@doorsetfix.com",
         phoneNo: "03005550333",
         cnicImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200",
         address: { street: "Blue Area", city: "Islamabad", state: "ICT", country: "Pakistan" },
-        expertise: ["hvac", "plumbing"],
+        expertise: ["pc build", "hardware upgrades", "gpu repair"],
         isAvailable: true,
         status: "available",
         activeTasks: 0,
         createdBy: admin._id,
       },
       {
-        firstName: "Maya",
-        lastName: "Noor",
-        email: "maya.tech@doorsetfix.com",
+        firstName: "Hamza",
+        lastName: "Farooq",
+        email: "hamza.tech@doorsetfix.com",
         phoneNo: "03005550444",
         cnicImage: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=1200",
         address: { street: "Model Town", city: "Lahore", state: "Punjab", country: "Pakistan" },
-        expertise: ["carpentry", "door frame"],
+        expertise: ["software", "os installation", "virus removal"],
         isAvailable: false,
         status: "unavailable",
         activeTasks: 0,
@@ -258,17 +260,26 @@ async function seedDummyData() {
       },
     ]);
 
+    // ─── Reviews ───────────────────────────────────────────
     await Review.insertMany(
-      products.slice(0, 5).map((product, idx) => ({
+      products.slice(0, 6).map((product, idx) => ({
         user: customerDocs[idx % customerDocs.length]._id,
         product: product._id,
         rating: 4 + (idx % 2),
-        comment: `Great quality and service for ${product.title}.`,
+        comment: [
+          `Excellent quality! The ${product.title} works perfectly with my setup.`,
+          `Great value for money. Fast shipping and exactly as described.`,
+          `Perfect accessory — been using it daily for weeks with no issues.`,
+          `Solid build quality. Highly recommend for anyone with a tech setup.`,
+          `Exactly what I needed. Compatible with all my devices.`,
+          `Premium feel and great performance. Would buy again!`,
+        ][idx],
         createdAt: dateMinusDays(20 - idx * 2),
         updatedAt: dateMinusDays(20 - idx * 2),
       })),
     );
 
+    // ─── Carts ─────────────────────────────────────────────
     await Cart.insertMany(
       customerDocs.slice(0, 3).map((user, idx) => ({
         user: user._id,
@@ -282,13 +293,19 @@ async function seedDummyData() {
       })),
     );
 
+    // ─── Time Slots ────────────────────────────────────────
     const slots = await TimeSlot.insertMany([
       { date: datePlusDays(1), startTime: "10:00", endTime: "11:00", maxBookings: 2, currentBookings: 1, isAvailable: true, createdBy: admin._id },
       { date: datePlusDays(1), startTime: "12:00", endTime: "13:00", maxBookings: 2, currentBookings: 2, isAvailable: false, createdBy: admin._id },
+      { date: datePlusDays(1), startTime: "14:00", endTime: "15:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
       { date: datePlusDays(2), startTime: "09:00", endTime: "10:00", maxBookings: 3, currentBookings: 1, isAvailable: true, createdBy: admin._id },
+      { date: datePlusDays(2), startTime: "11:00", endTime: "12:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
       { date: datePlusDays(2), startTime: "15:00", endTime: "16:00", maxBookings: 1, currentBookings: 0, isAvailable: true, createdBy: admin._id },
+      { date: datePlusDays(3), startTime: "10:00", endTime: "11:00", maxBookings: 3, currentBookings: 0, isAvailable: true, createdBy: admin._id },
+      { date: datePlusDays(3), startTime: "14:00", endTime: "15:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
     ]);
 
+    // ─── Bookings ──────────────────────────────────────────
     await Booking.insertMany(
       bookingTemplates.map((b, idx) => ({
         ...b,
@@ -305,6 +322,7 @@ async function seedDummyData() {
       })),
     );
 
+    // ─── Orders ────────────────────────────────────────────
     await Order.insertMany(
       Array.from({ length: 9 }).map((_, idx) => {
         const buyer = customerDocs[idx % customerDocs.length];
@@ -329,11 +347,12 @@ async function seedDummyData() {
       }),
     );
 
+    // ─── Chat Conversation ─────────────────────────────────
     const conversation = await Conversation.create({
       customer: customerDocs[0]._id,
       admin: admin._id,
       status: "open",
-      lastMessage: "Can you confirm technician ETA?",
+      lastMessage: "When will my laptop be ready for pickup?",
       lastMessageAt: new Date(),
     });
 
@@ -342,21 +361,21 @@ async function seedDummyData() {
         conversation: conversation._id,
         sender: customerDocs[0]._id,
         senderRole: "customer",
-        content: "Hi, I need an update on my booking.",
+        content: "Hi, I dropped off my MacBook yesterday for a screen repair. Any update?",
         isRead: true,
       },
       {
         conversation: conversation._id,
         sender: admin._id,
         senderRole: "admin",
-        content: "Sure, technician is assigned and will arrive by 11:00 AM.",
+        content: "Hi Alex! The replacement screen has been installed. We're running final tests now.",
         isRead: true,
       },
       {
         conversation: conversation._id,
         sender: customerDocs[0]._id,
         senderRole: "customer",
-        content: "Can you confirm technician ETA?",
+        content: "When will my laptop be ready for pickup?",
         isRead: false,
       },
     ]);
@@ -366,6 +385,7 @@ async function seedDummyData() {
     console.log(`- Services: ${services.length}`);
     console.log(`- Technicians: ${technicians.length}`);
     console.log(`- Products: ${products.length}`);
+    console.log(`- Time Slots: ${slots.length}`);
     console.log("- Collections: generated from product categories");
     console.log("- Analytics: generated from dated orders/bookings");
     console.log("- Login credentials:");

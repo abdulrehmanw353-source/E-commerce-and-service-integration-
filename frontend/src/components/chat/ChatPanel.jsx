@@ -105,7 +105,7 @@ export default function ChatPanel({ onClose }) {
             <div className="flex items-center gap-1 mt-0.5">
               {connected
                 ? <><div className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse" /><span className="text-[11px] text-white/70">Online</span></>
-                : <><div className="w-1.5 h-1.5 rounded-full bg-white/30" /><span className="text-[11px] text-white/50">Connecting…</span></>
+                : <><div className="w-1.5 h-1.5 rounded-full bg-amber-400" /><span className="text-[11px] text-white/70">We reply within 12 hours</span></>
               }
             </div>
           </div>
@@ -125,8 +125,8 @@ export default function ChatPanel({ onClose }) {
         ) : allMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
             <MessageCircle className="w-10 h-10 text-white/25 mb-3" strokeWidth={1.5} />
-            <p className="text-[14px] font-semibold text-white mb-1">Start the conversation</p>
-            <p className="text-[12px] text-white/45">Our support team typically replies within minutes.</p>
+            <p className="text-[14px] font-semibold text-white mb-1">Hi there! 👋 How can we help?</p>
+            <p className="text-[12px] text-white/45">Send us a message and we'll get back to you within 12 hours, even if we're currently offline.</p>
           </div>
         ) : (
           allMessages.map((msg, i) => (
@@ -180,7 +180,7 @@ export default function ChatPanel({ onClose }) {
           </button>
         </div>
         <p className="text-[11px] text-white/35 text-center mt-2">
-          {connected ? 'Press Enter to send' : 'Reconnecting to chat…'}
+          {connected ? 'Press Enter to send' : 'You can still send messages — we\'ll reply within 12 hours'}
         </p>
       </div>
     </div>

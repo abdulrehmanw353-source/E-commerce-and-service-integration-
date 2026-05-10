@@ -8,7 +8,7 @@ export default function Footer() {
       { label: 'Checkout', to: '/checkout' },
       { label: 'My Orders', to: '/account/orders' },
     ],
-    'Repair Services': [
+    'Electronics Repair': [
       { label: 'Book a Repair', to: '/services' },
       { label: 'My Bookings', to: '/account/bookings' },
       { label: 'Service Status', to: '/account/bookings' },
@@ -40,8 +40,8 @@ export default function Footer() {
                 <Wrench className="w-[24px] h-[24px] text-white" strokeWidth={1.75} />
               </div>
               <div>
-                <p className="text-[18px] font-semibold text-white tracking-[-0.01em] mb-1">Need a repair?</p>
-                <p className="text-[13px] text-white/55 font-medium">Book expert repair service for your device.</p>
+                <p className="text-[18px] font-semibold text-white tracking-[-0.01em] mb-1">Need a device repaired?</p>
+                <p className="text-[13px] text-white/55 font-medium">Book expert repair service for your phone, laptop, PC or tablet.</p>
               </div>
             </div>
             <div className="flex items-center px-5 py-2.5 rounded-xl font-semibold text-[13px] transition-all duration-300 ds-btn-primary">

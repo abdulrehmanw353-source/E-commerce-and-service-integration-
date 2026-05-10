@@ -59,7 +59,7 @@ export default function ChatWidget() {
           flex items-center justify-center
           transition-all duration-300
           ${isOpen
-            ? 'bg-[#3A3A3C] hover:bg-[#2C2C2E]'
+            ? 'bg-[#005BB5] hover:bg-[#004A99]'
             : 'bg-[#0071E3] hover:bg-[#0077ED]'
           }
           active:scale-95
