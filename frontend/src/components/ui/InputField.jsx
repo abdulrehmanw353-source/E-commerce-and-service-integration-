@@ -26,18 +26,18 @@ export default function InputField({
   const inputType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
 
   const baseClasses = [
-    'w-full px-4 py-[13px]',
-    'bg-[#F5F5F7]',
+    'w-full px-4 py-[14px]',
+    'bg-white',
     'border border-[#D2D2D7]',
     'rounded-[12px]',
-    'text-[17px] text-label-primary',
-    'placeholder:text-[#86868B]',
+    'text-[17px] text-[#1D1D1F]',
+    'placeholder:text-[#C7C7CC]',
     'font-normal tracking-[-0.022em]',
     'transition-all duration-200 ease-out',
     'outline-none',
-    'focus:border-apple-blue focus:ring-[3px] focus:ring-apple-blue/15 focus:bg-white',
+    'focus:border-apple-blue focus:ring-[3px] focus:ring-apple-blue/15',
     'disabled:opacity-40 disabled:cursor-not-allowed',
-    error ? 'border-apple-red/60 bg-apple-red/[0.03]' : '',
+    error ? 'border-apple-red/60 bg-apple-red/[0.02]' : '',
     type === 'password' ? 'pr-12' : '',
   ].join(' ');
 

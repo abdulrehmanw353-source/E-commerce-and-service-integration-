@@ -58,7 +58,7 @@ export default function CustomerLoginPage() {
       title="Sign in."
       subtitle="Access your TechStore account."
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" id="customer-login-form">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7" id="customer-login-form">
         <InputField
           label="Email Address"
           type="email"
@@ -84,7 +84,7 @@ export default function CustomerLoginPage() {
           fullWidth
           loading={isLoading}
           id="customer-login-btn"
-          className="mt-2"
+          className="mt-3"
         >
           Sign In
           <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
@@ -92,7 +92,7 @@ export default function CustomerLoginPage() {
       </form>
 
       {/* Register Link */}
-      <div className="mt-8 pt-6 border-t border-[#D2D2D7]/50 text-center">
+      <div className="mt-8 pt-7 border-t border-[#E8E8ED] text-center">
         <p className="text-[15px] text-[#86868B]">
           Don't have an account?{' '}
           <Link

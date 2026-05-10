@@ -52,14 +52,14 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#000000]">
-      <div className="w-full max-w-[400px] px-6 animate-scale-in">
+    <div className="min-h-screen flex items-center justify-center bg-[#000000] px-5">
+      <div className="w-full max-w-[420px] animate-scale-in">
         {/* Brand */}
         <div className="text-center mb-10">
           <div className="w-16 h-16 mx-auto mb-6 rounded-[18px] bg-[#1D1D1F] flex items-center justify-center border border-white/[0.08]">
             <Lock className="w-7 h-7 text-white/70" strokeWidth={1.5} />
           </div>
-          <h1 className="text-[32px] font-bold tracking-[-0.03em] text-white leading-tight mb-2">
+          <h1 className="text-[32px] font-bold tracking-[-0.03em] text-white leading-tight mb-3">
             Admin Console
           </h1>
           <p className="text-[15px] text-white/40 font-normal">
@@ -68,10 +68,10 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-[#1C1C1E] rounded-2xl p-8 border border-white/[0.06]">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" id="admin-login-form">
+        <div className="bg-[#1C1C1E] rounded-2xl px-7 py-8 sm:px-10 sm:py-10 border border-white/[0.06]">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7" id="admin-login-form">
             {/* Email */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               <label htmlFor="admin-email" className="text-[14px] font-medium text-white/60 tracking-[-0.01em]">
                 Email Address
               </label>
@@ -80,7 +80,7 @@ export default function AdminLoginPage() {
                 type="email"
                 placeholder="admin@admin.com"
                 className={`
-                  w-full px-4 py-[13px]
+                  w-full px-4 py-[14px]
                   bg-white/[0.06]
                   border border-white/[0.10]
                   rounded-[12px]
@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               <label htmlFor="admin-password" className="text-[14px] font-medium text-white/60 tracking-[-0.01em]">
                 Password
               </label>
@@ -109,7 +109,7 @@ export default function AdminLoginPage() {
                 type="password"
                 placeholder="Enter your password"
                 className={`
-                  w-full px-4 py-[13px]
+                  w-full px-4 py-[14px]
                   bg-white/[0.06]
                   border border-white/[0.10]
                   rounded-[12px]
@@ -135,7 +135,7 @@ export default function AdminLoginPage() {
               fullWidth
               loading={isLoading}
               id="admin-login-btn"
-              className="mt-2"
+              className="mt-3"
             >
               Sign In
               <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
@@ -144,7 +144,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-[12px] text-white/20 mt-8">
+        <p className="text-center text-[12px] text-white/20 mt-10">
           TechStore Admin Console
         </p>
       </div>
