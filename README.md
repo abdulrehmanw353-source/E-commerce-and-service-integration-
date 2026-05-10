@@ -101,6 +101,22 @@
 - building NotFoundPage with Apple-style minimal design
 - building LoadingScreen component with subtle spinner
 - creating reusable Navbar, Footer, and Sidebar layout components with Apple styling, and setting up React Router with MainLayout wrapper
+- creating reusable InputField component (Apple-styled, password toggle, validation errors, focus ring)
+- creating reusable Button component (primary/secondary/ghost/danger variants, loading state, pill shape)
+- creating AuthFormWrapper component (centered card layout with brand header and slide-up animation)
+- building CustomerLoginPage with react-hook-form + yup validation, Zustand auth integration, and redirect
+- building CustomerRegisterPage with full form (name, email, phone, password, address), validation, and API call
+- updating Navbar with functional Sign In link, authenticated user dropdown (avatar, name, account, logout)
+- updating Sidebar with auth-aware state (guest: sign in/register, authenticated: profile info + logout)
+- adding customer auth routes (/login, /register) to App.jsx as standalone pages
+- creating separate Zustand admin auth store with independent localStorage persistence
+- creating separate admin Axios instance with admin refresh token interceptor
+- creating useInitAdminAuth hook for admin session restoration
+- building AdminLoginPage with dark professional theme (dark bg, lock icon, glass card)
+- creating CustomerRoute guard (redirects to /login if not authenticated)
+- creating AdminRoute guard (checks admin auth + role, redirects to /admin/login)
+- creating GuestRoute guard (prevents authenticated users from accessing login/register)
+- integrating all route guards into App.jsx with admin login route (/admin/login)
 ```
 
 ### By "Pull Requests"

@@ -1,8 +1,14 @@
-import { X } from 'lucide-react';
+import { X, User, LogOut } from 'lucide-react';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore';
+import api from '../../lib/axios';
+import toast from 'react-hot-toast';
 
 export default function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuthStore();
+
   // Prevent scrolling on body when sidebar is open
   useEffect(() => {
     if (isOpen) {
@@ -14,6 +20,23 @@ export default function Sidebar({ isOpen, onClose }) {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await api.post('/auth/customer/logout');
+    } catch {
+      // Even if API fails, clear local state
+    }
+    logout();
+    onClose();
+    toast.success('Signed out successfully.');
+    navigate('/');
+  };
+
+  const handleNavClick = (to) => {
+    onClose();
+    navigate(to);
+  };
 
   if (!isOpen) return null;
 
@@ -42,21 +65,72 @@ export default function Sidebar({ isOpen, onClose }) {
 
         {/* Links */}
         <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-1">
-          {['Products', 'Services', 'Support'].map((item) => (
+          {[
+            { label: 'Products', to: '/products' },
+            { label: 'Services', to: '/services' },
+            { label: 'Support', to: '/support' },
+          ].map((item) => (
             <button
-              key={item}
+              key={item.label}
+              onClick={() => handleNavClick(item.to)}
               className="text-left text-[17px] font-medium text-label-primary py-3 border-b border-separator last:border-0 hover:text-apple-blue transition-colors"
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </div>
 
         {/* Footer actions */}
         <div className="p-6 border-t border-separator bg-bg-secondary">
-          <button className="apple-btn apple-btn-primary w-full text-[17px]">
-            Sign In
-          </button>
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-3">
+              {/* User info */}
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-9 h-9 rounded-full bg-apple-blue flex items-center justify-center">
+                  <span className="text-[14px] font-medium text-white">
+                    {user?.firstName?.charAt(0)?.toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[15px] font-medium text-label-primary">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                  <p className="text-[12px] text-label-quaternary">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleNavClick('/account')}
+                className="apple-btn apple-btn-secondary w-full text-[15px]"
+              >
+                <User className="w-4 h-4" strokeWidth={1.5} />
+                My Account
+              </button>
+              <button
+                onClick={handleLogout}
+                className="apple-btn w-full text-[15px] text-apple-red bg-red-50 hover:bg-red-100 active:scale-[0.96] transition-all"
+              >
+                <LogOut className="w-4 h-4" strokeWidth={1.5} />
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => handleNavClick('/login')}
+                className="apple-btn apple-btn-primary w-full text-[17px]"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => handleNavClick('/register')}
+                className="apple-btn apple-btn-secondary w-full text-[15px]"
+              >
+                Create Account
+              </button>
+            </div>
+          )}
         </div>
       </div>
       

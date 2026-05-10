@@ -4,13 +4,23 @@ import { Toaster } from 'react-hot-toast';
 import { queryClient } from './lib/queryClient';
 import { useInitAuth } from './hooks/useInitAuth';
 
-// Pages
+// Pages — Storefront
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
+
+// Pages — Customer Auth
+import CustomerLoginPage from './pages/auth/CustomerLoginPage';
+import CustomerRegisterPage from './pages/auth/CustomerRegisterPage';
+
+// Pages — Admin Auth
+import AdminLoginPage from './pages/admin/auth/AdminLoginPage';
 
 // Components
 import LoadingScreen from './components/ui/LoadingScreen';
 import MainLayout from './components/layout/MainLayout';
+
+// Guards
+import GuestRoute from './components/guards/GuestRoute';
 
 function AppContent() {
   const { isLoading } = useInitAuth();
@@ -21,9 +31,27 @@ function AppContent() {
 
   return (
     <Routes>
+      {/* ─── Storefront (with Navbar + Footer) ─── */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
       </Route>
+
+      {/* ─── Customer Auth (standalone, no main layout) ─── */}
+      <Route path="/login" element={
+        <GuestRoute>
+          <CustomerLoginPage />
+        </GuestRoute>
+      } />
+      <Route path="/register" element={
+        <GuestRoute>
+          <CustomerRegisterPage />
+        </GuestRoute>
+      } />
+
+      {/* ─── Admin Auth (standalone, dark theme) ─── */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+
+      {/* ─── 404 ─── */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
