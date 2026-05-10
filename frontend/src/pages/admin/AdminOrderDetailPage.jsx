@@ -69,7 +69,7 @@ export default function AdminOrderDetailPage() {
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Link to="/admin/orders"
-          className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/[0.06] transition-all">
+          className="p-2 rounded-xl text-white hover:bg-white/[0.06] transition-all">
           <ArrowLeft className="w-5 h-5" strokeWidth={1.75} />
         </Link>
         <div>

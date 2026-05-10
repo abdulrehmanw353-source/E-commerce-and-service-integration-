@@ -115,7 +115,7 @@ export default function AdminProductEditPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate('/admin/products')}
-            className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/[0.06] transition-all">
+            className="p-2 rounded-xl text-white hover:bg-white/[0.06] transition-all">
             <ArrowLeft className="w-5 h-5" strokeWidth={1.75} />
           </button>
           <div>
@@ -124,7 +124,7 @@ export default function AdminProductEditPage() {
           </div>
         </div>
         <button onClick={() => setDeleteModal(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl text-[#ffd8df] bg-[#ff5e7d]/20 border border-[#ff5e7d]/45 hover:bg-[#ff5e7d]/30 text-[13px] font-semibold transition-all shadow-[0_0_16px_rgba(255,94,125,0.25)]">
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-white bg-[#ff3b57] border border-[#ff3b57]/60 hover:bg-[#ff5e7d] text-[13px] font-semibold transition-all shadow-[0_0_16px_rgba(255,59,87,0.25)]">
           <Trash2 className="w-4 h-4" strokeWidth={1.75} /> Delete
         </button>
       </div>
@@ -226,7 +226,7 @@ export default function AdminProductEditPage() {
                 {updateMut.isPending ? 'Saving…' : 'Save Changes'}
               </button>
               <button type="button" onClick={() => navigate('/admin/products')}
-                className="w-full py-3.5 border border-[#9c89ff]/45 bg-[#2a2350]/35 hover:bg-[#352d62] text-[#efe9ff] rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
+                className="w-full py-3.5 border border-[#6fe7ff]/30 bg-[#141a2f] hover:bg-[#6fe7ff]/10 hover:border-[#6fe7ff]/45 text-[#bff6ff] hover:text-white rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
                 Discard
               </button>
             </div>

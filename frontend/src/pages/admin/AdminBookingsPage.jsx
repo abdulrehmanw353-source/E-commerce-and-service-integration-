@@ -59,7 +59,7 @@ export default function AdminBookingsPage() {
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
               className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all ${statusFilter === s
                 ? 'ds-btn-primary text-white'
-                : 'bg-[#1C1C1E] border border-[#8f74ff]/30 text-white/80 hover:text-white'}`}>
+                : 'bg-[#1C1C1E] border border-[#8f74ff]/30 text-white/60 hover:text-white'}`}>
               {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All'}
             </button>
           ))}

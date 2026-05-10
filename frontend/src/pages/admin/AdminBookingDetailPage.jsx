@@ -58,11 +58,19 @@ export default function AdminBookingDetailPage() {
   const customer = b.customer ?? b.user;
   const currentTechnician = b.assignedTechnician || '';
   const technicians = Array.isArray(techData) ? techData : (techData?.technicians || []);
+  const addr = customer?.address || {};
+  const timeSlotObj = b.preferredTimeSlot;
+  const timeSlotLabel =
+    typeof timeSlotObj === 'string'
+      ? timeSlotObj
+      : (timeSlotObj?.label ||
+        (timeSlotObj?.startTime && timeSlotObj?.endTime ? `${timeSlotObj.startTime} - ${timeSlotObj.endTime}` : null) ||
+        (timeSlotObj?.start && timeSlotObj?.end ? `${timeSlotObj.start} - ${timeSlotObj.end}` : null));
 
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-5">
       <button onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-[13px] text-white/40 hover:text-white transition-colors">
+        className="inline-flex items-center gap-1.5 text-[13px] text-white hover:bg-white/[0.06] px-2.5 py-1.5 rounded-xl transition-colors w-fit">
         <ArrowLeft className="w-4 h-4" strokeWidth={1.75} /> Bookings
       </button>
 
@@ -125,6 +133,14 @@ export default function AdminBookingDetailPage() {
               {customer?.phone && <p className="text-[12px] text-white/40">{customer.phone}</p>}
             </div>
           </div>
+          {(addr?.street || addr?.city || addr?.country) && (
+            <div className="mt-4 pt-4 border-t border-white/[0.06]">
+              <p className="text-[11px] font-semibold text-white/35 uppercase tracking-wider mb-2">Address</p>
+              <p className="text-[13px] text-white/70 leading-relaxed">
+                {[addr.street, addr.city, addr.state, addr.country].filter(Boolean).join(', ')}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Device Details */}
@@ -136,6 +152,7 @@ export default function AdminBookingDetailPage() {
               { label: 'Brand', value: b.deviceBrand },
               { label: 'Model', value: b.deviceModel },
               { label: 'Preferred Date', value: b.preferredDate ? new Date(b.preferredDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : null },
+              { label: 'Time Slot', value: timeSlotLabel },
               { label: 'Technician', value: b.assignedTechnician },
               { label: 'Est. Cost', value: b.estimatedCost ? `$${b.estimatedCost}` : null },
               { label: 'Final Cost', value: b.finalCost ? `$${b.finalCost}` : null },

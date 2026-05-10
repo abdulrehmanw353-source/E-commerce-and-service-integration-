@@ -20,7 +20,7 @@ function StatCard({ label, value, icon: Icon, sub }) {
           <Icon className="w-4 h-4 text-[#e5deff]" />
         </div>
       </div>
-      <p className="text-[50px] leading-none mt-4 font-bold tracking-[-0.03em] text-[#b8a8ff]">{value ?? '—'}</p>
+      <p className="text-[36px] sm:text-[46px] lg:text-[50px] leading-none mt-4 font-bold tracking-[-0.03em] text-[#b8a8ff]">{value ?? '—'}</p>
       <p className="text-[13px] text-white/50 mt-2">{sub}</p>
     </div>
   );
@@ -41,11 +41,11 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      <h2 className="text-[48px] leading-none font-extrabold tracking-[-0.04em] text-white">
+      <h2 className="text-[28px] sm:text-[40px] lg:text-[48px] leading-[1.05] font-extrabold tracking-[-0.04em] text-white">
         Welcome back, <span className="text-[#8f74ff]">Admin!</span>
       </h2>
 
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Revenue" value={`$${Math.round(stats?.totalRevenue || 0).toLocaleString()}`} icon={DollarSign} sub="Total revenue" />
         <StatCard label="Active Bookings" value={stats?.pendingBookings ?? stats?.totalBookings ?? '—'} icon={Clock3} sub="Currently in progress" />
         <StatCard label="Completed Services" value={stats?.completedBookings ?? '—'} icon={CheckCircle2} sub="Total successfully fixed" />
@@ -117,13 +117,15 @@ export default function AdminDashboardPage() {
             {recentOrders.length === 0 ? (
               <p className="px-5 py-8 text-[13px] text-white/35 text-center">No recent orders</p>
             ) : recentOrders.slice(0, 5).map((order) => (
-              <div key={order._id} className="grid grid-cols-[1fr_160px_130px] gap-3 px-5 py-3.5 items-center">
+              <div key={order._id} className="grid grid-cols-1 sm:grid-cols-[1fr_160px_130px] gap-3 px-5 py-3.5 items-start sm:items-center">
                 <div>
                   <p className="text-[14px] font-semibold text-white">#{order._id?.slice(-8)?.toUpperCase()}</p>
                   <p className="text-[12px] text-white/50">{order.user?.firstName} {order.user?.lastName}</p>
                 </div>
-                <StatusBadge status={order.status} />
-                <Link to={`/admin/orders/${order._id}`} className="justify-self-end px-3 py-1.5 rounded-lg text-[12px] ds-btn-outline text-white">
+                <div className="sm:justify-self-center">
+                  <StatusBadge status={order.status} />
+                </div>
+                <Link to={`/admin/orders/${order._id}`} className="sm:justify-self-end w-fit px-3 py-1.5 rounded-lg text-[12px] ds-btn-outline text-white">
                   View Details
                 </Link>
               </div>

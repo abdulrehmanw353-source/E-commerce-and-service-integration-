@@ -43,6 +43,8 @@ import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage';
 import AdminTimeSlotsPage from './pages/admin/AdminTimeSlotsPage';
 import AdminChatPage from './pages/admin/AdminChatPage';
 import AdminTechniciansPage from './pages/admin/AdminTechniciansPage';
+import AdminTechnicianCreatePage from './pages/admin/AdminTechnicianCreatePage';
+import AdminTechnicianEditPage from './pages/admin/AdminTechnicianEditPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 
@@ -115,6 +117,8 @@ function AppContent() {
         <Route path="customers" element={<AdminUsersPage />} />
         <Route path="customers/:id" element={<AdminCustomerDetailPage />} />
         <Route path="technicians" element={<AdminTechniciansPage />} />
+        <Route path="technicians/new" element={<AdminTechnicianCreatePage />} />
+        <Route path="technicians/:id/edit" element={<AdminTechnicianEditPage />} />
         <Route path="analytics" element={<AdminAnalyticsPage />} />
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />

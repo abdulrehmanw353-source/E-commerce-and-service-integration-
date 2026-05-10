@@ -75,7 +75,7 @@ export default function AdminProductCreatePage() {
       {/* ─── Header ─── */}
       <div className="flex items-center gap-4 mb-6">
         <button onClick={() => navigate('/admin/products')}
-          className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/[0.06] transition-all">
+          className="p-2 rounded-xl text-white hover:bg-white/[0.06] transition-all">
           <ArrowLeft className="w-5 h-5" strokeWidth={1.75} />
         </button>
         <div>
@@ -195,7 +195,7 @@ export default function AdminProductCreatePage() {
                 {createMut.isPending ? 'Creating…' : 'Create Product'}
               </button>
               <button type="button" onClick={() => navigate('/admin/products')}
-                className="w-full py-3.5 border border-[#9c89ff]/45 bg-[#2a2350]/35 hover:bg-[#352d62] text-[#efe9ff] rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
+                className="w-full py-3.5 border border-[#6fe7ff]/30 bg-[#141a2f] hover:bg-[#6fe7ff]/10 hover:border-[#6fe7ff]/45 text-[#bff6ff] hover:text-white rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
                 Discard
               </button>
             </div>

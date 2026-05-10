@@ -101,7 +101,7 @@ export default function AdminSidebar({ collapsed }) {
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full text-left px-3 py-2.5 text-[12px] text-[#ffd1db] hover:bg-[#ff5e7d]/15"
+                className="w-full text-left px-3 py-2.5 text-[12px] font-semibold text-white bg-[#ff3b57] hover:bg-[#ff5e7d] transition-colors"
               >
                 Sign Out
               </button>
