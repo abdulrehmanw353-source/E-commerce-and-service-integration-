@@ -3,15 +3,15 @@ import { ShoppingBag, Menu, User, LogOut, ChevronDown, Search, Package, Wrench }
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
-import { useCartItemCount } from '../../hooks/useCart';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
 
 export default function Navbar({ onOpenSidebar }) {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
-  const openCart = useCartStore(s => s.open);
-  const cartCount = useCartItemCount();
+  const openCart  = useCartStore(s => s.open);
+  const cartItems = useCartStore(s => s.items);
+  const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const menuRef = useRef(null);

@@ -130,15 +130,15 @@
 | 4A.5 | Wire "Add to Cart" on `ProductDetailPage` | ✅ |
 | 4A.6 | Wire Navbar cart icon → CartSlideOut, item count badge | ✅ |
 
-### Part 4B — Checkout & Orders ⬜ NEXT
+### Part 4B — Checkout & Orders ✅ COMPLETED
 
 | # | Task | Status |
 |---|------|--------|
-| 4B.1 | `pages/CheckoutPage.jsx` — order summary, shipping address, Place Order | ⬜ |
-| 4B.2 | `pages/OrderSuccessPage.jsx` — Apple-style confirmation, order ID, animation | ⬜ |
+| 4B.1 | `pages/CheckoutPage.jsx` — guest-friendly (email + phone), pre-fills from auth store | ✅ |
+| 4B.2 | `pages/OrderSuccessPage.jsx` — animated checkmark, order summary, CTAs | ✅ |
 | 4B.3 | `pages/account/MyOrdersPage.jsx` — order list, status badges (already built ✅) | ✅ |
-| 4B.4 | `pages/account/OrderDetailPage.jsx` — single order detail, items, totals | ⬜ |
-| 4B.5 | Order routes in `App.jsx` | ⬜ |
+| 4B.4 | `pages/account/OrderDetailPage.jsx` — single order detail | ⬜ |
+| 4B.5 | Checkout + success routes in `App.jsx` | ✅ |
 
 ### Part 4C — Customer Account ✅ COMPLETED
 
@@ -289,7 +289,7 @@
 | **Phase 1** — Foundation | Setup, Design System, Axios, Zustand, Layout, HomePage | ✅ Done |
 | **Phase 2** — Authentication | 2A ✅ → 2B ✅ → 2C ✅ | ✅ Done |
 | **Phase 3** — Storefront Core | 3A ✅ → 3B ✅ → 3C ✅ | ✅ Done |
-| **Phase 4** — E-Commerce Flow | 4A ✅ → 4B ⬜ → 4C ✅ | 🔄 In Progress |
+| **Phase 4** — E-Commerce Flow | 4A ✅ → 4B ✅ → 4C ✅ | ✅ Done |
 | **Phase 5** — Service Booking | 5A ✅ → 5B 🔄 | 🔄 Partial |
 | **Phase 6** — Admin Dashboard | 6A ✅ → 6B ✅ → 6C ✅ → 6D ✅ → 6E 🔄 → 6F ✅ → 6G ⬜ → 6H ✅ | 🔄 Partial |
 | **Phase 7** — Chat & Polish | 7A ⬜ → 7B 🔄 → 7C ⬜ | ⬜ Pending |

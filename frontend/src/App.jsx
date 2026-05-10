@@ -9,6 +9,8 @@ import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ServicesPage from './pages/ServicesPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Pages — Customer Auth
@@ -59,8 +61,12 @@ function AppContent() {
         <Route index element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
-        <Route path="services" element={<ServicesPage />} />
-        {/* Protected customer routes */}
+        {/* Services — requires auth */}
+        <Route path="services" element={<CustomerRoute><ServicesPage /></CustomerRoute>} />
+        {/* Cart checkout — no auth required */}
+        <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="order-success" element={<OrderSuccessPage />} />
+        {/* Protected customer account routes */}
         <Route path="account" element={<CustomerRoute><AccountPage /></CustomerRoute>} />
         <Route path="account/orders" element={<CustomerRoute><MyOrdersPage /></CustomerRoute>} />
         <Route path="account/bookings" element={<CustomerRoute><MyBookingsPage /></CustomerRoute>} />
