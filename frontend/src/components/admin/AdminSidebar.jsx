@@ -1,19 +1,20 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingBag, Package, Users, Calendar,
-  MessageSquare, LogOut, ChevronRight, Zap
+  MessageSquare, LogOut, Zap, Clock
 } from 'lucide-react';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import adminApi from '../../lib/adminAxios';
 import toast from 'react-hot-toast';
 
 const navItems = [
-  { label: 'Dashboard',  to: '/admin',          icon: LayoutDashboard, end: true },
-  { label: 'Products',   to: '/admin/products', icon: Package },
-  { label: 'Orders',     to: '/admin/orders',   icon: ShoppingBag },
-  { label: 'Bookings',   to: '/admin/bookings', icon: Calendar },
-  { label: 'Users',      to: '/admin/users',    icon: Users },
-  { label: 'Support',    to: '/admin/chat',     icon: MessageSquare },
+  { label: 'Dashboard',   to: '/admin',              icon: LayoutDashboard, end: true },
+  { label: 'Products',    to: '/admin/products',     icon: Package },
+  { label: 'Orders',      to: '/admin/orders',       icon: ShoppingBag },
+  { label: 'Bookings',    to: '/admin/bookings',     icon: Calendar },
+  { label: 'Time Slots',  to: '/admin/time-slots',   icon: Clock },
+  { label: 'Users',       to: '/admin/users',        icon: Users },
+  { label: 'Support',     to: '/admin/chat',         icon: MessageSquare },
 ];
 
 export default function AdminSidebar({ collapsed }) {

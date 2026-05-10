@@ -136,8 +136,8 @@
 |---|------|--------|
 | 4B.1 | `pages/CheckoutPage.jsx` — guest-friendly (email + phone), pre-fills from auth store | ✅ |
 | 4B.2 | `pages/OrderSuccessPage.jsx` — animated checkmark, order summary, CTAs | ✅ |
-| 4B.3 | `pages/account/MyOrdersPage.jsx` — order list, status badges (already built ✅) | ✅ |
-| 4B.4 | `pages/account/OrderDetailPage.jsx` — single order detail | ⬜ |
+| 4B.3 | `pages/account/MyOrdersPage.jsx` — order list, status badges | ✅ |
+| 4B.4 | `pages/admin/AdminOrderDetailPage.jsx` — full rebuild: items, customer, status dropdowns | ✅ |
 | 4B.5 | Checkout + success routes in `App.jsx` | ✅ |
 
 ### Part 4C — Customer Account ✅ COMPLETED
@@ -170,10 +170,11 @@
 | # | Task | Status |
 |---|------|--------|
 | 5B.1 | `pages/account/MyBookingsPage.jsx` — list, status badges, cancel | ✅ |
-| 5B.2 | `BookingDetailPage` — single booking detail | ⬜ |
-| 5B.3 | `StatusBadge` component (admin version built ✅) | ✅ |
-| 5B.4 | Booking routes in `App.jsx` | ✅ |
-| 5B.5 | Navbar/Footer wired to `/services` | ✅ |
+| 5B.2 | `pages/account/BookingDetailPage.jsx` — full detail, status banner, pricing, cancel | ✅ |
+| 5B.3 | Booking list cards link to BookingDetailPage | ✅ |
+| 5B.4 | `StatusBadge` component (admin version built ✅) | ✅ |
+| 5B.5 | Booking routes in `App.jsx` | ✅ |
+| 5B.6 | Navbar/Footer wired to `/services` | ✅ |
 
 ---
 
@@ -231,12 +232,13 @@
 | 6F.2 | `pages/admin/AdminBookingDetailPage.jsx` — device, problem, images, notes | ✅ |
 | 6F.3 | BookingActions (approve, reject, assign, status) | ✅ |
 
-### Part 6G — Time Slot Management ⬜
+### Part 6G — Time Slot Management ✅ COMPLETED
 
 | # | Task | Status |
 |---|------|--------|
-| 6G.1 | `pages/admin/AdminTimeSlotsPage.jsx` | ⬜ |
-| 6G.2 | Time slot create/edit form | ⬜ |
+| 6G.1 | `pages/admin/AdminTimeSlotsPage.jsx` — grouped by date, capacity bars | ✅ |
+| 6G.2 | Create/edit modal form + delete confirm | ✅ |
+| 6G.3 | Time Slots nav item in AdminSidebar | ✅ |
 
 ### Part 6H — Admin Chat ✅
 
@@ -290,8 +292,8 @@
 | **Phase 2** — Authentication | 2A ✅ → 2B ✅ → 2C ✅ | ✅ Done |
 | **Phase 3** — Storefront Core | 3A ✅ → 3B ✅ → 3C ✅ | ✅ Done |
 | **Phase 4** — E-Commerce Flow | 4A ✅ → 4B ✅ → 4C ✅ | ✅ Done |
-| **Phase 5** — Service Booking | 5A ✅ → 5B 🔄 | 🔄 Partial |
-| **Phase 6** — Admin Dashboard | 6A ✅ → 6B ✅ → 6C ✅ → 6D ✅ → 6E 🔄 → 6F ✅ → 6G ⬜ → 6H ✅ | 🔄 Partial |
+| **Phase 5** — Service Booking | 5A ✅ → 5B ✅ | ✅ Done |
+| **Phase 6** — Admin Dashboard | 6A ✅ → 6B ✅ → 6C ✅ → 6D ✅ → 6E 🔄 → 6F ✅ → 6G ✅ → 6H ✅ | 🔄 Partial |
 | **Phase 7** — Chat & Polish | 7A ⬜ → 7B 🔄 → 7C ⬜ | ⬜ Pending |
 
 ---

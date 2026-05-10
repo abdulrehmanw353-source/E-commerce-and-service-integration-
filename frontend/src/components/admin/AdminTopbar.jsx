@@ -10,6 +10,7 @@ function getPageTitle(pathname) {
   if (/^\/admin\/orders\/.+$/.test(pathname)) return 'Order Detail';
   if (pathname === '/admin/bookings') return 'Bookings';
   if (/^\/admin\/bookings\/.+$/.test(pathname)) return 'Booking Detail';
+  if (pathname === '/admin/time-slots') return 'Time Slots';
   if (pathname === '/admin/users') return 'Users';
   if (pathname === '/admin/chat') return 'Support Chat';
   return 'Admin';

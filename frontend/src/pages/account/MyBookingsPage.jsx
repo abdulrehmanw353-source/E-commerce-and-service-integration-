@@ -67,59 +67,57 @@ export default function MyBookingsPage() {
             {bookings.map(b => (
               <div
                 key={b._id}
-                className="bg-white border border-[#E8E8ED] rounded-2xl p-5 hover:border-[#D2D2D7] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all"
+                className="bg-white border border-[#E8E8ED] rounded-2xl overflow-hidden hover:border-[#D2D2D7] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center flex-shrink-0 text-[22px]">
-                      {DEVICE_ICONS[b.deviceType] || '🔧'}
+                <Link to={`/account/bookings/${b._id}`} className="block p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center flex-shrink-0 text-[22px]">
+                        {DEVICE_ICONS[b.deviceType] || '🔧'}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-[15px] font-semibold text-[#1D1D1F] truncate">{b.problemTitle}</p>
+                          <span className={`text-[11px] font-semibold uppercase px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_STYLE[b.status] || 'bg-[#F5F5F7] text-[#86868B]'}`}>
+                            {b.status?.replace('-', ' ')}
+                          </span>
+                        </div>
+                        <p className="text-[13px] text-[#86868B] capitalize">
+                          {b.deviceType}{b.deviceBrand ? ` · ${b.deviceBrand}` : ''}{b.deviceModel ? ` ${b.deviceModel}` : ''}
+                        </p>
+                        <div className="flex items-center gap-1 mt-1.5 text-[13px] text-[#86868B]">
+                          <Clock className="w-3.5 h-3.5" strokeWidth={1.75} />
+                          {new Date(b.preferredDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-[15px] font-semibold text-[#1D1D1F] truncate">{b.problemTitle}</p>
-                        <span className={`text-[11px] font-semibold uppercase px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_STYLE[b.status] || 'bg-[#F5F5F7] text-[#86868B]'}`}>
-                          {b.status?.replace('-', ' ')}
-                        </span>
-                      </div>
-                      <p className="text-[13px] text-[#86868B] capitalize">
-                        {b.deviceType}{b.deviceBrand ? ` · ${b.deviceBrand}` : ''}{b.deviceModel ? ` ${b.deviceModel}` : ''}
-                      </p>
-                      <div className="flex items-center gap-1 mt-1.5 text-[13px] text-[#86868B]">
-                        <Clock className="w-3.5 h-3.5" strokeWidth={1.75} />
-                        {new Date(b.preferredDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-                      </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {b.estimatedCost && (
+                        <span className="text-[14px] font-semibold text-[#1D1D1F]">${b.estimatedCost}</span>
+                      )}
+                      <ChevronRight className="w-4 h-4 text-[#D2D2D7]" strokeWidth={2} />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {b.estimatedCost && (
-                      <span className="text-[14px] font-semibold text-[#1D1D1F]">${b.estimatedCost}</span>
-                    )}
-                    {b.status === 'pending' && (
-                      <button
-                        onClick={() => cancelMut.mutate(b._id)}
-                        disabled={cancelMut.isPending}
-                        className="p-2 rounded-xl text-[#86868B] hover:text-red-500 hover:bg-red-50 disabled:opacity-40 transition-all"
-                        title="Cancel booking"
-                      >
-                        <X className="w-4 h-4" strokeWidth={2} />
-                      </button>
-                    )}
-                  </div>
-                </div>
 
-                {/* Admin notes */}
-                {b.adminNotes && (
-                  <div className="mt-3 pt-3 border-t border-[#F5F5F7]">
-                    <p className="text-[12px] text-[#86868B]">
-                      <span className="font-semibold text-[#1D1D1F]">Admin: </span>{b.adminNotes}
-                    </p>
-                  </div>
-                )}
-                {b.rejectionReason && (
-                  <div className="mt-3 pt-3 border-t border-[#F5F5F7]">
-                    <p className="text-[12px] text-red-500">
-                      <span className="font-semibold">Rejected: </span>{b.rejectionReason}
-                    </p>
+                  {/* Admin notes */}
+                  {b.adminNotes && (
+                    <div className="mt-3 pt-3 border-t border-[#F5F5F7]">
+                      <p className="text-[12px] text-[#86868B]">
+                        <span className="font-semibold text-[#1D1D1F]">Admin: </span>{b.adminNotes}
+                      </p>
+                    </div>
+                  )}
+                </Link>
+                {/* Cancel button — outside the link */}
+                {b.status === 'pending' && (
+                  <div className="px-5 pb-4">
+                    <button
+                      onClick={() => cancelMut.mutate(b._id)}
+                      disabled={cancelMut.isPending}
+                      className="flex items-center gap-1.5 text-[13px] text-[#FF3B30] hover:bg-red-50 px-3 py-1.5 rounded-xl disabled:opacity-40 transition-all"
+                    >
+                      <X className="w-3.5 h-3.5" strokeWidth={2} /> Cancel Booking
+                    </button>
                   </div>
                 )}
               </div>

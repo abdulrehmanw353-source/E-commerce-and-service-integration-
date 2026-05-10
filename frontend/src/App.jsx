@@ -21,6 +21,7 @@ import CustomerRegisterPage from './pages/auth/CustomerRegisterPage';
 import AccountPage from './pages/account/AccountPage';
 import MyOrdersPage from './pages/account/MyOrdersPage';
 import MyBookingsPage from './pages/account/MyBookingsPage';
+import BookingDetailPage from './pages/account/BookingDetailPage';
 
 // Pages — Admin Auth
 import AdminLoginPage from './pages/admin/auth/AdminLoginPage';
@@ -35,6 +36,7 @@ import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage';
+import AdminTimeSlotsPage from './pages/admin/AdminTimeSlotsPage';
 import AdminChatPage from './pages/admin/AdminChatPage';
 
 // Components / Layout
@@ -70,6 +72,7 @@ function AppContent() {
         <Route path="account" element={<CustomerRoute><AccountPage /></CustomerRoute>} />
         <Route path="account/orders" element={<CustomerRoute><MyOrdersPage /></CustomerRoute>} />
         <Route path="account/bookings" element={<CustomerRoute><MyBookingsPage /></CustomerRoute>} />
+        <Route path="account/bookings/:id" element={<CustomerRoute><BookingDetailPage /></CustomerRoute>} />
       </Route>
 
       {/* ─── Customer Auth (standalone, no main layout) ─── */}
@@ -102,6 +105,7 @@ function AppContent() {
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="bookings/:id" element={<AdminBookingDetailPage />} />
+        <Route path="time-slots" element={<AdminTimeSlotsPage />} />
         <Route path="chat" element={<AdminChatPage />} />
       </Route>
 
