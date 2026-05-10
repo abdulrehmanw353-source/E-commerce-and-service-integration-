@@ -8,6 +8,7 @@ import { Wrench, Calendar, ChevronRight, Laptop, Smartphone, Monitor, Tablet, Pa
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
+import { useServices } from '../hooks/useServices';
 
 // ─── Fetchers ────────────────────────────────────────────────
 const fetchSlots = (date, technicianId) =>
@@ -35,15 +36,6 @@ const DEVICE_TYPES = [
   { key: 'other',   label: 'Other',   icon: Package },
 ];
 
-const SERVICES = [
-  { title: 'Plumbing Services', desc: 'Leak repairs, pipe installations, and emergency plumbing.', icon: '🔧', price: '$89' },
-  { title: 'Electrical Services', desc: 'Wiring, circuit repair, lighting setup, and safety checks.', icon: '⚡', price: '$99' },
-  { title: 'Carpentry Services', desc: 'Furniture setup, wood repairs, and custom shelving.', icon: '🪚', price: '$79' },
-  { title: 'HVAC & AC Repair', desc: 'AC installation, heating fixes, and duct cleaning.', icon: '❄️', price: '$129' },
-  { title: 'Appliance Repair', desc: 'Washing machines, ovens, and dishwashers repaired.', icon: '🧺', price: '$69' },
-  { title: 'Door & Lock Services', desc: 'Lock installation and smart security upgrades.', icon: '🔐', price: '$59' },
-];
-
 // ─── Field ───────────────────────────────────────────────────
 function Field({ label, error, children, hint }) {
   return (
@@ -62,6 +54,8 @@ export default function ServicesPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
+  const { data: servicesData, isLoading: servicesLoading } = useServices();
+  const services = Array.isArray(servicesData) ? servicesData : (servicesData?.services || []);
 
   const { data: techniciansData } = useQuery({
     queryKey: ['public-technicians'],
@@ -123,11 +117,20 @@ export default function ServicesPage() {
 
             <div>
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                {SERVICES.map((s, i) => (
+                {(servicesLoading ? Array.from({ length: 6 }).map((_, i) => ({ _skeleton: true, i })) : services).map((s, i) => (
+                  s?._skeleton ? (
+                    <div key={i} className="ds-card p-6 animate-pulse">
+                      <div className="h-10 w-10 rounded-2xl bg-white/[0.08] mb-5" />
+                      <div className="h-7 w-3/4 rounded-full bg-white/[0.08] mb-3" />
+                      <div className="h-4 w-full rounded-full bg-white/[0.08] mb-2" />
+                      <div className="h-4 w-2/3 rounded-full bg-white/[0.08] mb-6" />
+                      <div className="h-10 w-full rounded-xl bg-white/[0.08]" />
+                    </div>
+                  ) : (
                   <div key={s.title} className={`ds-card p-6 flex flex-col ${i === 0 ? 'ds-card-glow' : ''}`}>
-                    <div className="text-4xl mb-5">{s.icon}</div>
+                    <div className="text-4xl mb-5">{s.icon || '🔧'}</div>
                     <h3 className="text-[28px] font-bold text-white tracking-[-0.02em] leading-tight mb-2">{s.title}</h3>
-                    <p className="text-[15px] text-white/65 min-h-[60px]">{s.desc}</p>
+                    <p className="text-[15px] text-white/65 min-h-[60px]">{s.shortDesc || s.desc || s.description}</p>
                     <button
                       onClick={() => {
                         if (!isAuthenticated) { toast.error('Please sign in to book a repair.'); navigate('/login'); return; }
@@ -138,8 +141,14 @@ export default function ServicesPage() {
                     >
                       Book Now
                     </button>
-                    <p className="text-white/75 mt-4 text-[20px]">Starting from <span className="font-bold text-white">{s.price}</span></p>
+                    <p className="text-white/75 mt-4 text-[20px]">
+                      Starting from{' '}
+                      <span className="font-bold text-white">
+                        {typeof s.startingPrice === 'number' ? `$${s.startingPrice}` : (s.price || '—')}
+                      </span>
+                    </p>
                   </div>
+                  )
                 ))}
               </div>
             </div>

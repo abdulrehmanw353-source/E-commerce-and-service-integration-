@@ -95,7 +95,7 @@ export default function ChatPanel({ onClose }) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0071E3] rounded-t-2xl flex-shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-[#0071E3] flex-shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
             <MessageCircle className="w-4 h-4 text-white" strokeWidth={1.75} />
@@ -117,16 +117,16 @@ export default function ChatPanel({ onClose }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-white">
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-[#0f1425]">
         {initializing ? (
           <div className="flex items-center justify-center h-full">
-            <Loader2 className="w-6 h-6 text-[#D2D2D7] animate-spin" strokeWidth={1.75} />
+            <Loader2 className="w-6 h-6 text-white/25 animate-spin" strokeWidth={1.75} />
           </div>
         ) : allMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
-            <MessageCircle className="w-10 h-10 text-[#D2D2D7] mb-3" strokeWidth={1.5} />
-            <p className="text-[14px] font-medium text-[#1D1D1F] mb-1">Start the conversation</p>
-            <p className="text-[12px] text-[#86868B]">Our support team typically replies within minutes.</p>
+            <MessageCircle className="w-10 h-10 text-white/25 mb-3" strokeWidth={1.5} />
+            <p className="text-[14px] font-semibold text-white mb-1">Start the conversation</p>
+            <p className="text-[12px] text-white/45">Our support team typically replies within minutes.</p>
           </div>
         ) : (
           allMessages.map((msg, i) => (
@@ -155,7 +155,7 @@ export default function ChatPanel({ onClose }) {
       </div>
 
       {/* Input */}
-      <div className="flex-shrink-0 px-3 py-3 border-t border-[#F5F5F7] bg-white rounded-b-2xl">
+      <div className="flex-shrink-0 px-3 py-3 border-t border-white/10 bg-[#0f1425]">
         <div className="flex items-end gap-2">
           <textarea
             ref={inputRef}
@@ -164,7 +164,7 @@ export default function ChatPanel({ onClose }) {
             onKeyDown={handleKeyDown}
             placeholder="Type a message…"
             rows={1}
-            className="flex-1 resize-none bg-[#F5F5F7] rounded-xl px-3 py-2.5 text-[14px] text-[#1D1D1F] placeholder:text-[#C7C7CC] outline-none max-h-[100px] overflow-y-auto"
+            className="flex-1 resize-none bg-white/[0.06] border border-white/10 rounded-xl px-3 py-2.5 text-[14px] text-white placeholder:text-white/35 outline-none max-h-[100px] overflow-y-auto focus:border-[#2d8cff]/45 focus:ring-4 focus:ring-[#2d8cff]/15 transition-all"
             style={{ height: 'auto', minHeight: '40px' }}
             onInput={e => {
               e.target.style.height = 'auto';
@@ -174,12 +174,12 @@ export default function ChatPanel({ onClose }) {
           <button
             onClick={handleSend}
             disabled={!text.trim() || !convId}
-            className="w-9 h-9 rounded-full bg-[#0071E3] disabled:bg-[#D2D2D7] hover:bg-[#0077ED] flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+            className="w-10 h-10 rounded-xl bg-[#0071E3] disabled:bg-white/[0.08] hover:bg-[#0077ED] flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
           >
             <Send className="w-4 h-4 text-white" strokeWidth={2} />
           </button>
         </div>
-        <p className="text-[11px] text-[#C7C7CC] text-center mt-2">
+        <p className="text-[11px] text-white/35 text-center mt-2">
           {connected ? 'Press Enter to send' : 'Reconnecting to chat…'}
         </p>
       </div>

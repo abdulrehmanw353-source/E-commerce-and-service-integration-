@@ -22,6 +22,8 @@ import timeSlotRouter from "./routes/timeSlot.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import adminChatRouter from "./routes/admin.chat.routes.js";
 import technicianRouter from "./routes/technician.routes.js";
+import publicServiceRouter from "./routes/public.service.routes.js";
+import adminServiceRouter from "./routes/admin.service.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -52,6 +54,8 @@ app.use("/api/v1/admin/users", adminUserRouter);
 app.use("/api/v1/admin/dashboard", adminDashboardRouter);
 app.use("/api/v1/bookings", bookingRouter);
 app.use("/api/v1/admin/bookings", adminBookingRouter);
+app.use("/api/v1/services", publicServiceRouter);
+app.use("/api/v1/admin/services", adminServiceRouter);
 app.use("/api/v1/time-slots", timeSlotRouter);
 app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1/admin/chat", adminChatRouter);

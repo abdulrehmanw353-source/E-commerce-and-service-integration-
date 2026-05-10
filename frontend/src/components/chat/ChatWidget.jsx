@@ -40,10 +40,12 @@ export default function ChatWidget() {
       {/* ── Chat panel ── */}
       {isOpen && (
         <div
-          className="fixed bottom-[80px] right-4 sm:right-6 z-50 w-[340px] h-[480px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.18)] flex flex-col overflow-hidden"
+          className="fixed bottom-[80px] right-4 sm:right-6 z-50 w-[340px] h-[480px] ds-shell flex flex-col overflow-hidden p-2"
           style={{ animation: 'chatSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1) both' }}
         >
-          <ChatPanel onClose={() => { setIsOpen(false); setHasUnread(false); }} />
+          <div className="ds-card h-full overflow-hidden">
+            <ChatPanel onClose={() => { setIsOpen(false); setHasUnread(false); }} />
+          </div>
         </div>
       )}
 

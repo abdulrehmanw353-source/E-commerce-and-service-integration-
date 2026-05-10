@@ -71,7 +71,7 @@ export default function AdminRegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="w-full max-w-[500px] ds-card p-8 sm:p-10">
+      <div className="w-full max-w-[720px] ds-card p-8 sm:p-10">
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-2xl mx-auto bg-[#7a5cff]/25 border border-[#7a5cff]/55 flex items-center justify-center">
             <ShieldPlus className="w-7 h-7 text-[#bbaeff]" />

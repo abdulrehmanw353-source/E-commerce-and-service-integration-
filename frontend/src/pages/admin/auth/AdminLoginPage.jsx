@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="w-full max-w-[440px] animate-scale-in">
+      <div className="w-full max-w-[720px] animate-scale-in">
         {/* Brand */}
         <div className="text-center" style={{ marginBottom: '48px' }}>
           <div className="mx-auto flex items-center justify-center border border-[#8f74ff]/60 shadow-[0_0_22px_rgba(122,92,255,0.35)]"

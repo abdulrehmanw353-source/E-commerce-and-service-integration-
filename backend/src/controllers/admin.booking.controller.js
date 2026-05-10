@@ -35,7 +35,7 @@ const getAdminSingleBooking = asyncHandler(async (req, res) => {
 // ------ APPROVE BOOKING (ADMIN)
 
 const approveBooking = asyncHandler(async (req, res) => {
-   const { adminNotes, estimatedCost } = req.body;
+   const { adminNotes, estimatedCost } = req.body || {};
 
    const booking = await approveBookingService(
       req.params.id,
@@ -51,7 +51,7 @@ const approveBooking = asyncHandler(async (req, res) => {
 // ------ REJECT BOOKING (ADMIN)
 
 const rejectBooking = asyncHandler(async (req, res) => {
-   const { rejectionReason } = req.body;
+   const { rejectionReason } = req.body || {};
 
    const booking = await rejectBookingService(req.params.id, rejectionReason);
 

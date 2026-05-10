@@ -47,6 +47,9 @@ import AdminTechnicianCreatePage from './pages/admin/AdminTechnicianCreatePage';
 import AdminTechnicianEditPage from './pages/admin/AdminTechnicianEditPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
+import AdminServicesPage from './pages/admin/AdminServicesPage';
+import AdminServiceCreatePage from './pages/admin/AdminServiceCreatePage';
+import AdminServiceEditPage from './pages/admin/AdminServiceEditPage';
 
 // Components / Layout
 import LoadingScreen from './components/ui/LoadingScreen';
@@ -123,6 +126,9 @@ function AppContent() {
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="bookings/:id" element={<AdminBookingDetailPage />} />
+        <Route path="services" element={<AdminServicesPage />} />
+        <Route path="services/new" element={<AdminServiceCreatePage />} />
+        <Route path="services/:id/edit" element={<AdminServiceEditPage />} />
         <Route path="time-slots" element={<AdminTimeSlotsPage />} />
         <Route path="chat" element={<AdminChatPage />} />
       </Route>

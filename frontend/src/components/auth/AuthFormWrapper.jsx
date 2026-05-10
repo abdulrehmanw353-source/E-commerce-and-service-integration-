@@ -27,7 +27,7 @@ export default function AuthFormWrapper({
 
       {/* Centered Content */}
       <div className="flex-1 flex items-center justify-center px-5 sm:px-6 pb-20 pt-2">
-        <div className="w-full max-w-[480px] animate-slide-up">
+        <div className="w-full max-w-[720px] animate-slide-up">
           {/* Brand Header */}
           <div className="text-center mb-10">
             <Link to="/" className="inline-block mb-4">

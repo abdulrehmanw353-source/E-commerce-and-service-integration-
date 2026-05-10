@@ -15,6 +15,7 @@ import Order from "../models/order.model.js";
 import TimeSlot from "../models/timeSlot.model.js";
 import Booking from "../models/booking.model.js";
 import Technician from "../models/technician.model.js";
+import Service from "../models/service.model.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 
@@ -50,6 +51,7 @@ async function seedDummyData() {
       Booking.deleteMany({}),
       TimeSlot.deleteMany({}),
       Technician.deleteMany({}),
+      Service.deleteMany({}),
       Product.deleteMany({}),
     ]);
     // Keep a single admin account aligned with "single-admin" policy.
@@ -125,6 +127,81 @@ async function seedDummyData() {
         updatedAt: dateMinusDays(30 - index * 2),
       })),
     );
+
+    const services = await Service.insertMany([
+      {
+        title: "Plumbing Services",
+        slug: "plumbing-services",
+        shortDesc: "Leak repairs, pipe installations, and emergency plumbing.",
+        description: "From leaks to installations — fast, clean, and reliable plumbing service with transparent estimates.",
+        icon: "🔧",
+        startingPrice: 89,
+        isEnabled: true,
+        sortOrder: 1,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+      {
+        title: "Electrical Services",
+        slug: "electrical-services",
+        shortDesc: "Wiring, circuit repair, lighting setup, and safety checks.",
+        description: "Certified electrical troubleshooting, repairs, and new installations with safety-first workflows.",
+        icon: "⚡",
+        startingPrice: 99,
+        isEnabled: true,
+        sortOrder: 2,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+      {
+        title: "Carpentry Services",
+        slug: "carpentry-services",
+        shortDesc: "Furniture setup, wood repairs, and custom shelving.",
+        description: "Precision carpentry for doors, frames, cabinets, and custom work — built to last.",
+        icon: "🪚",
+        startingPrice: 79,
+        isEnabled: true,
+        sortOrder: 3,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+      {
+        title: "HVAC & AC Repair",
+        slug: "hvac-ac-repair",
+        shortDesc: "AC installation, heating fixes, and duct cleaning.",
+        description: "Diagnostics, repairs, and maintenance for HVAC systems with energy-saving recommendations.",
+        icon: "❄️",
+        startingPrice: 129,
+        isEnabled: true,
+        sortOrder: 4,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+      {
+        title: "Appliance Repair",
+        slug: "appliance-repair",
+        shortDesc: "Washing machines, ovens, and dishwashers repaired.",
+        description: "Quick appliance diagnostics and repair with common parts on-hand for faster turnaround.",
+        icon: "🧺",
+        startingPrice: 69,
+        isEnabled: true,
+        sortOrder: 5,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+      {
+        title: "Door & Lock Services",
+        slug: "door-lock-services",
+        shortDesc: "Lock installation and smart security upgrades.",
+        description: "Lock replacement, keyless entry setup, alignment fixes, and smart lock upgrades.",
+        icon: "🔐",
+        startingPrice: 59,
+        isEnabled: true,
+        sortOrder: 6,
+        createdBy: admin._id,
+        updatedBy: admin._id,
+      },
+    ]);
 
     const technicians = await Technician.insertMany([
       {
@@ -286,6 +363,7 @@ async function seedDummyData() {
 
     console.log("(DUMMY SEED COMPLETE)");
     console.log(`- Customers: ${customerDocs.length}`);
+    console.log(`- Services: ${services.length}`);
     console.log(`- Technicians: ${technicians.length}`);
     console.log(`- Products: ${products.length}`);
     console.log("- Collections: generated from product categories");
