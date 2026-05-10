@@ -47,7 +47,7 @@ export default function AuthFormWrapper({
 
           {/* Form Card — with visible border + generous padding */}
           <div
-            className="bg-white rounded-[20px] border border-[#E8E8ED]"
+            className="bg-white rounded-[24px] border border-[#E8E8ED] shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
             style={{ padding: '40px 44px' }}
           >
             {children}

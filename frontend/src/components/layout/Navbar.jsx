@@ -46,7 +46,7 @@ export default function Navbar({ onOpenSidebar }) {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-[20px] backdrop-saturate-[180%] border-b border-[#D2D2D7]/80" id="main-nav">
+    <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-[24px] backdrop-saturate-[180%] border-b border-[#D2D2D7]/80" id="main-nav">
       <div className="apple-section-wide">
         <div className="flex items-center justify-between h-[44px]">
           {/* Logo */}

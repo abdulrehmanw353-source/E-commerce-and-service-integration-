@@ -13,7 +13,7 @@ export default function AnnouncementBar() {
 
   return (
     <div className="relative bg-[#1D1D1F] text-white text-center" id="announcement-bar">
-      <div className="apple-section-wide flex items-center justify-center py-3 px-10">
+      <div className="apple-section-wide flex items-center justify-center py-2 px-10">
         <Link
           to="/products"
           className="inline-flex items-center gap-1.5 text-[14px] font-normal text-white/90 hover:text-white transition-colors"

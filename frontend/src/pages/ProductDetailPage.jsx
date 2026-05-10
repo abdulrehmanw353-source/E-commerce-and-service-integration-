@@ -48,8 +48,8 @@ export default function ProductDetailPage() {
   if (isLoading) {
     return (
       <div className="bg-white min-h-screen">
-        <div className="apple-section-wide pt-8 pb-16">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="apple-section-wide pt-4 pb-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Image Skeleton */}
             <div className="space-y-4">
               <div className="aspect-square bg-[#F5F5F7] rounded-[20px] animate-pulse" />
@@ -98,7 +98,7 @@ export default function ProductDetailPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Breadcrumb */}
-      <div className="apple-section-wide pt-6 pb-2">
+      <div className="apple-section-wide pt-4 pb-2">
         <nav className="flex items-center gap-1.5 text-[13px] text-[#86868B]">
           <Link to="/" className="hover:text-apple-blue transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" strokeWidth={2} />
@@ -117,8 +117,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Product Content */}
-      <section className="apple-section-wide pt-6 pb-16 sm:pb-20">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 animate-fade-in">
+      <section className="apple-section-wide pt-4 pb-12 sm:pb-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 animate-fade-in">
 
           {/* ─── Image Gallery ─── */}
           <div className="space-y-4">
@@ -192,7 +192,7 @@ export default function ProductDetailPage() {
 
             {/* Description */}
             {product.description && (
-              <p className="text-[15px] sm:text-[17px] text-[#86868B] leading-relaxed mb-8 whitespace-pre-line">
+              <p className="text-[15px] sm:text-[17px] text-[#86868B] leading-relaxed mb-6 whitespace-pre-line">
                 {product.description}
               </p>
             )}
@@ -257,7 +257,7 @@ export default function ProductDetailPage() {
       </section>
 
       {/* ─── Reviews Section ─── */}
-      <section className="bg-[#F5F5F7] py-14 sm:py-20">
+      <section className="bg-[#F5F5F7] py-10 sm:py-16">
         <div className="apple-section-wide">
           <h2 className="text-[24px] sm:text-[32px] font-bold tracking-[-0.03em] text-[#1D1D1F] mb-8">
             Reviews
@@ -270,7 +270,7 @@ export default function ProductDetailPage() {
           ) : (
             <div className="space-y-6">
               {reviews.map((review) => (
-                <div key={review._id} className="bg-white rounded-2xl p-6 sm:p-8">
+                <div key={review._id} className="bg-white rounded-[24px] p-6 sm:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-[#E8E8ED]">
                   {/* Header */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">

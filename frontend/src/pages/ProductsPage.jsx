@@ -42,16 +42,16 @@ export default function ProductsPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
-      <section className="pt-10 sm:pt-14 pb-8 sm:pb-10">
+      <section className="pt-8 sm:pt-12 pb-6 sm:pb-8">
         <div className="apple-section-wide">
-          <div className="mb-8 sm:mb-10">
-            <h1 className="text-[32px] sm:text-[44px] font-bold tracking-[-0.03em] text-[#1D1D1F] leading-tight">
+          <div className="mb-6 sm:mb-8 text-center sm:text-left">
+            <h1 className="text-[44px] sm:text-[64px] font-bold tracking-[-0.03em] text-[#1D1D1F] leading-tight mb-2">
               {filters.category
                 ? filters.category.charAt(0).toUpperCase() + filters.category.slice(1)
-                : 'All Products'}
+                : 'All Products.'}
             </h1>
             {data && (
-              <p className="text-[15px] sm:text-[17px] text-[#86868B] mt-2">
+              <p className="text-[19px] sm:text-[21px] text-[#86868B] font-medium">
                 {data.totalProducts} {data.totalProducts === 1 ? 'product' : 'products'} found
               </p>
             )}
@@ -63,7 +63,7 @@ export default function ProductsPage() {
       </section>
 
       {/* Products Grid */}
-      <section className="pb-12 sm:pb-16">
+      <section className="pb-8 sm:pb-12">
         <div className="apple-section-wide">
           {isError ? (
             <div className="text-center py-20">

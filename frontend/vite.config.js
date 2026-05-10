@@ -22,3 +22,4 @@ export default defineConfig({
     },
   },
 })
+// Dev server restart trigger

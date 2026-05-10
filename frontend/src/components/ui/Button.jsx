@@ -9,17 +9,17 @@ import { Loader2 } from 'lucide-react';
 
 const variants = {
   primary: `
-    !bg-[#007AFF] text-white
-    hover:!bg-[#0071E3]
-    active:scale-[0.97] active:!bg-[#006ADB]
+    !bg-[#0071E3] text-white
+    hover:!bg-[#0077ED]
+    active:scale-[0.97] active:!bg-[#0061C3]
   `,
   secondary: `
-    !bg-[#E8E8ED] text-[#007AFF]
+    !bg-[#E8E8ED] text-[#0071E3]
     hover:!bg-[#DCDCE2]
     active:!bg-[#D2D2D7] active:scale-[0.97]
   `,
   ghost: `
-    !bg-transparent text-[#007AFF]
+    !bg-transparent text-[#0071E3]
     hover:!bg-[#F5F5F7]
     active:!bg-[#E8E8ED] active:scale-[0.97]
   `,

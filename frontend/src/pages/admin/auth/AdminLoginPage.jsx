@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
         {/* Form Card */}
         <div
           className="border border-white/[0.06]"
-          style={{ backgroundColor: '#1C1C1E', borderRadius: '20px', padding: '40px 44px' }}
+          style={{ backgroundColor: '#1C1C1E', borderRadius: '24px', padding: '40px 44px' }}
         >
           <form onSubmit={handleSubmit(onSubmit)} id="admin-login-form">
             {/* Email */}
