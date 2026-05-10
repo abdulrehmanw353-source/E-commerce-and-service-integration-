@@ -21,20 +21,21 @@ export default function AdminTopbar({ onToggleSidebar }) {
   const title = getPageTitle(pathname);
 
   return (
-    <header className="h-[52px] flex items-center justify-between px-4 sm:px-6 bg-[#111111] border-b border-white/[0.06] flex-shrink-0">
+    <header className="h-[64px] flex items-center justify-between px-4 sm:px-6 bg-[#12182a] border-b border-white/[0.08] flex-shrink-0">
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-white/40 hover:text-white/80 hover:bg-white/[0.06] transition-all duration-150"
+          className="w-9 h-9 flex items-center justify-center rounded-xl text-white/40 hover:text-white hover:bg-white/[0.08] transition-all duration-150"
         >
           <Menu className="w-4 h-4" strokeWidth={1.75} />
         </button>
-        <h1 className="text-[15px] font-semibold text-white tracking-[-0.01em]">{title}</h1>
+        <h1 className="text-[16px] font-semibold text-white tracking-[-0.01em]">{title}</h1>
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="w-8 h-8 flex items-center justify-center rounded-lg text-white/40 hover:text-white/80 hover:bg-white/[0.06] transition-all duration-150">
+        <button className="w-9 h-9 flex items-center justify-center rounded-xl text-white/40 hover:text-white hover:bg-white/[0.08] transition-all duration-150 relative">
           <Bell className="w-4 h-4" strokeWidth={1.75} />
+          <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff5e7d]" />
         </button>
       </div>
     </header>

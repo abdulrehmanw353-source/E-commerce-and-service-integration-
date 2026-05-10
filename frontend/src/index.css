@@ -110,8 +110,11 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-bg-primary);
-  color: var(--color-label-primary);
+  background:
+    radial-gradient(1200px 700px at 20% 0%, rgba(122, 92, 255, 0.22), transparent 60%),
+    radial-gradient(1000px 700px at 85% 10%, rgba(96, 67, 255, 0.18), transparent 62%),
+    #090b16;
+  color: #e9ebff;
   font-size: 17px;
   line-height: 1.47059;
   letter-spacing: -0.022em;
@@ -301,4 +304,66 @@ a:not([class*="text-"]) {
   margin-right: auto;
   padding-left: 22px;
   padding-right: 22px;
+}
+
+/* ============================================
+   DOORSETFIX DARK NEON THEME
+   ============================================ */
+
+:root {
+  --ds-bg: #0b0f1d;
+  --ds-surface: #12182a;
+  --ds-surface-2: #161d32;
+  --ds-border: rgba(157, 133, 255, 0.24);
+  --ds-text: #f4f6ff;
+  --ds-muted: #a7adcf;
+  --ds-primary: #7a5cff;
+  --ds-primary-2: #8f74ff;
+  --ds-glow: rgba(122, 92, 255, 0.45);
+}
+
+.ds-shell {
+  background: linear-gradient(160deg, #0c1120, #0a0e1b 45%, #090d19);
+  border: 1px solid rgba(168, 148, 255, 0.2);
+  border-radius: 24px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.ds-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(157, 133, 255, 0.22);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ds-card-glow {
+  box-shadow:
+    0 0 0 1px rgba(150, 125, 255, 0.45) inset,
+    0 0 26px rgba(122, 92, 255, 0.35);
+}
+
+.ds-btn-primary {
+  background: linear-gradient(90deg, var(--ds-primary), var(--ds-primary-2));
+  color: #fff;
+  border: 1px solid rgba(179, 160, 255, 0.45);
+  box-shadow: 0 6px 20px var(--ds-glow);
+}
+
+.ds-btn-primary:hover {
+  filter: brightness(1.07);
+}
+
+.ds-btn-outline {
+  color: #d8d1ff;
+  border: 1px solid rgba(146, 124, 255, 0.45);
+  background: rgba(122, 92, 255, 0.08);
+}
+
+.ds-chip {
+  border: 1px solid rgba(166, 143, 255, 0.28);
+  color: #cbc6ed;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 999px;
 }

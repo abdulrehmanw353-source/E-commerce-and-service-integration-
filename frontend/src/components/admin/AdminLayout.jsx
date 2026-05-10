@@ -7,16 +7,15 @@ export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#0A0A0A] overflow-hidden" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif" }}>
-      {/* Sidebar */}
-      <AdminSidebar collapsed={collapsed} />
-
-      {/* Main */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <AdminTopbar onToggleSidebar={() => setCollapsed(c => !c)} />
-        <main className="flex-1 overflow-y-auto bg-[#0A0A0A]">
-          <Outlet />
-        </main>
+    <div className="h-screen overflow-hidden p-3 sm:p-5 bg-transparent" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif" }}>
+      <div className="ds-shell h-full flex overflow-hidden">
+        <AdminSidebar collapsed={collapsed} />
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+          <AdminTopbar onToggleSidebar={() => setCollapsed(c => !c)} />
+          <main className="flex-1 overflow-y-auto bg-transparent">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );

@@ -30,18 +30,18 @@ export default function AdminSidebar({ collapsed }) {
 
   return (
     <aside className={`
-      flex flex-col h-full bg-[#111111] border-r border-white/[0.06]
+      flex flex-col h-full bg-[#0f1425] border-r border-white/[0.08]
       transition-all duration-300 ease-out
       ${collapsed ? 'w-[64px]' : 'w-[220px]'}
     `}>
       {/* Brand */}
-      <div className={`flex items-center gap-3 px-4 py-5 border-b border-white/[0.06] flex-shrink-0`}>
-        <div className="w-8 h-8 rounded-[10px] bg-[#0071E3] flex items-center justify-center flex-shrink-0">
+      <div className={`flex items-center gap-3 px-4 py-5 border-b border-white/[0.08] flex-shrink-0`}>
+        <div className="w-8 h-8 rounded-[10px] bg-[#7a5cff] flex items-center justify-center flex-shrink-0 shadow-[0_0_18px_rgba(122,92,255,0.45)]">
           <Zap className="w-4 h-4 text-white" strokeWidth={2} />
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-white tracking-[-0.01em] leading-tight truncate">TechStore</p>
+            <p className="text-[14px] font-semibold text-white tracking-[-0.01em] leading-tight truncate">DoorSetFix</p>
             <p className="text-[11px] text-white/35 leading-tight">Admin Console</p>
           </div>
         )}
@@ -59,8 +59,8 @@ export default function AdminSidebar({ collapsed }) {
               flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium
               transition-all duration-150 group
               ${isActive
-                ? 'bg-white/10 text-white'
-                : 'text-white/45 hover:text-white/80 hover:bg-white/[0.05]'}
+                ? 'bg-gradient-to-r from-[#6f50ff] to-[#8c72ff] text-white shadow-[0_0_20px_rgba(122,92,255,0.35)]'
+                : 'text-white/50 hover:text-white/90 hover:bg-white/[0.05]'}
               ${collapsed ? 'justify-center px-2' : ''}
             `}
             title={collapsed ? label : undefined}
@@ -72,10 +72,10 @@ export default function AdminSidebar({ collapsed }) {
       </nav>
 
       {/* User + Logout */}
-      <div className="px-2 py-3 border-t border-white/[0.06] space-y-1 flex-shrink-0">
+      <div className="px-2 py-3 border-t border-white/[0.08] space-y-1 flex-shrink-0">
         {!collapsed && user && (
           <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
-            <div className="w-7 h-7 rounded-full bg-[#0071E3] flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 rounded-full bg-[#7a5cff] flex items-center justify-center flex-shrink-0">
               <span className="text-[11px] font-bold text-white">{user.firstName?.[0]?.toUpperCase()}</span>
             </div>
             <div className="min-w-0">

@@ -11,7 +11,7 @@ import { useAuthStore } from '../store/authStore';
 
 // ─── Fetchers ────────────────────────────────────────────────
 const fetchSlots = (date) =>
-  api.get('/time-slots/', { params: { date } }).then(r => r.data.data ?? r.data);
+  api.get('/time-slots/available', { params: { date } }).then(r => r.data.data ?? r.data);
 
 // ─── Schema ──────────────────────────────────────────────────
 const schema = yup.object({
@@ -33,12 +33,12 @@ const DEVICE_TYPES = [
 ];
 
 const SERVICES = [
-  { title: 'Screen Repair', desc: 'Cracked or broken display', icon: '📱', price: 'From $49' },
-  { title: 'Battery Replacement', desc: 'Restore battery life', icon: '🔋', price: 'From $39' },
-  { title: 'Data Recovery', desc: 'Recover lost or corrupted files', icon: '💾', price: 'From $79' },
-  { title: 'Hardware Upgrade', desc: 'RAM, SSD & performance upgrades', icon: '⚡', price: 'From $59' },
-  { title: 'Virus Removal', desc: 'Clean malware and secure your device', icon: '🛡️', price: 'From $49' },
-  { title: 'Diagnostics', desc: 'Full device health check', icon: '🔍', price: 'From $29' },
+  { title: 'Plumbing Services', desc: 'Leak repairs, pipe installations, and emergency plumbing.', icon: '🔧', price: '$89' },
+  { title: 'Electrical Services', desc: 'Wiring, circuit repair, lighting setup, and safety checks.', icon: '⚡', price: '$99' },
+  { title: 'Carpentry Services', desc: 'Furniture setup, wood repairs, and custom shelving.', icon: '🪚', price: '$79' },
+  { title: 'HVAC & AC Repair', desc: 'AC installation, heating fixes, and duct cleaning.', icon: '❄️', price: '$129' },
+  { title: 'Appliance Repair', desc: 'Washing machines, ovens, and dishwashers repaired.', icon: '🧺', price: '$69' },
+  { title: 'Door & Lock Services', desc: 'Lock installation and smart security upgrades.', icon: '🔐', price: '$59' },
 ];
 
 // ─── Field ───────────────────────────────────────────────────
@@ -88,64 +88,64 @@ export default function ServicesPage() {
   const minDateStr = minDate.toISOString().split('T')[0];
 
   return (
-    <div className="bg-white min-h-screen">
-
-      {/* ─── Hero ─── */}
-      <section className="pt-16 pb-12 bg-[#1D1D1F] text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,113,227,0.15)_0%,_transparent_70%)]" />
-        <div className="apple-section relative z-10">
-          <div className="w-14 h-14 mx-auto mb-6 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center">
-            <Wrench className="w-7 h-7 text-white" strokeWidth={1.5} />
-          </div>
-          <h1 className="text-[44px] sm:text-[56px] font-bold tracking-[-0.04em] text-white leading-tight mb-4">
-            Expert Repair Services.
-          </h1>
-          <p className="text-[19px] text-white/60 font-medium max-w-lg mx-auto mb-8">
-            Certified technicians. Genuine parts. Same-day service available.
-          </p>
-          <button
-            onClick={() => {
-              if (!isAuthenticated) { toast.error('Please sign in to book a repair.'); navigate('/login'); return; }
-              setShowForm(true);
-              setTimeout(() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
-            }}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1D1D1F] rounded-full text-[17px] font-semibold hover:bg-[#F5F5F7] hover:scale-105 active:scale-95 transition-all shadow-[0_4px_20px_rgba(255,255,255,0.15)]"
-          >
-            Book a Repair <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
-          </button>
-        </div>
-      </section>
-
-      {/* ─── Services Grid ─── */}
-      <section className="py-16 sm:py-20">
-        <div className="apple-section-wide">
-          <div className="text-center mb-12">
-            <h2 className="text-[32px] sm:text-[40px] font-bold tracking-[-0.03em] text-[#1D1D1F] mb-3">What we fix.</h2>
-            <p className="text-[17px] text-[#86868B]">Professional repairs for all major devices.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-            {SERVICES.map(s => (
-              <div key={s.title} className="bg-[#F5F5F7] rounded-2xl p-6 hover:bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border hover:border-[#E8E8ED] transition-all group">
-                <div className="text-3xl mb-4">{s.icon}</div>
-                <h3 className="text-[17px] font-semibold text-[#1D1D1F] mb-1">{s.title}</h3>
-                <p className="text-[14px] text-[#86868B] mb-3">{s.desc}</p>
-                <p className="text-[14px] font-semibold text-[#0071E3]">{s.price}</p>
+    <div className="min-h-screen py-10 sm:py-14">
+      <div className="apple-section-wide">
+        <section className="ds-shell p-4 sm:p-6">
+          <div className="grid lg:grid-cols-[280px_minmax(0,1fr)] gap-5">
+            <aside className="ds-card p-5">
+              <p className="text-white font-semibold text-[20px] mb-4">Service Categories</p>
+              <div className="space-y-2 text-[15px]">
+                {['Home Maintenance', 'Installations', 'Repairs', 'Emergency Services', 'Commercial'].map((c) => (
+                  <div key={c} className="px-3 py-2.5 rounded-xl border border-white/10 text-white/85 bg-white/[0.02]">{c}</div>
+                ))}
               </div>
-            ))}
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <p className="text-white font-semibold mb-3">Filter Options</p>
+                <p className="text-white/65 text-sm">Price</p>
+                <div className="h-1 bg-white/10 rounded-full my-3">
+                  <div className="h-1 w-2/3 rounded-full bg-[#8b72ff]" />
+                </div>
+                <p className="text-white/65 text-sm mt-4">Availability</p>
+                <div className="w-12 h-6 rounded-full bg-white/10 mt-2 relative"><span className="w-5 h-5 rounded-full bg-white absolute top-0.5 left-0.5" /></div>
+              </div>
+            </aside>
+
+            <div>
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+                {SERVICES.map((s, i) => (
+                  <div key={s.title} className={`ds-card p-6 flex flex-col ${i === 0 ? 'ds-card-glow' : ''}`}>
+                    <div className="text-4xl mb-5">{s.icon}</div>
+                    <h3 className="text-[28px] font-bold text-white tracking-[-0.02em] leading-tight mb-2">{s.title}</h3>
+                    <p className="text-[15px] text-white/65 min-h-[60px]">{s.desc}</p>
+                    <button
+                      onClick={() => {
+                        if (!isAuthenticated) { toast.error('Please sign in to book a repair.'); navigate('/login'); return; }
+                        setShowForm(true);
+                        setTimeout(() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                      }}
+                      className={`mt-5 rounded-full py-2.5 font-semibold transition-all ${i === 0 ? 'ds-btn-primary' : 'ds-btn-outline'}`}
+                    >
+                      Book Now
+                    </button>
+                    <p className="text-white/75 mt-4 text-[20px]">Starting from <span className="font-bold text-white">{s.price}</span></p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ─── Booking Form ─── */}
       {showForm && (
-        <section id="booking-form" className="py-16 bg-[#F5F5F7]">
+        <section id="booking-form" className="py-16">
           <div className="apple-section-wide max-w-2xl mx-auto">
             <div className="text-center mb-10">
-              <h2 className="text-[32px] font-bold tracking-[-0.03em] text-[#1D1D1F] mb-2">Book a Repair</h2>
-              <p className="text-[15px] text-[#86868B]">Fill in the details below and we'll get back to you shortly.</p>
+              <h2 className="text-[32px] font-bold tracking-[-0.03em] text-white mb-2">Book a Repair</h2>
+              <p className="text-[15px] text-white/65">Fill in the details below and we'll get back to you shortly.</p>
             </div>
 
-            <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-[#E8E8ED]">
+            <div className="ds-card p-6 sm:p-10 rounded-[32px]">
               <form onSubmit={handleSubmit((data) => bookMut.mutate(data))} className="space-y-8">
 
               {/* Device Type */}
@@ -173,12 +173,12 @@ export default function ServicesPage() {
                 <Field label="Brand (optional)" error={errors.deviceBrand?.message}>
                   <input placeholder="e.g. Apple, Dell, Samsung"
                     {...register('deviceBrand')}
-                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
                 </Field>
                 <Field label="Model (optional)" error={errors.deviceModel?.message}>
                   <input placeholder="e.g. MacBook Pro 2023"
                     {...register('deviceModel')}
-                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
                 </Field>
               </div>
 
@@ -186,14 +186,14 @@ export default function ServicesPage() {
               <Field label="Problem Title" error={errors.problemTitle?.message}>
                 <input placeholder="e.g. Cracked screen, won't turn on"
                   {...register('problemTitle')}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
               </Field>
 
               <Field label="Problem Description" error={errors.problemDescription?.message}
                 hint="Describe the issue in detail (minimum 20 characters)">
                 <textarea rows={4} placeholder="Tell us what's happening with your device..."
                   {...register('problemDescription')}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all resize-none" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all resize-none" />
               </Field>
 
               {/* Date */}
@@ -201,7 +201,7 @@ export default function ServicesPage() {
                 <input type="date" min={minDateStr}
                   {...register('preferredDate')}
                   onChange={(e) => { register('preferredDate').onChange(e); setSelectedDate(e.target.value); }}
-                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
               </Field>
 
               {/* Time Slots */}

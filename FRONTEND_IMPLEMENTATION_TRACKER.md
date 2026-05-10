@@ -15,13 +15,13 @@ Rules for execution:
 
 ## 0) UI Screen Mapping (Required Before UI Work)
 
-- [ ] Collect and organize all provided UI screens by flow:
+- [x] Collect and organize all provided UI screens by flow:
   - Storefront (public shopping)
   - Booking (service flow)
   - Admin dashboard
-- [ ] Build a screen-to-route map (`Screen Name -> Frontend Route`).
-- [ ] Identify reusable design tokens from screens (colors, spacing, radius, typography, button/input styles).
-- [ ] Mark which current pages are:
+- [x] Build a screen-to-route map (`Screen Name -> Frontend Route`).
+- [x] Identify reusable design tokens from screens (colors, spacing, radius, typography, button/input styles).
+- [x] Mark which current pages are:
   - Keep
   - Redesign
   - Rebuild
@@ -391,7 +391,24 @@ Commit message:
 ## Current Start Point
 
 Next part to implement:
-- `Phase 0 -> UI Screen Mapping`
+- `Phase 2 -> Part 2.1 Customer Auth Flow Hardening`
 
 Blocked items:
-- Waiting for your provided UI screens to align implementation precisely.
+- None
+
+---
+
+## UI Screen-to-Route Map (Current)
+
+- Admin Dashboard screen -> `/admin` (`AdminLayout`, `AdminSidebar`, `AdminTopbar`, `AdminDashboardPage`)
+- Store Landing screen -> `/` (`Navbar`, `HomePage`)
+- Booking Services screen -> `/services` (`ServicesPage`)
+
+## First Implementation Wave Applied
+
+- Replaced Apple light base with dark neon DoorSetFix theme tokens and utilities in `frontend/src/index.css`.
+- Restyled shared storefront navigation in `frontend/src/components/layout/Navbar.jsx` to match provided top-bar style.
+- Rebuilt store landing hero + service category cards in `frontend/src/pages/HomePage.jsx`.
+- Reworked services catalog layout with left filter rail and neon cards in `frontend/src/pages/ServicesPage.jsx`.
+- Fixed booking slot fetch endpoint to `GET /time-slots/available`.
+- Restyled admin shell and dashboard visuals in `frontend/src/components/admin/*` and `frontend/src/pages/admin/AdminDashboardPage.jsx`.

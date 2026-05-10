@@ -44,19 +44,20 @@ export default function Navbar({ onOpenSidebar }) {
   };
 
   const navLinks = [
-    { label: 'Products', to: '/products' },
     { label: 'Services', to: '/services' },
-    { label: 'Support', to: '/support' },
+    { label: 'Store', to: '/products' },
+    { label: 'About', to: '/' },
+    { label: 'Contact', to: '/account' },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-[24px] backdrop-saturate-[180%] border-b border-[#D2D2D7]/80" id="main-nav">
+    <nav className="sticky top-0 z-50 bg-[#0d1020]/92 backdrop-blur-[20px] border-b border-white/10" id="main-nav">
       <div className="apple-section-wide">
-        <div className="flex items-center justify-between h-[44px]">
+        <div className="flex items-center justify-between h-[64px]">
           {/* Logo */}
           <Link to="/" className="flex items-center" id="nav-logo">
-            <span className="text-[20px] font-semibold tracking-[-0.02em] text-[#1D1D1F]">
-              TechStore
+            <span className="text-[26px] font-bold tracking-[-0.02em] text-[#f3f0ff]">
+              DoorSet<span className="text-[#8f74ff]">Fix</span>
             </span>
           </Link>
 
@@ -67,7 +68,7 @@ export default function Navbar({ onOpenSidebar }) {
                 key={item.label}
                 to={item.to}
                 id={`nav-${item.label.toLowerCase()}`}
-                className="text-[12px] font-normal text-[#1D1D1F]/80 hover:text-[#1D1D1F] transition-colors duration-200 tracking-[0.01em]"
+                className="text-[14px] font-medium text-white/70 hover:text-white transition-colors duration-200 tracking-[0.01em]"
               >
                 {item.label}
               </Link>
@@ -81,22 +82,22 @@ export default function Navbar({ onOpenSidebar }) {
               <button
                 onClick={() => setShowSearch(!showSearch)}
                 id="nav-search"
-                className="text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
+                className="text-white/60 hover:text-white transition-colors p-0.5"
               >
                 <Search className="w-[17px] h-[17px]" strokeWidth={1.5} />
               </button>
 
               {/* Search Dropdown */}
               {showSearch && (
-                <div className="absolute right-0 top-full mt-3 w-[320px] bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-[#D2D2D7]/60 overflow-hidden animate-scale-in origin-top-right">
+                <div className="absolute right-0 top-full mt-3 w-[320px] bg-[#141a2c] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] border border-white/10 overflow-hidden animate-scale-in origin-top-right">
                   <div className="p-3">
-                    <div className="flex items-center gap-2.5 bg-[#F5F5F7] rounded-xl px-3.5 py-2.5">
-                      <Search className="w-4 h-4 text-[#86868B] flex-shrink-0" strokeWidth={1.5} />
+                    <div className="flex items-center gap-2.5 bg-white/5 rounded-xl px-3.5 py-2.5 border border-white/10">
+                      <Search className="w-4 h-4 text-white/40 flex-shrink-0" strokeWidth={1.5} />
                       <input
                         type="text"
                         placeholder="Search products..."
                         autoFocus
-                        className="bg-transparent w-full text-[15px] text-[#1D1D1F] placeholder:text-[#86868B] outline-none"
+                        className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && e.target.value.trim()) {
                             navigate(`/products?search=${encodeURIComponent(e.target.value.trim())}`);
@@ -106,13 +107,13 @@ export default function Navbar({ onOpenSidebar }) {
                       />
                     </div>
                   </div>
-                  <div className="border-t border-[#D2D2D7]/40 px-4 py-3">
-                    <p className="text-[11px] text-[#86868B] uppercase tracking-wider font-medium mb-2">Quick Links</p>
-                    <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-[#1D1D1F] hover:text-apple-blue transition-colors">
-                      <Package className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />All Products
+                  <div className="border-t border-white/10 px-4 py-3">
+                    <p className="text-[11px] text-white/40 uppercase tracking-wider font-medium mb-2">Quick Links</p>
+                    <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
+                      <Package className="w-4 h-4 text-white/50" strokeWidth={1.5} />All Products
                     </Link>
-                    <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-[#1D1D1F] hover:text-apple-blue transition-colors">
-                      <Wrench className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />Repair Services
+                    <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
+                      <Wrench className="w-4 h-4 text-white/50" strokeWidth={1.5} />Repair Services
                     </Link>
                   </div>
                 </div>
@@ -125,9 +126,9 @@ export default function Navbar({ onOpenSidebar }) {
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   id="nav-user-menu"
-                  className="hidden sm:flex items-center gap-1.5 text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors"
+                  className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"
                 >
-                  <div className="w-[26px] h-[26px] rounded-full bg-[#1D1D1F] flex items-center justify-center">
+                  <div className="w-[30px] h-[30px] rounded-full bg-[#7a5cff] flex items-center justify-center">
                     <span className="text-[11px] font-semibold text-white leading-none">
                       {user?.firstName?.charAt(0)?.toUpperCase()}
                     </span>
@@ -137,12 +138,12 @@ export default function Navbar({ onOpenSidebar }) {
 
                 {/* Dropdown */}
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-3 w-[220px] bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-[#D2D2D7]/60 overflow-hidden animate-scale-in origin-top-right">
-                    <div className="p-4 border-b border-[#D2D2D7]/40">
-                      <p className="text-[15px] font-semibold text-[#1D1D1F] truncate">
+                  <div className="absolute right-0 top-full mt-3 w-[220px] bg-[#141a2c] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] border border-white/10 overflow-hidden animate-scale-in origin-top-right">
+                    <div className="p-4 border-b border-white/10">
+                      <p className="text-[15px] font-semibold text-white truncate">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-[12px] text-[#86868B] truncate mt-0.5">
+                      <p className="text-[12px] text-white/45 truncate mt-0.5">
                         {user?.email}
                       </p>
                     </div>
@@ -150,29 +151,29 @@ export default function Navbar({ onOpenSidebar }) {
                       <Link
                         to="/account"
                         onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-white/90 hover:bg-white/5 transition-colors"
                       >
-                        <User className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
+                        <User className="w-4 h-4 text-white/55" strokeWidth={1.5} />
                         My Account
                       </Link>
                       <Link
                         to="/account/orders"
                         onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-white/90 hover:bg-white/5 transition-colors"
                       >
-                        <Package className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
+                        <Package className="w-4 h-4 text-white/55" strokeWidth={1.5} />
                         My Orders
                       </Link>
                       <Link
                         to="/account/bookings"
                         onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-white/90 hover:bg-white/5 transition-colors"
                       >
-                        <Wrench className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
+                        <Wrench className="w-4 h-4 text-white/55" strokeWidth={1.5} />
                         My Bookings
                       </Link>
                     </div>
-                    <div className="border-t border-[#D2D2D7]/40 py-1.5">
+                    <div className="border-t border-white/10 py-1.5">
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-[14px] text-apple-red hover:bg-apple-red/5 transition-colors"
@@ -188,9 +189,9 @@ export default function Navbar({ onOpenSidebar }) {
               <Link
                 to="/login"
                 id="nav-signin"
-                className="hidden sm:block text-[12px] font-normal text-[#1D1D1F]/80 hover:text-[#1D1D1F] transition-colors"
+                className="hidden sm:block text-[14px] font-medium text-white/80 hover:text-white transition-colors border border-white/20 px-4 py-1.5 rounded-full"
               >
-                Sign In
+                Login
               </Link>
             )}
 
@@ -198,11 +199,11 @@ export default function Navbar({ onOpenSidebar }) {
             <button
               id="nav-bag"
               onClick={openCart}
-              className="relative text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
+              className="relative text-white/70 hover:text-white transition-colors p-0.5"
             >
               <ShoppingBag className="w-[17px] h-[17px]" strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#0071E3] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none tabular-nums">
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#7a5cff] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none tabular-nums">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -211,7 +212,7 @@ export default function Navbar({ onOpenSidebar }) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={onOpenSidebar}
-              className="md:hidden text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
+              className="md:hidden text-white/70 hover:text-white transition-colors p-0.5"
             >
               <Menu className="w-[17px] h-[17px]" strokeWidth={1.5} />
             </button>

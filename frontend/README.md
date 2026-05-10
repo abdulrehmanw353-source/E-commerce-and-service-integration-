@@ -14,3 +14,7 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Progress Log
+
+- Switched frontend from Apple light styling to a DoorSetFix dark-neon theme and rebuilt the Admin Dashboard, Store Landing, and Services screens to match provided UI references, including fixing booking slot integration to use the public available-slots endpoint.
