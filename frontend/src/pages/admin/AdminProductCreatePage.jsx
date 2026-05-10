@@ -39,7 +39,7 @@ function Field({ label, error, required, children }) {
   );
 }
 
-const INPUT = "w-full bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-4 py-2.5 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all";
+const INPUT = "w-full bg-[#1C1C1E] border border-white/[0.08] hover:border-white/[0.15] rounded-xl px-4 py-3 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#0071E3] focus:bg-[#2C2C2E] focus:ring-4 focus:ring-[#0071E3]/15 transition-all shadow-inner";
 
 export default function AdminProductCreatePage() {
   const navigate = useNavigate();
@@ -186,13 +186,13 @@ export default function AdminProductCreatePage() {
             </div>
 
             {/* Actions */}
-            <div className="space-y-2.5">
+            <div className="space-y-3 pt-2">
               <button type="submit" disabled={createMut.isPending}
-                className="w-full py-3 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-xl text-[14px] font-semibold transition-all">
+                className="w-full py-3.5 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-xl text-[14px] font-semibold transition-all shadow-[0_4px_14px_rgba(0,113,227,0.3)] hover:shadow-[0_6px_20px_rgba(0,113,227,0.4)] active:scale-[0.98]">
                 {createMut.isPending ? 'Creating…' : 'Create Product'}
               </button>
               <button type="button" onClick={() => navigate('/admin/products')}
-                className="w-full py-3 bg-white/[0.06] hover:bg-white/[0.1] text-white/60 rounded-xl text-[14px] font-medium transition-all">
+                className="w-full py-3.5 bg-white/[0.06] hover:bg-white/[0.1] text-white/80 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]">
                 Discard
               </button>
             </div>

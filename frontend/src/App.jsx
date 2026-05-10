@@ -11,6 +11,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import ServicesPage from './pages/ServicesPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import BookingSuccessPage from './pages/BookingSuccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Pages — Customer Auth
@@ -69,6 +70,7 @@ function AppContent() {
         {/* Cart checkout — no auth required */}
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="order-success" element={<OrderSuccessPage />} />
+        <Route path="booking-success" element={<CustomerRoute><BookingSuccessPage /></CustomerRoute>} />
         {/* Protected customer account routes */}
         <Route path="account" element={<CustomerRoute><AccountPage /></CustomerRoute>} />
         <Route path="account/orders" element={<CustomerRoute><MyOrdersPage /></CustomerRoute>} />

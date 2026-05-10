@@ -186,6 +186,9 @@
 - PHASE 7A: building ChatWidget, ChatPanel, ChatMessage for authenticated storefront users with socket.io real-time integration
 - PHASE 7B: rebuilding AdminChatPage with socket.io live updates, typing indicators, and search
 - PHASE 6E: creating AdminCustomerDetailPage for Shopify-style detailed user view and role management
+- PHASE 5A: creating BookingSuccessPage and wiring it to ServicesPage booking flow
+- UI POLISH: refining CRUD forms in AdminProductCreatePage and AdminProductEditPage with elevated Apple HIG inputs and buttons
+- UI POLISH: wrapping ServicesPage booking form in high-fidelity Apple-style card layout
 ```
 
 ### By "Pull Requests"

@@ -76,9 +76,8 @@ export default function ServicesPage() {
 
   const bookMut = useMutation({
     mutationFn: (body) => api.post('/bookings/', body).then(r => r.data),
-    onSuccess: () => {
-      toast.success('Booking submitted! We\'ll confirm shortly.');
-      navigate('/account/bookings');
+    onSuccess: (data) => {
+      navigate('/booking-success', { state: { booking: data.data || data } });
     },
     onError: (err) => toast.error(err.response?.data?.message || 'Failed to submit booking.'),
   });
@@ -146,7 +145,8 @@ export default function ServicesPage() {
               <p className="text-[15px] text-[#86868B]">Fill in the details below and we'll get back to you shortly.</p>
             </div>
 
-            <form onSubmit={handleSubmit((data) => bookMut.mutate(data))} className="space-y-6">
+            <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-[#E8E8ED]">
+              <form onSubmit={handleSubmit((data) => bookMut.mutate(data))} className="space-y-8">
 
               {/* Device Type */}
               <Field label="Device Type" error={errors.deviceType?.message}>
@@ -173,12 +173,12 @@ export default function ServicesPage() {
                 <Field label="Brand (optional)" error={errors.deviceBrand?.message}>
                   <input placeholder="e.g. Apple, Dell, Samsung"
                     {...register('deviceBrand')}
-                    className="w-full bg-white border border-[#D2D2D7] rounded-xl px-4 py-3 text-[15px] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all" />
+                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
                 </Field>
                 <Field label="Model (optional)" error={errors.deviceModel?.message}>
                   <input placeholder="e.g. MacBook Pro 2023"
                     {...register('deviceModel')}
-                    className="w-full bg-white border border-[#D2D2D7] rounded-xl px-4 py-3 text-[15px] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all" />
+                    className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
                 </Field>
               </div>
 
@@ -186,14 +186,14 @@ export default function ServicesPage() {
               <Field label="Problem Title" error={errors.problemTitle?.message}>
                 <input placeholder="e.g. Cracked screen, won't turn on"
                   {...register('problemTitle')}
-                  className="w-full bg-white border border-[#D2D2D7] rounded-xl px-4 py-3 text-[15px] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
               </Field>
 
               <Field label="Problem Description" error={errors.problemDescription?.message}
                 hint="Describe the issue in detail (minimum 20 characters)">
                 <textarea rows={4} placeholder="Tell us what's happening with your device..."
                   {...register('problemDescription')}
-                  className="w-full bg-white border border-[#D2D2D7] rounded-xl px-4 py-3 text-[15px] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all resize-none" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all resize-none" />
               </Field>
 
               {/* Date */}
@@ -201,7 +201,7 @@ export default function ServicesPage() {
                 <input type="date" min={minDateStr}
                   {...register('preferredDate')}
                   onChange={(e) => { register('preferredDate').onChange(e); setSelectedDate(e.target.value); }}
-                  className="w-full bg-white border border-[#D2D2D7] rounded-xl px-4 py-3 text-[15px] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all" />
+                  className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all" />
               </Field>
 
               {/* Time Slots */}
@@ -227,10 +227,11 @@ export default function ServicesPage() {
               )}
 
               <button type="submit" disabled={bookMut.isPending}
-                className="w-full py-4 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-full text-[17px] font-semibold transition-all">
+                className="w-full py-4 mt-2 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-full text-[17px] font-semibold transition-all shadow-[0_4px_14px_rgba(0,113,227,0.3)] hover:shadow-[0_6px_20px_rgba(0,113,227,0.4)] active:scale-[0.98]">
                 {bookMut.isPending ? 'Submitting…' : 'Submit Booking Request'}
               </button>
             </form>
+            </div>
           </div>
         </section>
       )}

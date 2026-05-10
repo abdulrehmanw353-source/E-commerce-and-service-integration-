@@ -163,7 +163,7 @@
 | 5A.3 | `TimeSlotPicker` — fetches & displays available slots | ✅ |
 | 5A.4 | `DeviceTypeSelector` — visual icon buttons | ✅ |
 | 5A.5 | Service routes in `App.jsx` (`/services`) | ✅ |
-| 5A.6 | `BookingSuccessPage` — redirect after booking | ⬜ |
+| 5A.6 | `BookingSuccessPage` — redirect after booking | ✅ |
 
 ### Part 5B — Customer Booking Dashboard ✅ COMPLETED
 
