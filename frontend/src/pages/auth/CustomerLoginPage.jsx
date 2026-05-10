@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { LogIn } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 import AuthFormWrapper from '../../components/auth/AuthFormWrapper';
 import InputField from '../../components/ui/InputField';
@@ -58,7 +58,7 @@ export default function CustomerLoginPage() {
       title="Sign in."
       subtitle="Access your TechStore account."
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" id="customer-login-form">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" id="customer-login-form">
         <InputField
           label="Email Address"
           type="email"
@@ -84,19 +84,20 @@ export default function CustomerLoginPage() {
           fullWidth
           loading={isLoading}
           id="customer-login-btn"
+          className="mt-2"
         >
-          <LogIn className="w-[18px] h-[18px]" strokeWidth={1.5} />
           Sign In
+          <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
         </Button>
       </form>
 
       {/* Register Link */}
-      <div className="mt-6 pt-5 border-t border-separator text-center">
-        <p className="text-[15px] text-label-secondary">
+      <div className="mt-8 pt-6 border-t border-[#D2D2D7]/50 text-center">
+        <p className="text-[15px] text-[#86868B]">
           Don't have an account?{' '}
           <Link
             to="/register"
-            className="apple-link font-medium"
+            className="text-apple-blue font-medium hover:underline"
             id="login-to-register-link"
           >
             Create one now

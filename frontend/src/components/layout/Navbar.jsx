@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, User, LogOut, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Menu, User, LogOut, ChevronDown, Search, Package, Wrench } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/axios';
@@ -9,13 +9,18 @@ export default function Navbar({ onOpenSidebar }) {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const menuRef = useRef(null);
+  const searchRef = useRef(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowUserMenu(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearch(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -34,29 +39,31 @@ export default function Navbar({ onOpenSidebar }) {
     navigate('/');
   };
 
+  const navLinks = [
+    { label: 'Products', to: '/products' },
+    { label: 'Services', to: '/services' },
+    { label: 'Support', to: '/support' },
+  ];
+
   return (
-    <nav className="sticky top-0 z-50 apple-glass border-b border-separator" id="main-nav">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-[20px] backdrop-saturate-[180%] border-b border-[#D2D2D7]/80" id="main-nav">
       <div className="apple-section-wide">
-        <div className="flex items-center justify-between h-[48px]">
+        <div className="flex items-center justify-between h-[44px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1.5" id="nav-logo">
-            <span className="text-[21px] font-semibold tracking-tight text-label-primary">
+          <Link to="/" className="flex items-center" id="nav-logo">
+            <span className="text-[20px] font-semibold tracking-[-0.02em] text-[#1D1D1F]">
               TechStore
             </span>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-7">
-            {[
-              { label: 'Products', to: '/products' },
-              { label: 'Services', to: '/services' },
-              { label: 'Support', to: '/support' },
-            ].map((item) => (
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
                 id={`nav-${item.label.toLowerCase()}`}
-                className="text-[13px] font-normal text-label-secondary hover:text-label-primary transition-colors duration-200"
+                className="text-[12px] font-normal text-[#1D1D1F]/80 hover:text-[#1D1D1F] transition-colors duration-200 tracking-[0.01em]"
               >
                 {item.label}
               </Link>
@@ -64,47 +71,107 @@ export default function Navbar({ onOpenSidebar }) {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4">
+            {/* Search */}
+            <div className="relative" ref={searchRef}>
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                id="nav-search"
+                className="text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
+              >
+                <Search className="w-[17px] h-[17px]" strokeWidth={1.5} />
+              </button>
+
+              {/* Search Dropdown */}
+              {showSearch && (
+                <div className="absolute right-0 top-full mt-3 w-[320px] bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-[#D2D2D7]/60 overflow-hidden animate-scale-in origin-top-right">
+                  <div className="p-3">
+                    <div className="flex items-center gap-2.5 bg-[#F5F5F7] rounded-xl px-3.5 py-2.5">
+                      <Search className="w-4 h-4 text-[#86868B] flex-shrink-0" strokeWidth={1.5} />
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        autoFocus
+                        className="bg-transparent w-full text-[15px] text-[#1D1D1F] placeholder:text-[#86868B] outline-none"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && e.target.value.trim()) {
+                            navigate(`/products?search=${encodeURIComponent(e.target.value.trim())}`);
+                            setShowSearch(false);
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="border-t border-[#D2D2D7]/40 px-4 py-3">
+                    <p className="text-[11px] text-[#86868B] uppercase tracking-wider font-medium mb-2">Quick Links</p>
+                    <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-[#1D1D1F] hover:text-apple-blue transition-colors">
+                      <Package className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />All Products
+                    </Link>
+                    <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-[#1D1D1F] hover:text-apple-blue transition-colors">
+                      <Wrench className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />Repair Services
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Auth */}
             {isAuthenticated ? (
-              /* ─── Authenticated: User Menu ─── */
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   id="nav-user-menu"
-                  className="hidden sm:flex items-center gap-1.5 text-[13px] font-normal text-label-secondary hover:text-label-primary transition-colors"
+                  className="hidden sm:flex items-center gap-1.5 text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors"
                 >
-                  <div className="w-7 h-7 rounded-full bg-apple-blue flex items-center justify-center">
-                    <span className="text-[12px] font-medium text-white">
+                  <div className="w-[26px] h-[26px] rounded-full bg-[#1D1D1F] flex items-center justify-center">
+                    <span className="text-[11px] font-semibold text-white leading-none">
                       {user?.firstName?.charAt(0)?.toUpperCase()}
                     </span>
                   </div>
-                  <span className="hidden lg:inline">{user?.firstName}</span>
                   <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} strokeWidth={2} />
                 </button>
 
                 {/* Dropdown */}
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-[200px] bg-bg-primary rounded-xl shadow-lg border border-separator overflow-hidden animate-scale-in origin-top-right">
-                    <div className="p-3 border-b border-separator">
-                      <p className="text-[15px] font-medium text-label-primary truncate">
+                  <div className="absolute right-0 top-full mt-3 w-[220px] bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-[#D2D2D7]/60 overflow-hidden animate-scale-in origin-top-right">
+                    <div className="p-4 border-b border-[#D2D2D7]/40">
+                      <p className="text-[15px] font-semibold text-[#1D1D1F] truncate">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-[12px] text-label-quaternary truncate">
+                      <p className="text-[12px] text-[#86868B] truncate mt-0.5">
                         {user?.email}
                       </p>
                     </div>
-                    <div className="py-1">
+                    <div className="py-1.5">
                       <Link
                         to="/account"
                         onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-2.5 px-3 py-2.5 text-[15px] text-label-primary hover:bg-bg-secondary transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
                       >
-                        <User className="w-4 h-4 text-label-quaternary" strokeWidth={1.5} />
+                        <User className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
                         My Account
                       </Link>
+                      <Link
+                        to="/account/orders"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
+                      >
+                        <Package className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
+                        My Orders
+                      </Link>
+                      <Link
+                        to="/account/bookings"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#1D1D1F] hover:bg-[#F5F5F7] transition-colors"
+                      >
+                        <Wrench className="w-4 h-4 text-[#86868B]" strokeWidth={1.5} />
+                        My Bookings
+                      </Link>
+                    </div>
+                    <div className="border-t border-[#D2D2D7]/40 py-1.5">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[15px] text-apple-red hover:bg-bg-secondary transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[14px] text-apple-red hover:bg-apple-red/5 transition-colors"
                       >
                         <LogOut className="w-4 h-4" strokeWidth={1.5} />
                         Sign Out
@@ -114,29 +181,29 @@ export default function Navbar({ onOpenSidebar }) {
                 )}
               </div>
             ) : (
-              /* ─── Guest: Sign In Link ─── */
               <Link
                 to="/login"
                 id="nav-signin"
-                className="hidden sm:block text-[13px] font-normal text-apple-blue hover:text-[#0071E3] transition-colors"
+                className="hidden sm:block text-[12px] font-normal text-[#1D1D1F]/80 hover:text-[#1D1D1F] transition-colors"
               >
                 Sign In
               </Link>
             )}
 
+            {/* Cart */}
             <button
               id="nav-bag"
-              className="text-label-secondary hover:text-label-primary transition-colors"
+              className="text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
             >
-              <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              <ShoppingBag className="w-[17px] h-[17px]" strokeWidth={1.5} />
             </button>
             
             {/* Mobile Menu Toggle */}
             <button
               onClick={onOpenSidebar}
-              className="md:hidden text-label-secondary hover:text-label-primary transition-colors"
+              className="md:hidden text-[#1D1D1F]/60 hover:text-[#1D1D1F] transition-colors p-0.5"
             >
-              <Menu className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              <Menu className="w-[17px] h-[17px]" strokeWidth={1.5} />
             </button>
           </div>
         </div>

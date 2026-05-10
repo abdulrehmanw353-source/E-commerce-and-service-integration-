@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { UserPlus } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 import AuthFormWrapper from '../../components/auth/AuthFormWrapper';
 import InputField from '../../components/ui/InputField';
@@ -102,7 +102,7 @@ export default function CustomerRegisterPage() {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" id="customer-register-form">
         {/* Name Row */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <InputField
             label="First Name"
             name="firstName"
@@ -138,38 +138,39 @@ export default function CustomerRegisterPage() {
         />
 
         {/* Password Row */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <InputField
             label="Password"
             type="password"
             name="password"
-            placeholder="Min. 6 characters"
+            placeholder="Min. 6 chars"
             register={register}
             error={errors.password?.message}
           />
           <InputField
-            label="Confirm Password"
+            label="Confirm"
             type="password"
             name="confirmPassword"
-            placeholder="Re-enter password"
+            placeholder="Re-enter"
             register={register}
             error={errors.confirmPassword?.message}
           />
         </div>
 
         {/* Address Section */}
-        <div className="pt-2">
-          <p className="text-[13px] font-medium text-label-secondary tracking-tight pl-1 mb-3">
-            Shipping Address <span className="text-label-quaternary font-normal">(optional)</span>
+        <div className="pt-3 border-t border-[#D2D2D7]/40">
+          <p className="text-[14px] font-medium text-label-primary tracking-[-0.01em] mb-4">
+            Shipping Address{' '}
+            <span className="text-[#86868B] font-normal text-[13px]">(optional)</span>
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <InputField
               name="street"
               placeholder="Street address"
               register={register}
               error={errors.street?.message}
             />
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <InputField
                 name="city"
                 placeholder="City"
@@ -199,19 +200,20 @@ export default function CustomerRegisterPage() {
           fullWidth
           loading={isLoading}
           id="customer-register-btn"
+          className="mt-1"
         >
-          <UserPlus className="w-[18px] h-[18px]" strokeWidth={1.5} />
           Create Account
+          <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
         </Button>
       </form>
 
       {/* Login Link */}
-      <div className="mt-6 pt-5 border-t border-separator text-center">
-        <p className="text-[15px] text-label-secondary">
+      <div className="mt-8 pt-6 border-t border-[#D2D2D7]/50 text-center">
+        <p className="text-[15px] text-[#86868B]">
           Already have an account?{' '}
           <Link
             to="/login"
-            className="apple-link font-medium"
+            className="text-apple-blue font-medium hover:underline"
             id="register-to-login-link"
           >
             Sign in

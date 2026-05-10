@@ -117,6 +117,17 @@
 - creating AdminRoute guard (checks admin auth + role, redirects to /admin/login)
 - creating GuestRoute guard (prevents authenticated users from accessing login/register)
 - integrating all route guards into App.jsx with admin login route (/admin/login)
+- UI POLISH: fixing input fields (visible #D2D2D7 borders, #F5F5F7 bg, focus ring, 14px labels)
+- UI POLISH: fixing auth pages (clean #F5F5F7 bg, proper card shadow, better spacing)
+- UI POLISH: fixing Button component (reliable blue backgrounds, hover color shifts, font-medium)
+- UI POLISH: fixing homepage text spacing bug (repairs.Get → repairs. Get)
+- UI POLISH: using Apple's exact colors across all pages (#1D1D1F, #86868B, #F5F5F7, #D2D2D7, #6E6E73)
+- adding "Expert Repair Services" dark promotional section to HomePage with gradient and CTA
+- making feature cards clickable links to respective routes
+- creating AnnouncementBar component (dark bg, teal accent, dismissible, free shipping promo)
+- enhancing Navbar with search dropdown, quick links, My Orders/My Bookings in user menu
+- enhancing Footer with 4-column layout (Shop, Repair, Account, Support), repair mini-banner
+- integrating AnnouncementBar into MainLayout above Navbar
 ```
 
 ### By "Pull Requests"

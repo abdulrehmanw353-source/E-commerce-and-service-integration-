@@ -9,31 +9,31 @@ import { Loader2 } from 'lucide-react';
 
 const variants = {
   primary: `
-    bg-apple-blue text-white
-    hover:opacity-90
-    active:scale-[0.96] active:opacity-80
+    !bg-[#007AFF] text-white
+    hover:!bg-[#0071E3]
+    active:scale-[0.97] active:!bg-[#006ADB]
   `,
   secondary: `
-    bg-fill-quaternary text-apple-blue
-    hover:bg-fill-tertiary
-    active:bg-fill-secondary active:scale-[0.96]
+    !bg-[#E8E8ED] text-[#007AFF]
+    hover:!bg-[#DCDCE2]
+    active:!bg-[#D2D2D7] active:scale-[0.97]
   `,
   ghost: `
-    bg-transparent text-apple-blue
-    hover:bg-fill-quaternary
-    active:bg-fill-tertiary active:scale-[0.96]
+    !bg-transparent text-[#007AFF]
+    hover:!bg-[#F5F5F7]
+    active:!bg-[#E8E8ED] active:scale-[0.97]
   `,
   danger: `
-    bg-apple-red text-white
-    hover:opacity-90
-    active:scale-[0.96] active:opacity-80
+    !bg-[#FF3B30] text-white
+    hover:!bg-[#E8342B]
+    active:scale-[0.97] active:!bg-[#D12D25]
   `,
 };
 
 const sizes = {
-  sm: 'px-4 py-2 text-[15px] gap-1.5',
-  md: 'px-6 py-3 text-[17px] gap-2',
-  lg: 'px-8 py-3.5 text-[17px] gap-2',
+  sm: 'px-5 py-2 text-[15px] gap-1.5',
+  md: 'px-6 py-[11px] text-[17px] gap-2',
+  lg: 'px-8 py-[13px] text-[17px] gap-2',
 };
 
 export default function Button({
@@ -59,7 +59,7 @@ export default function Button({
       onClick={onClick}
       className={`
         inline-flex items-center justify-center
-        font-normal tracking-[-0.022em]
+        font-medium tracking-[-0.022em]
         rounded-full
         transition-all duration-150 ease-out
         cursor-pointer select-none
