@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, Users, ChevronRight, ShieldCheck } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
 import StatusBadge from '../../components/admin/StatusBadge';
@@ -13,6 +13,7 @@ const updateRole = ({ id, role }) =>
 
 export default function AdminUsersPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
@@ -74,7 +75,11 @@ export default function AdminUsersPage() {
                     </td></tr>
                   )
                   : users.map(u => (
-                    <tr key={u._id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr 
+                      key={u._id} 
+                      onClick={() => navigate(`/admin/users/${u._id}`)}
+                      className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                    >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-[#0071E3]/20 flex items-center justify-center flex-shrink-0">
@@ -91,7 +96,10 @@ export default function AdminUsersPage() {
                       <td className="px-5 py-3.5">
                         {u.role !== 'admin' && (
                           <button
-                            onClick={() => roleMut.mutate({ id: u._id, role: 'admin' })}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              roleMut.mutate({ id: u._id, role: 'admin' });
+                            }}
                             disabled={roleMut.isPending}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white/50 bg-white/[0.06] hover:bg-[#0071E3]/20 hover:text-[#0071E3] disabled:opacity-40 transition-all"
                           >

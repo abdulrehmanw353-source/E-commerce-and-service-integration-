@@ -222,7 +222,7 @@
 | # | Task | Status |
 |---|------|--------|
 | 6E.1 | `pages/admin/AdminUsersPage.jsx` — search, promote-to-admin | ✅ |
-| 6E.2 | Customer detail page | ⬜ |
+| 6E.2 | Customer detail page | ✅ |
 
 ### Part 6F — Booking Management ✅
 
@@ -263,13 +263,13 @@
 | 7A.6 | Typing indicators (emit/listen, bounce dots) | ✅ |
 | 7A.7 | ChatWidget in `MainLayout` (authenticated only) | ✅ |
 
-### Part 7B — Chat System (Admin Side) ✅ PARTIAL
+### Part 7B — Chat System (Admin Side) ✅ COMPLETED
 
 | # | Task | Status |
 |---|------|--------|
 | 7B.1 | `pages/admin/AdminChatPage.jsx` — conversations + messages (polling) | ✅ |
-| 7B.2 | Real-time socket integration for admin | ⬜ |
-| 7B.3 | Close conversation action | ⬜ |
+| 7B.2 | Real-time socket integration for admin | ✅ |
+| 7B.3 | Close conversation action | ✅ |
 
 ### Part 7C — Final Polish ⬜
 
@@ -293,8 +293,8 @@
 | **Phase 3** — Storefront Core | 3A ✅ → 3B ✅ → 3C ✅ | ✅ Done |
 | **Phase 4** — E-Commerce Flow | 4A ✅ → 4B ✅ → 4C ✅ | ✅ Done |
 | **Phase 5** — Service Booking | 5A ✅ → 5B ✅ | ✅ Done |
-| **Phase 6** — Admin Dashboard | 6A ✅ → 6B ✅ → 6C ✅ → 6D ✅ → 6E 🔄 → 6F ✅ → 6G ✅ → 6H ✅ | 🔄 Partial |
-| **Phase 7** — Chat & Polish | 7A ⬜ → 7B 🔄 → 7C ⬜ | ⬜ Pending |
+| **Phase 6** — Admin Dashboard | 6A ✅ → 6B ✅ → 6C ✅ → 6D ✅ → 6E ✅ → 6F ✅ → 6G ✅ → 6H ✅ | ✅ Done |
+| **Phase 7** — Chat & Polish | 7A ✅ → 7B ✅ → 7C ⬜ | 🔄 Partial |
 
 ---
 

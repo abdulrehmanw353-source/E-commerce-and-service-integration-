@@ -174,7 +174,7 @@ button {
   border: none;
   background: none;
   font: inherit;
-  color: currentColor; /* use explicit text-* classes to set color */
+  color: #1D1D1F; /* Safe dark default — override with text-white etc. */
 }
 
 /* Ensure all <a> used as button-links have correct default color */

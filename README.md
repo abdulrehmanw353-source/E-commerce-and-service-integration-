@@ -182,6 +182,10 @@
 - PHASE 4A: wiring MainLayout.jsx to render CartSlideOut globally on all storefront pages
 - PHASE 4A: wiring Navbar cart icon → CartSlideOut open, live item count badge (blue pill, 9+ cap)
 - PHASE 4A: wiring ProductDetailPage Add to Cart → useAddToCart hook, opens CartSlideOut on success
+- UI POLISH: fixing global button CSS to enforce dark text by default preventing white-text inheritance issues on light backgrounds
+- PHASE 7A: building ChatWidget, ChatPanel, ChatMessage for authenticated storefront users with socket.io real-time integration
+- PHASE 7B: rebuilding AdminChatPage with socket.io live updates, typing indicators, and search
+- PHASE 6E: creating AdminCustomerDetailPage for Shopify-style detailed user view and role management
 ```
 
 ### By "Pull Requests"

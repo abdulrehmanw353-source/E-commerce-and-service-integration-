@@ -34,6 +34,7 @@ import AdminProductEditPage from './pages/admin/AdminProductEditPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminCustomerDetailPage from './pages/admin/AdminCustomerDetailPage';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage';
 import AdminTimeSlotsPage from './pages/admin/AdminTimeSlotsPage';
@@ -103,6 +104,7 @@ function AppContent() {
         <Route path="orders" element={<AdminOrdersPage />} />
         <Route path="orders/:id" element={<AdminOrderDetailPage />} />
         <Route path="users" element={<AdminUsersPage />} />
+        <Route path="users/:id" element={<AdminCustomerDetailPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="bookings/:id" element={<AdminBookingDetailPage />} />
         <Route path="time-slots" element={<AdminTimeSlotsPage />} />
