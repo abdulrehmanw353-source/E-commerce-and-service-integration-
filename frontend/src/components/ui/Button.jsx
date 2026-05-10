@@ -1,46 +1,17 @@
 import { Loader2 } from 'lucide-react';
 
-/**
- * Apple-styled Button Component
- *
- * Variants: primary (blue fill, white text), secondary (gray fill, dark text),
- *           ghost (transparent, blue text), danger (red fill, white text),
- *           dark (dark fill, white text)
- * Supports: loading state, disabled, icons, full-width
- */
-
 const variants = {
-  primary: `
-    bg-[#0071E3] !text-white
-    hover:bg-[#0077ED]
-    active:scale-[0.97] active:bg-[#0061C3]
-  `,
-  secondary: `
-    bg-[#E8E8ED] !text-[#1D1D1F]
-    hover:bg-[#DCDCE2]
-    active:bg-[#D2D2D7] active:scale-[0.97]
-  `,
-  ghost: `
-    bg-transparent !text-[#0071E3]
-    hover:bg-[#F5F5F7]
-    active:bg-[#E8E8ED] active:scale-[0.97]
-  `,
-  danger: `
-    bg-[#FF3B30] !text-white
-    hover:bg-[#E8342B]
-    active:scale-[0.97] active:bg-[#D12D25]
-  `,
-  dark: `
-    bg-[#1D1D1F] !text-white
-    hover:bg-[#3A3A3C]
-    active:scale-[0.97] active:bg-[#2C2C2E]
-  `,
+  primary: 'ds-btn-primary text-white hover:brightness-[1.07]',
+  secondary: 'ds-btn-outline text-white/90 hover:text-white hover:bg-white/[0.06]',
+  ghost: 'bg-transparent text-white/80 hover:text-white hover:bg-white/[0.06] border border-transparent',
+  danger: 'bg-[#ff3b57] text-white border border-[#ff3b57]/60 hover:bg-[#ff5e7d]',
+  dark: 'bg-[#12182a] text-white border border-white/10 hover:bg-white/[0.06]',
 };
 
 const sizes = {
-  sm: 'px-5 py-2 text-[15px] gap-1.5',
-  md: 'px-6 py-[11px] text-[17px] gap-2',
-  lg: 'px-8 py-[13px] text-[17px] gap-2',
+  sm: 'px-4 py-2 text-[13px] gap-1.5',
+  md: 'px-5 py-2.5 text-[14px] gap-2',
+  lg: 'px-6 py-3 text-[15px] gap-2',
 };
 
 export default function Button({
@@ -66,11 +37,12 @@ export default function Button({
       onClick={onClick}
       className={`
         inline-flex items-center justify-center
-        font-semibold tracking-[-0.022em]
-        rounded-full
+        font-semibold tracking-[-0.01em]
+        rounded-xl
         transition-all duration-150 ease-out
         cursor-pointer select-none
         disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
+        active:scale-[0.98]
         ${variants[variant]}
         ${sizes[size]}
         ${fullWidth ? 'w-full' : ''}

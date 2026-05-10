@@ -3,12 +3,13 @@ import { useState } from 'react';
 
 const categories = [
   { label: 'All Categories', value: '' },
-  { label: 'Laptops', value: 'laptops' },
-  { label: 'Phones', value: 'phones' },
-  { label: 'Desktops', value: 'desktops' },
-  { label: 'Tablets', value: 'tablets' },
-  { label: 'Audio', value: 'audio' },
-  { label: 'Gaming', value: 'gaming' },
+  { label: 'Door & Lock Services', value: 'Door & Lock Services' },
+  { label: 'Home Security', value: 'Home Security' },
+  { label: 'HVAC & AC Repair', value: 'HVAC & AC Repair' },
+  { label: 'Plumbing Services', value: 'Plumbing Services' },
+  { label: 'Electrical Services', value: 'Electrical Services' },
+  { label: 'Appliance Repair', value: 'Appliance Repair' },
+  { label: 'Carpentry Services', value: 'Carpentry Services' },
 ];
 
 const sortOptions = [
@@ -40,16 +41,16 @@ export default function ProductFilters({ filters, onFilterChange }) {
       <div className="flex items-center gap-3">
         {/* Search */}
         <div className="flex-1 relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#86868B]" strokeWidth={1.5} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-white/35" strokeWidth={1.5} />
           <input
             type="text"
             placeholder="Search products..."
             defaultValue={filters.keyword || ''}
             onKeyDown={handleSearch}
-            className="w-full pl-10 pr-10 py-3 bg-[#F5F5F7] rounded-xl text-[15px] text-[#1D1D1F] placeholder:text-[#C7C7CC] outline-none focus:ring-[3px] focus:ring-apple-blue/15 focus:bg-white transition-all border border-transparent focus:border-apple-blue"
+            className="w-full pl-10 pr-10 py-3 bg-[#12182a] border border-white/10 hover:border-[#8f74ff]/35 rounded-xl text-[14px] text-white placeholder:text-white/35 outline-none focus:border-[#a894ff] focus:ring-4 focus:ring-[#8f74ff]/20 transition-all"
           />
           {filters.keyword && (
-            <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-[#C7C7CC] hover:text-[#86868B] transition-colors">
+            <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-white/35 hover:text-white/70 transition-colors">
               <X className="w-4 h-4" strokeWidth={2} />
             </button>
           )}
@@ -58,7 +59,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
         {/* Mobile Filter Toggle */}
         <button
           onClick={() => setShowMobileFilters(!showMobileFilters)}
-          className="sm:hidden w-11 h-11 rounded-xl bg-[#F5F5F7] flex items-center justify-center text-[#1D1D1F] hover:bg-[#E8E8ED] transition-colors"
+          className="sm:hidden w-11 h-11 rounded-xl bg-[#12182a] border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/[0.06] transition-colors"
         >
           <SlidersHorizontal className="w-[18px] h-[18px]" strokeWidth={1.5} />
         </button>
@@ -70,13 +71,13 @@ export default function ProductFilters({ filters, onFilterChange }) {
             <select
               value={filters.category || ''}
               onChange={(e) => onFilterChange({ ...filters, category: e.target.value, page: 1 })}
-              className="appearance-none pl-4 pr-9 py-3 bg-[#F5F5F7] rounded-xl text-[14px] text-[#1D1D1F] outline-none focus:ring-[3px] focus:ring-apple-blue/15 cursor-pointer hover:bg-[#E8E8ED] transition-colors border border-transparent focus:border-apple-blue"
+              className="appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 hover:border-[#8f74ff]/35 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff] focus:ring-4 focus:ring-[#8f74ff]/20 cursor-pointer transition-colors"
             >
               {categories.map((cat) => (
                 <option key={cat.value} value={cat.value}>{cat.label}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#86868B] pointer-events-none" strokeWidth={2} />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/45 pointer-events-none" strokeWidth={2} />
           </div>
 
           {/* Sort */}
@@ -84,13 +85,13 @@ export default function ProductFilters({ filters, onFilterChange }) {
             <select
               value={filters.sort || '-createdAt'}
               onChange={(e) => onFilterChange({ ...filters, sort: e.target.value, page: 1 })}
-              className="appearance-none pl-4 pr-9 py-3 bg-[#F5F5F7] rounded-xl text-[14px] text-[#1D1D1F] outline-none focus:ring-[3px] focus:ring-apple-blue/15 cursor-pointer hover:bg-[#E8E8ED] transition-colors border border-transparent focus:border-apple-blue"
+              className="appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 hover:border-[#8f74ff]/35 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff] focus:ring-4 focus:ring-[#8f74ff]/20 cursor-pointer transition-colors"
             >
               {sortOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#86868B] pointer-events-none" strokeWidth={2} />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/45 pointer-events-none" strokeWidth={2} />
           </div>
         </div>
       </div>
@@ -102,25 +103,25 @@ export default function ProductFilters({ filters, onFilterChange }) {
             <select
               value={filters.category || ''}
               onChange={(e) => onFilterChange({ ...filters, category: e.target.value, page: 1 })}
-              className="w-full appearance-none pl-4 pr-9 py-3 bg-[#F5F5F7] rounded-xl text-[14px] text-[#1D1D1F] outline-none border border-transparent focus:border-apple-blue"
+              className="w-full appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff]"
             >
               {categories.map((cat) => (
                 <option key={cat.value} value={cat.value}>{cat.label}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#86868B] pointer-events-none" strokeWidth={2} />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/45 pointer-events-none" strokeWidth={2} />
           </div>
           <div className="relative flex-1">
             <select
               value={filters.sort || '-createdAt'}
               onChange={(e) => onFilterChange({ ...filters, sort: e.target.value, page: 1 })}
-              className="w-full appearance-none pl-4 pr-9 py-3 bg-[#F5F5F7] rounded-xl text-[14px] text-[#1D1D1F] outline-none border border-transparent focus:border-apple-blue"
+              className="w-full appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff]"
             >
               {sortOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#86868B] pointer-events-none" strokeWidth={2} />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/45 pointer-events-none" strokeWidth={2} />
           </div>
         </div>
       )}

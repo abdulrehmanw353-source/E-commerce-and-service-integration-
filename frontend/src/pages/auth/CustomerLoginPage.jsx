@@ -42,7 +42,7 @@ export default function CustomerLoginPage() {
   };
 
   return (
-    <AuthFormWrapper title="Sign in." subtitle="Access your TechStore account.">
+    <AuthFormWrapper title="Sign in." subtitle="Access your DoorSetFix account.">
       <form onSubmit={handleSubmit(onSubmit)} id="customer-login-form">
         <div style={{ marginBottom: '24px' }}>
           <InputField
@@ -72,10 +72,10 @@ export default function CustomerLoginPage() {
         </Button>
       </form>
 
-      <div className="text-center" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #E8E8ED' }}>
-        <p className="text-[15px] text-[#86868B]">
+      <div className="text-center mt-8 pt-6 border-t border-white/10">
+        <p className="text-[13px] text-white/55">
           Don't have an account?{' '}
-          <Link to="/register" className="text-apple-blue font-medium hover:underline" id="login-to-register-link">
+          <Link to="/register" className="text-[#d7ccff] font-semibold hover:text-white transition-colors" id="login-to-register-link">
             Create one now
           </Link>
         </p>

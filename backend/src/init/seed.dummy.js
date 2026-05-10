@@ -14,6 +14,7 @@ import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
 import TimeSlot from "../models/timeSlot.model.js";
 import Booking from "../models/booking.model.js";
+import Technician from "../models/technician.model.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 
@@ -48,20 +49,22 @@ async function seedDummyData() {
       Order.deleteMany({}),
       Booking.deleteMany({}),
       TimeSlot.deleteMany({}),
+      Technician.deleteMany({}),
       Product.deleteMany({}),
     ]);
+    // Keep a single admin account aligned with "single-admin" policy.
     await User.deleteMany({ email: { $ne: "admin@admin.com" } });
 
     let admin = await User.findOne({ email: "admin@admin.com", role: "admin" });
     if (!admin) {
       admin = await User.create({
-        firstName: "Super",
-        lastName: "Admin",
-        email: "super.admin@gmail.com",
-        password: "Admin123#",
+        firstName: "Admin",
+        lastName: "DoorSetFix",
+        email: "admin@admin.com",
+        password: "admin123",
         role: "admin",
       });
-      console.log("(SEED) default admin created: super.admin@gmail.com / Admin123#");
+      console.log("(SEED) default admin created: admin@admin.com / admin123");
     }
 
     const customerDocs = await User.insertMany([
@@ -123,6 +126,61 @@ async function seedDummyData() {
       })),
     );
 
+    const technicians = await Technician.insertMany([
+      {
+        firstName: "Sara",
+        lastName: "Khan",
+        email: "sara.tech@doorsetfix.com",
+        phoneNo: "03005550111",
+        cnicImage: "https://images.unsplash.com/photo-1520975958225-2b4b85b2edb0?w=1200",
+        address: { street: "Gulberg", city: "Lahore", state: "Punjab", country: "Pakistan" },
+        expertise: ["door lock", "smart lock", "home security"],
+        isAvailable: true,
+        status: "available",
+        activeTasks: 1,
+        createdBy: admin._id,
+      },
+      {
+        firstName: "Asad",
+        lastName: "Ali",
+        email: "asad.tech@doorsetfix.com",
+        phoneNo: "03005550222",
+        cnicImage: "https://images.unsplash.com/photo-1520975682031-a0c5d0bca10d?w=1200",
+        address: { street: "DHA", city: "Karachi", state: "Sindh", country: "Pakistan" },
+        expertise: ["appliance repair", "electrical"],
+        isAvailable: true,
+        status: "busy",
+        activeTasks: 3,
+        createdBy: admin._id,
+      },
+      {
+        firstName: "David",
+        lastName: "Lee",
+        email: "david.tech@doorsetfix.com",
+        phoneNo: "03005550333",
+        cnicImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200",
+        address: { street: "Blue Area", city: "Islamabad", state: "ICT", country: "Pakistan" },
+        expertise: ["hvac", "plumbing"],
+        isAvailable: true,
+        status: "available",
+        activeTasks: 0,
+        createdBy: admin._id,
+      },
+      {
+        firstName: "Maya",
+        lastName: "Noor",
+        email: "maya.tech@doorsetfix.com",
+        phoneNo: "03005550444",
+        cnicImage: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=1200",
+        address: { street: "Model Town", city: "Lahore", state: "Punjab", country: "Pakistan" },
+        expertise: ["carpentry", "door frame"],
+        isAvailable: false,
+        status: "unavailable",
+        activeTasks: 0,
+        createdBy: admin._id,
+      },
+    ]);
+
     await Review.insertMany(
       products.slice(0, 5).map((product, idx) => ({
         user: customerDocs[idx % customerDocs.length]._id,
@@ -160,6 +218,8 @@ async function seedDummyData() {
         customer: customerDocs[idx % customerDocs.length]._id,
         preferredDate: datePlusDays((idx % 4) + 1),
         preferredTimeSlot: slots[idx % slots.length]._id,
+        technician: technicians[idx % technicians.length]._id,
+        assignedTechnician: `${technicians[idx % technicians.length].firstName} ${technicians[idx % technicians.length].lastName || ""}`.trim(),
         images: [
           "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200",
         ],
@@ -226,6 +286,7 @@ async function seedDummyData() {
 
     console.log("(DUMMY SEED COMPLETE)");
     console.log(`- Customers: ${customerDocs.length}`);
+    console.log(`- Technicians: ${technicians.length}`);
     console.log(`- Products: ${products.length}`);
     console.log("- Collections: generated from product categories");
     console.log("- Analytics: generated from dated orders/bookings");

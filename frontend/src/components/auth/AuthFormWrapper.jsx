@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 
 /**
  * Auth Form Wrapper — Shared container for Login / Register pages
- * Clean #F5F5F7 background, centered white card, slide-up animation.
+ * Dark-neon theme, centered ds-shell card.
  */
 export default function AuthFormWrapper({
   title,
@@ -13,12 +13,12 @@ export default function AuthFormWrapper({
   backLabel = 'Home',
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5F7]">
+    <div className="min-h-screen flex flex-col">
       {/* Back Link */}
       <div className="px-6 sm:px-12 py-5">
         <Link
           to={backTo}
-          className="inline-flex items-center gap-1.5 text-[15px] text-apple-blue hover:opacity-70 transition-opacity"
+          className="inline-flex items-center gap-1.5 text-[13px] text-white/70 hover:text-white transition-colors px-3 py-2 rounded-xl hover:bg-white/[0.06]"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           {backLabel}
@@ -31,15 +31,15 @@ export default function AuthFormWrapper({
           {/* Brand Header */}
           <div className="text-center mb-10">
             <Link to="/" className="inline-block mb-4">
-              <span className="text-[18px] font-semibold tracking-[-0.02em] text-[#86868B]">
-                TechStore
+              <span className="text-[20px] font-bold tracking-[-0.02em] text-[#f3f0ff]">
+                DoorSet<span className="text-[#8f74ff]">Fix</span>
               </span>
             </Link>
-            <h1 className="text-[32px] sm:text-[40px] font-bold tracking-[-0.03em] text-[#1D1D1F] leading-[1.1]">
+            <h1 className="text-[30px] sm:text-[40px] font-extrabold tracking-[-0.03em] text-white leading-[1.1]">
               {title}
             </h1>
             {subtitle && (
-              <p className="text-[17px] text-[#86868B] font-normal leading-relaxed mt-3">
+              <p className="text-[14px] text-white/55 font-medium leading-relaxed mt-3">
                 {subtitle}
               </p>
             )}
@@ -47,10 +47,11 @@ export default function AuthFormWrapper({
 
           {/* Form Card — with visible border + generous padding */}
           <div
-            className="bg-white rounded-[24px] border border-[#E8E8ED] shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
-            style={{ padding: '40px 44px' }}
+            className="ds-shell p-3"
           >
-            {children}
+            <div className="ds-card p-6 sm:p-7">
+              {children}
+            </div>
           </div>
         </div>
       </div>

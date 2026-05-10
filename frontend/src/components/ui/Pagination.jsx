@@ -1,9 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-/**
- * Apple-styled Pagination
- * Shows page numbers with previous/next navigation.
- */
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
@@ -23,7 +19,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-10 h-10 rounded-full flex items-center justify-center text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-white/10"
         aria-label="Previous page"
       >
         <ChevronLeft className="w-4 h-4" strokeWidth={2} />
@@ -35,10 +31,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
           key={page}
           onClick={() => onPageChange(page)}
           className={`
-            w-10 h-10 rounded-full flex items-center justify-center text-[15px] font-medium transition-all duration-150
+            w-10 h-10 rounded-xl flex items-center justify-center text-[13px] font-semibold transition-all duration-150 border
             ${page === currentPage
-              ? '!bg-[#1D1D1F] text-white'
-              : 'text-[#1D1D1F] hover:bg-[#F5F5F7]'
+              ? 'ds-btn-primary text-white border-[#b3a0ff]/40 shadow-[0_0_18px_rgba(122,92,255,0.35)]'
+              : 'text-white/70 hover:text-white bg-[#12182a] border-white/10 hover:bg-white/[0.06] hover:border-[#8f74ff]/35'
             }
           `}
         >
@@ -50,7 +46,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-10 h-10 rounded-full flex items-center justify-center text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-white/10"
         aria-label="Next page"
       >
         <ChevronRight className="w-4 h-4" strokeWidth={2} />

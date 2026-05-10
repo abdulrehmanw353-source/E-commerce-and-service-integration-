@@ -145,17 +145,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* ─── Focus ─── */
 :focus-visible {
-  outline: 3px solid rgba(0, 113, 227, 0.4);
+  outline: 3px solid rgba(143, 116, 255, 0.55);
   outline-offset: 2px;
 }
 
@@ -177,7 +177,7 @@ button {
   border: none;
   background: none;
   font: inherit;
-  color: #1D1D1F; /* Safe dark default — override with text-white etc. */
+  color: inherit;
 }
 
 /* Ensure all <a> used as button-links have correct default color */

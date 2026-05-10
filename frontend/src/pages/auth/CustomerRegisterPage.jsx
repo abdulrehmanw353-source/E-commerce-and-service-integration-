@@ -55,7 +55,7 @@ export default function CustomerRegisterPage() {
   };
 
   return (
-    <AuthFormWrapper title="Create your account." subtitle="Join TechStore today.">
+    <AuthFormWrapper title="Create your account." subtitle="Join DoorSetFix today.">
       <form onSubmit={handleSubmit(onSubmit)} id="customer-register-form">
         {/* Name Row */}
         <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '20px' }}>
@@ -80,10 +80,10 @@ export default function CustomerRegisterPage() {
         </div>
 
         {/* Shipping Address */}
-        <div style={{ paddingTop: '20px', marginBottom: '28px', borderTop: '1px solid #E8E8ED' }}>
-          <p className="text-[13px] font-semibold text-[#86868B] uppercase tracking-[0.04em]" style={{ marginBottom: '20px' }}>
+        <div className="pt-5 mb-7 border-t border-white/10">
+          <p className="text-[11px] font-semibold text-white/45 uppercase tracking-[0.08em] mb-5">
             Shipping Address
-            <span className="font-normal normal-case tracking-normal text-[12px]" style={{ marginLeft: '6px' }}>(optional)</span>
+            <span className="font-medium normal-case tracking-normal text-[12px] text-white/35 ml-1.5">(optional)</span>
           </p>
           <div style={{ marginBottom: '16px' }}>
             <InputField name="street" placeholder="Street address" register={register} error={errors.street?.message} />
@@ -102,10 +102,10 @@ export default function CustomerRegisterPage() {
         </Button>
       </form>
 
-      <div className="text-center" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #E8E8ED' }}>
-        <p className="text-[15px] text-[#86868B]">
+      <div className="text-center mt-8 pt-6 border-t border-white/10">
+        <p className="text-[13px] text-white/55">
           Already have an account?{' '}
-          <Link to="/login" className="text-apple-blue font-medium hover:underline" id="register-to-login-link">
+          <Link to="/login" className="text-[#d7ccff] font-semibold hover:text-white transition-colors" id="register-to-login-link">
             Sign in
           </Link>
         </p>

@@ -100,7 +100,7 @@ export default function Navbar({ onOpenSidebar }) {
                         className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && e.target.value.trim()) {
-                            navigate(`/products?search=${encodeURIComponent(e.target.value.trim())}`);
+                            navigate(`/products?keyword=${encodeURIComponent(e.target.value.trim())}`);
                             setShowSearch(false);
                           }
                         }}
@@ -176,7 +176,7 @@ export default function Navbar({ onOpenSidebar }) {
                     <div className="border-t border-white/10 py-1.5">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[14px] text-apple-red hover:bg-apple-red/5 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[14px] text-[#ff9aad] hover:text-white hover:bg-[#ff5e7d]/15 transition-colors"
                       >
                         <LogOut className="w-4 h-4" strokeWidth={1.5} />
                         Sign Out
