@@ -54,6 +54,10 @@ const bookingSchema = new Schema(
          type: Schema.Types.ObjectId,
          ref: "TimeSlot",
       },
+      technician: {
+         type: Schema.Types.ObjectId,
+         ref: "Technician",
+      },
 
       // ------ Status Management
       status: {
@@ -102,6 +106,7 @@ const bookingSchema = new Schema(
 
 bookingSchema.index({ customer: 1, createdAt: -1 });
 bookingSchema.index({ status: 1 });
+bookingSchema.index({ technician: 1, preferredDate: 1, preferredTimeSlot: 1 });
 
 // ------ BOOKING MODEL
 

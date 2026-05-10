@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 
 import TimeSlot from "../models/timeSlot.model.js";
 import ApiError from "../utils/ApiError.js";
+import Booking from "../models/booking.model.js";
+import { ACTIVE_BOOKING_STATUSES } from "./technician.service.js";
 
 // ------ CREATE TIME SLOT (ADMIN)
 
@@ -36,19 +38,36 @@ const createTimeSlotService = async (payload, userId) => {
 
 // ------ GET AVAILABLE SLOTS (PUBLIC)
 
-const getAvailableSlotsService = async (date) => {
+const getAvailableSlotsService = async (date, technicianId) => {
    if (!date) {
       throw new ApiError(400, "Date is required");
    }
 
-   // ------ find slots where available and has capacity
    const slots = await TimeSlot.find({
       date: new Date(date),
       isAvailable: true,
       $expr: { $lt: ["$currentBookings", "$maxBookings"] },
    }).sort({ startTime: 1 });
 
-   return slots;
+   if (!technicianId) return slots;
+
+   if (!mongoose.Types.ObjectId.isValid(technicianId)) {
+      throw new ApiError(400, "Invalid technician ID");
+   }
+
+   const bookedSlots = await Booking.find({
+      technician: technicianId,
+      preferredDate: new Date(date),
+      status: { $in: ACTIVE_BOOKING_STATUSES },
+   }).select("preferredTimeSlot");
+
+   const bookedSlotIds = new Set(
+      bookedSlots
+         .map((b) => b.preferredTimeSlot?.toString())
+         .filter(Boolean),
+   );
+
+   return slots.filter((slot) => !bookedSlotIds.has(slot._id.toString()));
 };
 
 // ------ GET ALL SLOTS (ADMIN)

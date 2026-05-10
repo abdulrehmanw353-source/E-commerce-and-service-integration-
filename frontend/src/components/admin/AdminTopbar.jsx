@@ -11,7 +11,11 @@ function getPageTitle(pathname) {
   if (pathname === '/admin/bookings') return 'Bookings';
   if (/^\/admin\/bookings\/.+$/.test(pathname)) return 'Booking Detail';
   if (pathname === '/admin/time-slots') return 'Time Slots';
-  if (pathname === '/admin/users') return 'Users';
+  if (pathname === '/admin/customers') return 'Customers';
+  if (/^\/admin\/customers\/.+$/.test(pathname)) return 'Customer Detail';
+  if (pathname === '/admin/technicians') return 'Technicians';
+  if (pathname === '/admin/analytics') return 'Analytics';
+  if (pathname === '/admin/settings') return 'Admin Settings';
   if (pathname === '/admin/chat') return 'Support Chat';
   return 'Admin';
 }
@@ -33,7 +37,7 @@ export default function AdminTopbar({ onToggleSidebar }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="w-9 h-9 flex items-center justify-center rounded-xl text-white/40 hover:text-white hover:bg-white/[0.08] transition-all duration-150 relative">
+        <button className="w-9 h-9 flex items-center justify-center rounded-xl text-[#b59fff] hover:text-[#d1c5ff] hover:bg-[#7a5cff]/15 transition-all duration-150 relative border border-[#7a5cff]/30">
           <Bell className="w-4 h-4" strokeWidth={1.75} />
           <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff5e7d]" />
         </button>

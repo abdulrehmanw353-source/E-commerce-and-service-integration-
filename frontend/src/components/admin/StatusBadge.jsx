@@ -4,15 +4,17 @@
 const STATUS_MAP = {
   // Orders
   pending:    { label: 'Pending',    bg: 'bg-yellow-500/15', text: 'text-yellow-400' },
-  processing: { label: 'Processing', bg: 'bg-blue-500/15',   text: 'text-blue-400'   },
+  paid:       { label: 'Paid',       bg: 'bg-emerald-500/15',text: 'text-emerald-300' },
   shipped:    { label: 'Shipped',    bg: 'bg-indigo-500/15', text: 'text-indigo-400' },
   delivered:  { label: 'Delivered',  bg: 'bg-green-500/15',  text: 'text-green-400'  },
   cancelled:  { label: 'Cancelled',  bg: 'bg-red-500/15',    text: 'text-red-400'    },
+  failed:     { label: 'Failed',     bg: 'bg-red-500/15',    text: 'text-red-400' },
   // Bookings
-  confirmed:  { label: 'Confirmed',  bg: 'bg-green-500/15',  text: 'text-green-400'  },
+  approved:   { label: 'Approved',   bg: 'bg-green-500/15',  text: 'text-green-400'  },
   rejected:   { label: 'Rejected',   bg: 'bg-red-500/15',    text: 'text-red-400'    },
-  assigned:   { label: 'Assigned',   bg: 'bg-purple-500/15', text: 'text-purple-400' },
-  in_progress:{ label: 'In Progress',bg: 'bg-blue-500/15',   text: 'text-blue-400'   },
+  assigned:   { label: 'Assigned',   bg: 'bg-purple-500/15', text: 'text-purple-300' },
+  'in-progress': { label: 'In Progress', bg: 'bg-blue-500/15', text: 'text-blue-300' },
+  in_progress:{ label: 'In Progress',bg: 'bg-blue-500/15',   text: 'text-blue-300'   },
   completed:  { label: 'Completed',  bg: 'bg-green-500/15',  text: 'text-green-400'  },
   // Generic
   active:     { label: 'Active',     bg: 'bg-green-500/15',  text: 'text-green-400'  },

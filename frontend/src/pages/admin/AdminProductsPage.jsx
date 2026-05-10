@@ -38,7 +38,7 @@ export default function AdminProductsPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5 w-full">
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -48,7 +48,7 @@ export default function AdminProductsPage() {
         <Link
           to="/admin/products/create"
           id="admin-create-product"
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071E3] hover:bg-[#0077ED] text-white text-[13px] font-semibold rounded-xl transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2.5 ds-btn-primary text-[13px] font-semibold rounded-xl transition-all"
         >
           <Plus className="w-4 h-4" strokeWidth={2} /> Add Product
         </Link>

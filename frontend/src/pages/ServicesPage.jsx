@@ -10,8 +10,10 @@ import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
 
 // ─── Fetchers ────────────────────────────────────────────────
-const fetchSlots = (date) =>
-  api.get('/time-slots/available', { params: { date } }).then(r => r.data.data ?? r.data);
+const fetchSlots = (date, technicianId) =>
+  api.get('/time-slots/available', { params: { date, technicianId } }).then(r => r.data.data ?? r.data);
+const fetchTechnicians = () =>
+  api.get('/technicians/available').then((r) => r.data.data ?? r.data);
 
 // ─── Schema ──────────────────────────────────────────────────
 const schema = yup.object({
@@ -21,7 +23,8 @@ const schema = yup.object({
   deviceBrand:        yup.string().optional(),
   deviceModel:        yup.string().optional(),
   preferredDate:      yup.string().required('Select a date'),
-  preferredTimeSlot:  yup.string().optional(),
+  technicianId:       yup.string().required('Please select a technician'),
+  preferredTimeSlot:  yup.string().required('Please select a time slot'),
 });
 
 const DEVICE_TYPES = [
@@ -58,18 +61,26 @@ export default function ServicesPage() {
   const { isAuthenticated } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
+
+  const { data: techniciansData } = useQuery({
+    queryKey: ['public-technicians'],
+    queryFn: fetchTechnicians,
+    staleTime: 60_000,
+  });
+  const technicians = Array.isArray(techniciansData) ? techniciansData : (techniciansData?.technicians || []);
 
   const { data: slotsData } = useQuery({
-    queryKey: ['time-slots', selectedDate],
-    queryFn: () => fetchSlots(selectedDate),
-    enabled: !!selectedDate,
+    queryKey: ['time-slots', selectedDate, selectedTechnicianId],
+    queryFn: () => fetchSlots(selectedDate, selectedTechnicianId),
+    enabled: !!selectedDate && !!selectedTechnicianId,
     staleTime: 60_000,
   });
   const slots = Array.isArray(slotsData) ? slotsData : (slotsData?.slots ?? slotsData?.timeSlots ?? []);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { deviceType: '' },
+    defaultValues: { deviceType: '', technicianId: '' },
   });
 
   const deviceType = watch('deviceType');
@@ -196,6 +207,31 @@ export default function ServicesPage() {
                   className="w-full bg-[#F5F5F7] border border-transparent hover:border-[#D2D2D7] rounded-xl px-4 py-3.5 text-[15px] text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all resize-none" />
               </Field>
 
+              {/* Technician */}
+              <Field label="Select Technician" error={errors.technicianId?.message}>
+                <div className="grid sm:grid-cols-2 gap-2.5">
+                  {technicians.map((tech) => (
+                    <button
+                      key={tech._id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedTechnicianId(tech._id);
+                        setValue('technicianId', tech._id, { shouldValidate: true });
+                        setValue('preferredTimeSlot', '');
+                      }}
+                      className={`text-left rounded-xl border px-3 py-3 transition-all ${
+                        selectedTechnicianId === tech._id
+                          ? 'border-[#7a5cff] bg-[#7a5cff]/10 text-[#7a5cff]'
+                          : 'border-[#E8E8ED] bg-white text-[#1D1D1F] hover:border-[#b7a7ff]'
+                      }`}
+                    >
+                      <p className="font-semibold text-[14px]">{tech.firstName} {tech.lastName || ''}</p>
+                      <p className="text-[11px] opacity-75 capitalize">{tech.status} • {(tech.expertise || []).join(', ') || 'General'}</p>
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
               {/* Date */}
               <Field label="Preferred Date" error={errors.preferredDate?.message}>
                 <input type="date" min={minDateStr}
@@ -205,8 +241,8 @@ export default function ServicesPage() {
               </Field>
 
               {/* Time Slots */}
-              {slots.length > 0 && (
-                <Field label="Preferred Time Slot (optional)" error={errors.preferredTimeSlot?.message}>
+              {selectedTechnicianId && slots.length > 0 && (
+                <Field label="Preferred Time Slot" error={errors.preferredTimeSlot?.message}>
                   <div className="grid grid-cols-3 gap-2">
                     {slots.map(slot => (
                       <button type="button" key={slot._id}
@@ -224,6 +260,9 @@ export default function ServicesPage() {
                     ))}
                   </div>
                 </Field>
+              )}
+              {selectedTechnicianId && selectedDate && slots.length === 0 && (
+                <p className="text-[12px] text-amber-600">No available slots for selected technician on this date.</p>
               )}
 
               <button type="submit" disabled={bookMut.isPending}

@@ -23,7 +23,10 @@ const createTimeSlot = asyncHandler(async (req, res) => {
 // ------ GET AVAILABLE SLOTS (PUBLIC)
 
 const getAvailableSlots = asyncHandler(async (req, res) => {
-   const slots = await getAvailableSlotsService(req.query.date);
+   const slots = await getAvailableSlotsService(
+      req.query.date,
+      req.query.technicianId,
+   );
 
    return res
       .status(200)

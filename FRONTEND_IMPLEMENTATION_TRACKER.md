@@ -82,8 +82,8 @@ Commit message:
 ## Phase 2 - Authentication & Role Routing Stability
 
 ### Part 2.1 - Customer Auth Flow Hardening
-- [ ] Validate login/register/refresh/logout behavior with real API contract.
-- [ ] Improve session restoration and protected redirects.
+- [x] Validate login/register/refresh/logout behavior with real API contract.
+- [x] Improve session restoration and protected redirects.
 
 README note:
 - `Hardened customer authentication flow with reliable session restore and redirects.`
@@ -92,8 +92,8 @@ Commit message:
 - `harden customer auth flow and session restoration`
 
 ### Part 2.2 - Admin Auth Flow Hardening
-- [ ] Validate admin login/refresh/logout behavior.
-- [ ] Ensure admin routes are inaccessible to non-admin users.
+- [x] Validate admin login/refresh/logout behavior.
+- [x] Ensure admin routes are inaccessible to non-admin users.
 
 README note:
 - `Stabilized admin auth flow and strengthened role-based route protection.`
@@ -391,7 +391,7 @@ Commit message:
 ## Current Start Point
 
 Next part to implement:
-- `Phase 2 -> Part 2.1 Customer Auth Flow Hardening`
+- `Phase 5 -> Part 5.2 Admin Dashboard Analytics`
 
 Blocked items:
 - None
@@ -412,3 +412,54 @@ Blocked items:
 - Reworked services catalog layout with left filter rail and neon cards in `frontend/src/pages/ServicesPage.jsx`.
 - Fixed booking slot fetch endpoint to `GET /time-slots/available`.
 - Restyled admin shell and dashboard visuals in `frontend/src/components/admin/*` and `frontend/src/pages/admin/AdminDashboardPage.jsx`.
+
+## Latest Implementation Wave Applied
+
+- Added admin register authentication route support in backend auth controller/routes.
+- Added admin registration UI page `frontend/src/pages/admin/auth/AdminRegisterPage.jsx` and routed it via `/admin/register`.
+- Enabled admin session initialization on app boot with `useInitAdminAuth` in `App.jsx`.
+- Applied requested admin styling fixes (notification icon neon treatment + stronger sign-out button styling).
+- Added backend init seeding system:
+  - `backend/src/init/mockData.js`
+  - `backend/src/init/seed.dummy.js`
+  - new npm script: `npm run seed:dummy`
+- Seed script populates realistic dummy records for users, products, reviews, carts, orders, bookings, time slots, conversations, and messages.
+
+## Admin Stabilization Wave Applied
+
+- Enforced single-admin policy:
+  - backend now blocks creating a second admin account
+  - added `GET /api/v1/auth/admin/register-status`
+  - admin register page now auto-redirects to login with note when registration is locked.
+- Fixed admin status contract mismatches with backend values:
+  - orders use `pending|paid|shipped|delivered|cancelled`
+  - bookings use `pending|approved|in-progress|completed|rejected|cancelled`.
+- Restored analytics section on admin dashboard with tabs and live charts:
+  - revenue chart
+  - orders chart
+  - improved icon contrast and action card visibility.
+- Implemented technician assignment in booking detail page using existing backend endpoint:
+  - `PATCH /api/v1/admin/bookings/:id/assign`
+- Improved admin UI consistency:
+  - fixed prominent button styles for login/register and admin CRUD actions
+  - expanded product create/edit page content width
+  - improved icon contrast and visual hierarchy on dark theme.
+
+## Booking + Technician Flow Alignment Wave
+
+- Converted Users area into Customers-only navigation and listing:
+  - Sidebar now uses `Customers`
+  - Admin customer routes moved to `/admin/customers` and detail pages updated.
+- Added dedicated admin `Technicians` tab with CRUD UI and backend integration:
+  - first name, last name, email, phone, CNIC image, address, expertise, availability.
+- Added dedicated admin `Analytics` tab with separate colorful chart dashboards:
+  - revenue, orders, product performance, category distribution.
+- Added admin settings page to keep single-admin identity visible in profile area.
+- Booking flow now enforces technician-first scheduling:
+  - customer selects technician first
+  - then sees only slots available for that selected technician.
+- Implemented assignment improvements:
+  - booking detail page assigns technicians from a real technician dropdown
+  - backend assignment accepts technician ID and synchronizes booking + technician linkage.
+- Minor UI polish pass:
+  - brighter filter text, stronger action buttons, clearer icon contrast for dark theme.

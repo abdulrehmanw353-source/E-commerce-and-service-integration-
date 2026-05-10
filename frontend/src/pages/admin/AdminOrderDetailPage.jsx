@@ -13,18 +13,16 @@ const updateStatus = ({ id, status, paymentStatus }) =>
 
 import toast from 'react-hot-toast';
 
-const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
-const PAYMENT_STATUSES = ['pending', 'paid', 'failed', 'refunded'];
+const ORDER_STATUSES = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
+const PAYMENT_STATUSES = ['pending', 'paid', 'failed'];
 
 const STATUS_COLOR = {
-  pending:    'bg-yellow-100 text-yellow-700',
-  processing: 'bg-blue-100 text-blue-700',
-  shipped:    'bg-indigo-100 text-indigo-700',
-  delivered:  'bg-green-100 text-green-700',
-  cancelled:  'bg-red-100 text-red-700',
-  paid:       'bg-green-100 text-green-700',
-  failed:     'bg-red-100 text-red-700',
-  refunded:   'bg-orange-100 text-orange-700',
+  pending:    'bg-yellow-500/15 text-yellow-300',
+  paid:       'bg-emerald-500/15 text-emerald-300',
+  shipped:    'bg-indigo-500/15 text-indigo-300',
+  delivered:  'bg-green-500/15 text-green-300',
+  cancelled:  'bg-red-500/15 text-red-300',
+  failed:     'bg-red-500/15 text-red-300',
 };
 
 export default function AdminOrderDetailPage() {

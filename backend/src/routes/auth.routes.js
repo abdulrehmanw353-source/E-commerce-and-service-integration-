@@ -8,6 +8,8 @@ const router = Router();
 
 import {
    registerCustomer,
+   registerAdmin,
+   getAdminRegisterStatus,
    loginCustomer,
    refreshAccessToken,
    logoutCustomer,
@@ -25,6 +27,8 @@ router.post("/customer/logout", verifyJWT, logoutCustomer);
 
 // ------ ADMIN ROUTES
 
+router.post("/admin/register", registerAdmin);
+router.get("/admin/register-status", getAdminRegisterStatus);
 router.post("/admin/login", loginAdmin);
 router.post("/admin/refresh-token", refreshAccessToken);
 router.post("/admin/logout", verifyJWT, logoutAdmin);

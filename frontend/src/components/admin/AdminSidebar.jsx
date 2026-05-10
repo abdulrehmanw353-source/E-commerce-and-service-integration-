@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingBag, Package, Users, Calendar,
-  MessageSquare, LogOut, Zap, Clock
+  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, Settings
 } from 'lucide-react';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import adminApi from '../../lib/adminAxios';
@@ -13,7 +13,10 @@ const navItems = [
   { label: 'Orders',      to: '/admin/orders',       icon: ShoppingBag },
   { label: 'Bookings',    to: '/admin/bookings',     icon: Calendar },
   { label: 'Time Slots',  to: '/admin/time-slots',   icon: Clock },
-  { label: 'Users',       to: '/admin/users',        icon: Users },
+  { label: 'Customers',   to: '/admin/customers',    icon: Users },
+  { label: 'Technicians', to: '/admin/technicians',  icon: Wrench },
+  { label: 'Analytics',   to: '/admin/analytics',    icon: BarChart3 },
+  { label: 'Settings',    to: '/admin/settings',     icon: Settings },
   { label: 'Support',     to: '/admin/chat',         icon: MessageSquare },
 ];
 
@@ -88,7 +91,7 @@ export default function AdminSidebar({ collapsed }) {
           onClick={handleLogout}
           className={`
             w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium
-            text-white/45 hover:text-red-400 hover:bg-red-500/10 transition-all duration-150
+            text-[#ffc4d1] bg-[#ff5e7d]/10 border border-[#ff5e7d]/30 hover:bg-[#ff5e7d]/20 hover:text-white transition-all duration-150
             ${collapsed ? 'justify-center px-2' : ''}
           `}
           title={collapsed ? 'Sign Out' : undefined}

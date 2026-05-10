@@ -63,15 +63,16 @@ const rejectBooking = asyncHandler(async (req, res) => {
 // ------ ASSIGN TECHNICIAN (ADMIN)
 
 const assignTechnician = asyncHandler(async (req, res) => {
-   const { technicianName } = req.body;
+   const { technicianName, technicianId } = req.body;
 
-   if (!technicianName) {
-      throw new ApiError(400, "Technician name is required");
+   if (!technicianName && !technicianId) {
+      throw new ApiError(400, "Technician name or technician ID is required");
    }
 
    const booking = await assignTechnicianService(
       req.params.id,
       technicianName,
+      technicianId,
    );
 
    return res

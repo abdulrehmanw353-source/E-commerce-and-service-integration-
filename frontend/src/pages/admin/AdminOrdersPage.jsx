@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Search, ShoppingBag, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
 import StatusBadge from '../../components/admin/StatusBadge';
 
 const fetchOrders = (params) =>
   adminApi.get('/admin/orders/', { params }).then(r => r.data.data ?? r.data);
 
-const ORDER_STATUSES = ['pending','processing','shipped','delivered','cancelled'];
+const ORDER_STATUSES = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
 
 export default function AdminOrdersPage() {
-  const qc = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
@@ -38,15 +36,15 @@ export default function AdminOrdersPage() {
             placeholder="Search by order ID or customer…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full bg-[#1C1C1E] border border-white/[0.06] rounded-xl pl-9 pr-4 py-2.5 text-[13px] text-white placeholder:text-white/25 outline-none focus:border-[#0071E3] transition-all"
+            className="w-full bg-[#1C1C1E] border border-[#8f74ff]/25 rounded-xl pl-9 pr-4 py-2.5 text-[13px] text-white placeholder:text-white/35 outline-none focus:border-[#a994ff] transition-all"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
           {['', ...ORDER_STATUSES].map(s => (
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
               className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all ${statusFilter === s
-                ? 'bg-[#0071E3] text-white'
-                : 'bg-[#1C1C1E] border border-white/[0.06] text-white/45 hover:text-white'}`}>
+                ? 'ds-btn-primary text-white'
+                : 'bg-[#1C1C1E] border border-[#8f74ff]/30 text-white/80 hover:text-white'}`}>
               {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All'}
             </button>
           ))}

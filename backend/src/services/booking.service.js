@@ -5,6 +5,12 @@ import mongoose from "mongoose";
 import Booking from "../models/booking.model.js";
 import ApiError from "../utils/ApiError.js";
 import { uploadMultipleToCloudinary } from "../utils/cloudinary.upload.js";
+import TimeSlot from "../models/timeSlot.model.js";
+import Technician from "../models/technician.model.js";
+import {
+   ACTIVE_BOOKING_STATUSES,
+   recomputeTechnicianLoad,
+} from "./technician.service.js";
 
 // ------ CREATE BOOKING SERVICE
 
@@ -21,12 +27,43 @@ const createBookingService = async (userId, payload, files) => {
    if (!payload.preferredDate) {
       throw new ApiError(400, "Preferred date is required");
    }
+   if (!payload.technicianId) {
+      throw new ApiError(400, "Technician selection is required");
+   }
+   if (!payload.preferredTimeSlot) {
+      throw new ApiError(400, "Preferred time slot is required");
+   }
 
    // ------ validate preferred date is in the future
    const preferredDate = new Date(payload.preferredDate);
 
    if (preferredDate <= new Date()) {
       throw new ApiError(400, "Preferred date must be in the future");
+   }
+
+   const technician = await Technician.findById(payload.technicianId);
+   if (!technician) throw new ApiError(404, "Technician not found");
+   if (!technician.isAvailable || technician.status === "unavailable") {
+      throw new ApiError(400, "Selected technician is unavailable");
+   }
+
+   const slot = await TimeSlot.findById(payload.preferredTimeSlot);
+   if (!slot) throw new ApiError(404, "Time slot not found");
+   if (!slot.isAvailable || slot.currentBookings >= slot.maxBookings) {
+      throw new ApiError(400, "Selected time slot is unavailable");
+   }
+
+   const existingTechnicianBooking = await Booking.findOne({
+      technician: payload.technicianId,
+      preferredDate,
+      preferredTimeSlot: payload.preferredTimeSlot,
+      status: { $in: ACTIVE_BOOKING_STATUSES },
+   });
+   if (existingTechnicianBooking) {
+      throw new ApiError(
+         409,
+         "Selected slot is already booked for this technician",
+      );
    }
 
    // ------ upload images to Cloudinary (if provided)
@@ -46,9 +83,15 @@ const createBookingService = async (userId, payload, files) => {
       deviceModel: payload.deviceModel,
       images: imageUrls,
       preferredDate,
-      preferredTimeSlot: payload.preferredTimeSlot || undefined,
+      preferredTimeSlot: payload.preferredTimeSlot,
+      technician: payload.technicianId,
+      assignedTechnician: `${technician.firstName} ${technician.lastName || ""}`.trim(),
       status: "pending",
    });
+
+   slot.currentBookings += 1;
+   await slot.save({ validateBeforeSave: false });
+   await recomputeTechnicianLoad(payload.technicianId);
 
    return booking;
 };
@@ -80,6 +123,7 @@ const getCustomerBookingsService = async (userId, query) => {
 
    // ------ fetching bookings
    const bookings = await Booking.find(filter)
+      .populate("technician", "firstName lastName status")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -106,7 +150,7 @@ const getSingleBookingService = async (bookingId, userId) => {
    const booking = await Booking.findOne({
       _id: bookingId,
       customer: userId,
-   });
+   }).populate("technician", "firstName lastName status expertise");
 
    if (!booking) {
       throw new ApiError(404, "Booking not found");
@@ -141,6 +185,12 @@ const cancelBookingService = async (bookingId, userId) => {
 
    booking.status = "cancelled";
    await booking.save();
+   if (booking.preferredTimeSlot) {
+      await TimeSlot.findByIdAndUpdate(booking.preferredTimeSlot, {
+         $inc: { currentBookings: -1 },
+      });
+   }
+   await recomputeTechnicianLoad(booking.technician);
 
    return booking;
 };

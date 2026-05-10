@@ -50,7 +50,7 @@ export default function AdminCustomerDetailPage() {
           <h2 className="text-[20px] font-semibold text-white mb-2">Customer Not Found</h2>
           <p className="text-[14px] text-white/50 mb-6">This customer may have been deleted or does not exist.</p>
           <button
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate('/admin/customers')}
             className="px-6 py-2.5 bg-[#0071E3] text-white text-[14px] font-medium rounded-full hover:bg-[#0077ED] transition-all"
           >
             Back to Customers
@@ -69,7 +69,7 @@ export default function AdminCustomerDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate('/admin/customers')}
             className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.1] flex items-center justify-center transition-all"
           >
             <ChevronLeft className="w-5 h-5 text-white" strokeWidth={2} />

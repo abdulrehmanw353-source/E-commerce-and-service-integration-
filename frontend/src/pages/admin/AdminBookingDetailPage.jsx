@@ -1,17 +1,19 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Calendar, Check, X, UserCog } from 'lucide-react';
+import { ArrowLeft, Calendar, Check, X, Wrench, Save } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
 import StatusBadge from '../../components/admin/StatusBadge';
 
 const fetchBooking = (id) => adminApi.get(`/admin/bookings/${id}`).then(r => r.data.data ?? r.data);
+const fetchTechnicians = () => adminApi.get('/technicians', { params: { limit: 100 } }).then(r => r.data.data ?? r.data);
 const approveBooking   = (id) => adminApi.patch(`/admin/bookings/${id}/approve`).then(r => r.data);
 const rejectBooking    = (id) => adminApi.patch(`/admin/bookings/${id}/reject`).then(r => r.data);
 const updateBookingStatus = ({ id, status }) => adminApi.patch(`/admin/bookings/${id}/status`, { status }).then(r => r.data);
+const assignTechnician = ({ id, technicianId }) => adminApi.patch(`/admin/bookings/${id}/assign`, { technicianId }).then(r => r.data);
 
-const BOOKING_STATUSES = ['pending','confirmed','rejected','assigned','in_progress','completed','cancelled'];
+const BOOKING_STATUSES = ['pending', 'approved', 'in-progress', 'completed', 'rejected', 'cancelled'];
 
 export default function AdminBookingDetailPage() {
   const { id } = useParams();
@@ -23,12 +25,19 @@ export default function AdminBookingDetailPage() {
     queryFn: () => fetchBooking(id),
     enabled: !!id,
   });
+  const { data: techData } = useQuery({
+    queryKey: ['admin-technicians-lite'],
+    queryFn: fetchTechnicians,
+    staleTime: 60_000,
+  });
 
   const inv = () => { qc.invalidateQueries(['admin-booking', id]); qc.invalidateQueries(['admin-bookings']); };
 
   const approveMut = useMutation({ mutationFn: () => approveBooking(id), onSuccess: () => { inv(); toast.success('Approved!'); }, onError: (e) => toast.error(e.response?.data?.message || 'Failed.') });
   const rejectMut  = useMutation({ mutationFn: () => rejectBooking(id),  onSuccess: () => { inv(); toast.success('Rejected.'); }, onError: (e) => toast.error(e.response?.data?.message || 'Failed.') });
   const statusMut  = useMutation({ mutationFn: (status) => updateBookingStatus({ id, status }), onSuccess: () => { inv(); toast.success('Status updated!'); }, onError: (e) => toast.error(e.response?.data?.message || 'Failed.') });
+  const assignMut  = useMutation({ mutationFn: (technicianId) => assignTechnician({ id, technicianId }), onSuccess: () => { inv(); toast.success('Technician assigned!'); }, onError: (e) => toast.error(e.response?.data?.message || 'Failed.') });
+  const [technicianId, setTechnicianId] = useState('');
 
   if (isLoading) return (
     <div className="p-6 space-y-4 animate-pulse">
@@ -47,6 +56,8 @@ export default function AdminBookingDetailPage() {
 
   const b = data.booking ?? data;
   const customer = b.customer ?? b.user;
+  const currentTechnician = b.assignedTechnician || '';
+  const technicians = Array.isArray(techData) ? techData : (techData?.technicians || []);
 
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-5">
@@ -90,7 +101,7 @@ export default function AdminBookingDetailPage() {
               className="bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2 text-[13px] text-white outline-none focus:border-[#0071E3] cursor-pointer transition-all"
             >
               {BOOKING_STATUSES.map(s => (
-                <option key={s} value={s}>{s.replace('_', ' ').charAt(0).toUpperCase() + s.replace('_', ' ').slice(1)}</option>
+                <option key={s} value={s}>{s.replace('-', ' ').charAt(0).toUpperCase() + s.replace('-', ' ').slice(1)}</option>
               ))}
             </select>
           </div>
@@ -140,6 +151,34 @@ export default function AdminBookingDetailPage() {
         <h3 className="text-[12px] font-semibold text-white/35 uppercase tracking-wider mb-3">Problem</h3>
         <p className="text-[15px] font-semibold text-white mb-2">{b.problemTitle}</p>
         <p className="text-[13px] text-white/60 leading-relaxed">{b.problemDescription}</p>
+      </div>
+
+      <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-2xl p-5">
+        <h3 className="text-[12px] font-semibold text-white/35 uppercase tracking-wider mb-3">Technician Assignment</h3>
+        {currentTechnician && (
+          <p className="text-[13px] text-white/60 mb-3">Current: <span className="text-white font-semibold">{currentTechnician}</span></p>
+        )}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <select
+            value={technicianId}
+            onChange={(e) => setTechnicianId(e.target.value)}
+            className="flex-1 bg-[#2C2C2E] border border-white/[0.08] rounded-xl px-3 py-2.5 text-[13px] text-white outline-none focus:border-[#8f74ff]"
+          >
+            <option value="">Select technician</option>
+            {technicians.map((t) => (
+              <option key={t._id} value={t._id}>
+                {t.firstName} {t.lastName || ''} ({t.status})
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={() => assignMut.mutate(technicianId)}
+            disabled={assignMut.isPending || !technicianId}
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[13px] font-semibold ds-btn-primary disabled:opacity-50"
+          >
+            {assignMut.isPending ? <Save className="w-4 h-4 animate-spin" /> : <Wrench className="w-4 h-4" />} Assign
+          </button>
+        </div>
       </div>
 
       {/* Images */}

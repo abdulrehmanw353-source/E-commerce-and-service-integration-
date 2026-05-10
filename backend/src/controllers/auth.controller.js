@@ -56,6 +56,69 @@ const registerCustomer = asyncHandler(async (req, res) => {
       );
 });
 
+// ------ ADMIN REGISTER
+
+const registerAdmin = asyncHandler(async (req, res) => {
+   const { firstName, lastName, phoneNo, address, email, password } = req.body;
+
+   if (!firstName || !email || !password) {
+      throw new ApiError(400, "Required fields are missing");
+   }
+
+   const existingAdmin = await User.findOne({ role: "admin" });
+   if (existingAdmin) {
+      throw new ApiError(
+         403,
+         "Admin registration is disabled. Only one admin account is allowed.",
+      );
+   }
+
+   const existingUser = await User.findOne({ email });
+   if (existingUser) {
+      throw new ApiError(400, "Admin already exists");
+   }
+
+   const admin = await User.create({
+      firstName,
+      lastName,
+      phoneNo,
+      address,
+      email,
+      password,
+      role: "admin",
+   });
+
+   const adminObj = admin.toObject();
+
+   return res
+      .status(201)
+      .json(
+         new ApiResponse(
+            201,
+            { user: adminObj },
+            "Admin registered successfully",
+         ),
+      );
+});
+
+// ------ ADMIN REGISTER STATUS
+
+const getAdminRegisterStatus = asyncHandler(async (_req, res) => {
+   const adminCount = await User.countDocuments({ role: "admin" });
+   const allowRegistration = adminCount === 0;
+
+   return res.status(200).json(
+      new ApiResponse(
+         200,
+         {
+            adminCount,
+            allowRegistration,
+         },
+         "Admin registration status fetched",
+      ),
+   );
+});
+
 // ------ CUSTOMER LOGIN
 
 const loginCustomer = asyncHandler(async (req, res) => {
@@ -275,6 +338,8 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 
 export {
    registerCustomer,
+   registerAdmin,
+   getAdminRegisterStatus,
    loginCustomer,
    refreshAccessToken,
    logoutCustomer,

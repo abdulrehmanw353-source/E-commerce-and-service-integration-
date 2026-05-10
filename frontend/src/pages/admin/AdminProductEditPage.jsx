@@ -39,7 +39,7 @@ function Field({ label, error, required, children }) {
   );
 }
 
-const INPUT = "w-full bg-[#1C1C1E] border border-white/[0.08] hover:border-white/[0.15] rounded-xl px-4 py-3 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#0071E3] focus:bg-[#2C2C2E] focus:ring-4 focus:ring-[#0071E3]/15 transition-all shadow-inner";
+const INPUT = "w-full bg-[#1c2340] border border-[#7a5cff]/30 hover:border-[#9a84ff]/50 rounded-xl px-4 py-3 text-[14px] text-white placeholder:text-white/35 outline-none focus:border-[#a894ff] focus:bg-[#242c4b] focus:ring-4 focus:ring-[#8f74ff]/20 transition-all shadow-inner";
 
 export default function AdminProductEditPage() {
   const { id } = useParams();
@@ -110,7 +110,7 @@ export default function AdminProductEditPage() {
   );
 
   return (
-    <div className="p-4 sm:p-6 max-w-4xl">
+    <div className="p-4 sm:p-6 w-full">
       {/* ─── Header ─── */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -219,7 +219,7 @@ export default function AdminProductEditPage() {
 
             <div className="space-y-3 pt-2">
               <button type="submit" disabled={updateMut.isPending}
-                className="w-full py-3.5 bg-[#0071E3] hover:bg-[#0077ED] disabled:opacity-60 text-white rounded-xl text-[14px] font-semibold transition-all shadow-[0_4px_14px_rgba(0,113,227,0.3)] hover:shadow-[0_6px_20px_rgba(0,113,227,0.4)] active:scale-[0.98]">
+                className="w-full py-3.5 ds-btn-primary disabled:opacity-60 text-white rounded-xl text-[14px] font-semibold transition-all active:scale-[0.98]">
                 {updateMut.isPending ? 'Saving…' : 'Save Changes'}
               </button>
               <button type="button" onClick={() => navigate('/admin/products')}

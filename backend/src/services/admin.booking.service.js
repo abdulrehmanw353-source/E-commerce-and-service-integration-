@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 // ------ IMPORTING FROM FILES
 
 import Booking from "../models/booking.model.js";
+import Technician from "../models/technician.model.js";
 import ApiError from "../utils/ApiError.js";
+import { recomputeTechnicianLoad } from "./technician.service.js";
 
 // ------ GET ALL BOOKINGS (ADMIN)
 
@@ -30,6 +32,7 @@ const getAllBookingsService = async (query) => {
 
    const bookings = await Booking.find(filter)
       .populate("customer", "firstName lastName email phoneNo")
+      .populate("technician", "firstName lastName status expertise")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -53,7 +56,8 @@ const getAdminSingleBookingService = async (bookingId) => {
 
    const booking = await Booking.findById(bookingId)
       .populate("customer", "firstName lastName email phoneNo address")
-      .populate("preferredTimeSlot");
+      .populate("preferredTimeSlot")
+      .populate("technician", "firstName lastName status expertise");
 
    if (!booking) {
       throw new ApiError(404, "Booking not found");
@@ -117,13 +121,13 @@ const rejectBookingService = async (bookingId, rejectionReason) => {
 
 // ------ ASSIGN TECHNICIAN (ADMIN)
 
-const assignTechnicianService = async (bookingId, technicianName) => {
+const assignTechnicianService = async (bookingId, technicianName, technicianId) => {
    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
       throw new ApiError(400, "Invalid booking ID");
    }
 
-   if (!technicianName) {
-      throw new ApiError(400, "Technician name is required");
+   if (!technicianName && !technicianId) {
+      throw new ApiError(400, "Technician name or technician ID is required");
    }
 
    const booking = await Booking.findById(bookingId);
@@ -136,9 +140,33 @@ const assignTechnicianService = async (bookingId, technicianName) => {
       throw new ApiError(400, "Cannot assign technician to cancelled or rejected booking");
    }
 
-   booking.assignedTechnician = technicianName;
+   let technician = null;
+   if (technicianId && mongoose.Types.ObjectId.isValid(technicianId)) {
+      technician = await Technician.findById(technicianId);
+   } else if (technicianName) {
+      technician = await Technician.findOne({
+         $expr: {
+            $eq: [
+               {
+                  $trim: {
+                     input: {
+                        $concat: ["$firstName", " ", { $ifNull: ["$lastName", ""] }],
+                     },
+                  },
+               },
+               technicianName,
+            ],
+         },
+      });
+   }
+   if (!technician) {
+      throw new ApiError(404, "Technician not found");
+   }
+   booking.assignedTechnician = `${technician.firstName} ${technician.lastName || ""}`.trim();
+   booking.technician = technician._id;
 
    await booking.save();
+   await recomputeTechnicianLoad(technician._id);
 
    return booking;
 };
@@ -174,6 +202,9 @@ const updateBookingStatusService = async (bookingId, status, finalCost) => {
    if (finalCost !== undefined) booking.finalCost = finalCost;
 
    await booking.save();
+   if (booking.technician) {
+      await recomputeTechnicianLoad(booking.technician);
+   }
 
    return booking;
 };

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { queryClient } from './lib/queryClient';
 import { useInitAuth } from './hooks/useInitAuth';
+import { useInitAdminAuth } from './hooks/useInitAdminAuth';
 
 // Pages — Storefront
 import HomePage from './pages/HomePage';
@@ -26,6 +27,7 @@ import BookingDetailPage from './pages/account/BookingDetailPage';
 
 // Pages — Admin Auth
 import AdminLoginPage from './pages/admin/auth/AdminLoginPage';
+import AdminRegisterPage from './pages/admin/auth/AdminRegisterPage';
 
 // Pages — Admin Dashboard
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
@@ -40,6 +42,9 @@ import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage';
 import AdminTimeSlotsPage from './pages/admin/AdminTimeSlotsPage';
 import AdminChatPage from './pages/admin/AdminChatPage';
+import AdminTechniciansPage from './pages/admin/AdminTechniciansPage';
+import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
+import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 
 // Components / Layout
 import LoadingScreen from './components/ui/LoadingScreen';
@@ -53,8 +58,9 @@ import CustomerRoute from './components/guards/CustomerRoute';
 
 function AppContent() {
   const { isLoading } = useInitAuth();
+  const { isLoading: isAdminLoading } = useInitAdminAuth();
 
-  if (isLoading) {
+  if (isLoading || isAdminLoading) {
     return <LoadingScreen />;
   }
 
@@ -92,6 +98,7 @@ function AppContent() {
 
       {/* ─── Admin Auth (standalone, dark theme) ─── */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin/register" element={<AdminRegisterPage />} />
 
       {/* ─── Admin Dashboard (protected, dark layout) ─── */}
       <Route path="/admin" element={
@@ -105,8 +112,11 @@ function AppContent() {
         <Route path="products/:id/edit" element={<AdminProductEditPage />} />
         <Route path="orders" element={<AdminOrdersPage />} />
         <Route path="orders/:id" element={<AdminOrderDetailPage />} />
-        <Route path="users" element={<AdminUsersPage />} />
-        <Route path="users/:id" element={<AdminCustomerDetailPage />} />
+        <Route path="customers" element={<AdminUsersPage />} />
+        <Route path="customers/:id" element={<AdminCustomerDetailPage />} />
+        <Route path="technicians" element={<AdminTechniciansPage />} />
+        <Route path="analytics" element={<AdminAnalyticsPage />} />
+        <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="bookings/:id" element={<AdminBookingDetailPage />} />
         <Route path="time-slots" element={<AdminTimeSlotsPage />} />

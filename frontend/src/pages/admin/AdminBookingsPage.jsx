@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Calendar, ChevronRight, Check, X, UserCog } from 'lucide-react';
+import { Search, Calendar, ChevronRight, Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
@@ -11,7 +11,7 @@ const fetchBookings = (params) =>
 const approveBooking = (id) => adminApi.patch(`/admin/bookings/${id}/approve`).then(r => r.data);
 const rejectBooking  = (id) => adminApi.patch(`/admin/bookings/${id}/reject`).then(r => r.data);
 
-const BOOKING_STATUSES = ['pending','confirmed','rejected','assigned','in_progress','completed','cancelled'];
+const BOOKING_STATUSES = ['pending', 'approved', 'in-progress', 'completed', 'rejected', 'cancelled'];
 
 export default function AdminBookingsPage() {
   const qc = useQueryClient();
@@ -51,15 +51,15 @@ export default function AdminBookingsPage() {
             placeholder="Search bookings…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full bg-[#1C1C1E] border border-white/[0.06] rounded-xl pl-9 pr-4 py-2.5 text-[13px] text-white placeholder:text-white/25 outline-none focus:border-[#0071E3] transition-all"
+            className="w-full bg-[#1C1C1E] border border-[#8f74ff]/25 rounded-xl pl-9 pr-4 py-2.5 text-[13px] text-white placeholder:text-white/35 outline-none focus:border-[#a994ff] transition-all"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {['', 'pending', 'confirmed', 'completed', 'rejected'].map(s => (
+          {['', 'pending', 'approved', 'in-progress', 'completed', 'rejected'].map(s => (
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
               className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all ${statusFilter === s
-                ? 'bg-[#0071E3] text-white'
-                : 'bg-[#1C1C1E] border border-white/[0.06] text-white/45 hover:text-white'}`}>
+                ? 'ds-btn-primary text-white'
+                : 'bg-[#1C1C1E] border border-[#8f74ff]/30 text-white/80 hover:text-white'}`}>
               {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All'}
             </button>
           ))}
