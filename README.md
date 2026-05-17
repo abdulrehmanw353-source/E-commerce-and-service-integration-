@@ -211,6 +211,8 @@
 - adding payment status (pending, paid, refunded, cancelled) for orders
 - refactored admin delivery tax page to show category-based rules in editable table format
 - fixing overall store currency from $USD to PKR Rs
+- show expected delivery date for products
+- changing the complete store placeholders to a pakistani data
 ```
 
 ### By "Pull Requests"
