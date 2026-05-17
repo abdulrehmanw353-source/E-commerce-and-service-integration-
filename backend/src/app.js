@@ -26,6 +26,7 @@ import publicServiceRouter from "./routes/public.service.routes.js";
 import adminServiceRouter from "./routes/admin.service.routes.js";
 import paymentSettingsRouter from "./routes/paymentSettings.routes.js";
 import deliveryTaxSettingsRouter from "./routes/deliveryTaxSettings.routes.js";
+import serviceSettingsRouter from "./routes/serviceSettings.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -64,6 +65,7 @@ app.use("/api/v1/admin/chat", adminChatRouter);
 app.use("/api/v1/technicians", technicianRouter);
 app.use("/api/v1/payment-settings", paymentSettingsRouter);
 app.use("/api/v1/delivery-tax-settings", deliveryTaxSettingsRouter);
+app.use("/api/v1/service-settings", serviceSettingsRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 

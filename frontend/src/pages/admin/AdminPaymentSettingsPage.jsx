@@ -9,7 +9,7 @@ const fetchSettings = () => adminApi.get('/payment-settings').then(r => r.data.d
 export default function AdminPaymentSettingsPage() {
   const queryClient = useQueryClient();
 
-  const { data: settings, isLoading } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ['payment-settings'],
     queryFn: fetchSettings,
   });

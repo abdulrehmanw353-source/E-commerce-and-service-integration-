@@ -48,6 +48,7 @@ export default function AdminTechnicianEditPage() {
 
   useEffect(() => {
     if (!technician) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm({
       ...emptyForm,
       ...technician,

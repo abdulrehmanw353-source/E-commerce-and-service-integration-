@@ -11,7 +11,7 @@ const fetchBookings = (params) =>
 const approveBooking = (id) => adminApi.patch(`/admin/bookings/${id}/approve`).then(r => r.data);
 const rejectBooking  = (id) => adminApi.patch(`/admin/bookings/${id}/reject`).then(r => r.data);
 
-const BOOKING_STATUSES = ['pending', 'approved', 'in-progress', 'completed', 'rejected', 'cancelled'];
+
 
 export default function AdminBookingsPage() {
   const qc = useQueryClient();

@@ -20,7 +20,9 @@ export default function ChatWidget() {
       const t = setTimeout(() => setMounted(true), 600);
       return () => clearTimeout(t);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMounted(false);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOpen(false);
     }
   }, [isAuthenticated]);

@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 import { useProduct } from '../hooks/useProducts';
 import { useCartStore } from '../store/cartStore';
-import Button from '../components/ui/Button';
+
 import api from '../lib/axios';
 
 /**

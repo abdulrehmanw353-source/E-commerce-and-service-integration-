@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
  */
 export const useAdminAuthStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       // ─── State ────────────────────────
       user: null,
       accessToken: null,

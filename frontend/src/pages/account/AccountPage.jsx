@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { User, Lock, ChevronRight, Check } from 'lucide-react';
+import { Lock, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/axios';
 import { useAuthStore } from '../../store/authStore';
@@ -35,7 +35,7 @@ export default function AccountPage() {
   const [tab, setTab] = useState('profile'); // 'profile' | 'password'
   const { user: storeUser, setAuth } = useAuthStore();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ['customer-profile'],
     queryFn: fetchProfile,
     staleTime: 60_000,

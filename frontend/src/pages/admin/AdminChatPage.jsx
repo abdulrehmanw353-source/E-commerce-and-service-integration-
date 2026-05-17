@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MessageSquare, Send, Search, X, CheckCheck, Wifi, WifiOff, Clock } from 'lucide-react';
+import { MessageSquare, Send, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
 import adminApi from '../../lib/adminAxios';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
-import { initAdminSocket, destroyAdminSocket } from '../../lib/socket';
+import { initAdminSocket } from '../../lib/socket';
 
 // ─── API ──────────────────────────────────────────────────────
 const fetchConversations = () =>
@@ -152,6 +152,7 @@ export default function AdminChatPage() {
     if (messagesData) {
       const list = Array.isArray(messagesData) ? messagesData : (messagesData?.messages ?? []);
       // Reverse to show newest at bottom
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMessages([...list].reverse());
     }
   }, [messagesData]);

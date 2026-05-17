@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { X, Send, Minimize2, MessageCircle, Loader2, Wifi, WifiOff } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { MessageCircle, Loader2, Send, X } from 'lucide-react';
 import api from '../../lib/axios';
 import { useConversation } from '../../hooks/useSocket';
 import ChatMessage from './ChatMessage';
@@ -18,7 +17,7 @@ const sendRestMessage = (id, content) =>
  * Uses socket for real-time + REST for history fallback.
  */
 export default function ChatPanel({ onClose }) {
-  const qc = useQueryClient();
+
   const [text, setText] = useState('');
   const [convId, setConvId] = useState(null);
   const [historyMsgs, setHistoryMsgs] = useState([]);
@@ -28,7 +27,7 @@ export default function ChatPanel({ onClose }) {
   const typingDebounceRef = useRef(null);
 
   const {
-    realtimeMessages, setRealtimeMessages,
+    realtimeMessages,
     isTyping, sendMessage, emitTyping, markRead, connected,
   } = useConversation(convId);
 

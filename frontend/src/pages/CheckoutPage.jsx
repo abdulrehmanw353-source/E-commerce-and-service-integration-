@@ -190,7 +190,7 @@ export default function CheckoutPage() {
         // Authenticated flow: sync cart to backend then create order
         try {
           await api.delete('/cart/clear');
-        } catch (err) {
+        } catch {
           // ignore
         }
 
@@ -357,6 +357,7 @@ export default function CheckoutPage() {
                               ${errors.address ? 'border-[#ff5e7d]/70' : 'border-[#7a5cff]/25 hover:border-[#9a84ff]/45'}
                             `}
                             style={{ padding: '12px 14px 12px 40px' }}
+                            // eslint-disable-next-line react-hooks/refs
                             {...register('address', {
                               onChange: handleAddressInput,
                             })}

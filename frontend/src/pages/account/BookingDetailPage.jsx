@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft, Calendar, Clock, Smartphone, Laptop, Monitor,
@@ -42,7 +42,7 @@ function InfoRow({ label, value }) {
 
 export default function BookingDetailPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
+
   const qc = useQueryClient();
 
   const { data: booking, isLoading, isError } = useQuery({
@@ -142,7 +142,7 @@ export default function BookingDetailPage() {
                     })
                   : null
               } />
-              <InfoRow label="Time Slot"    value={booking.preferredTimeSlot} />
+              <InfoRow label="Time"    value={booking.preferredTime} />
             </div>
 
             {/* Images */}
@@ -240,6 +240,24 @@ export default function BookingDetailPage() {
                   <h2 className="text-[15px] font-bold text-white">Assigned Technician</h2>
                 </div>
                 <p className="text-[14px] font-medium text-white">{booking.assignedTechnician}</p>
+                {booking.technician?.expertise?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {booking.technician.expertise.map((e) => (
+                      <span key={e} className="text-[11px] px-2 py-0.5 rounded-full bg-[#7a5cff]/10 text-[#b09fff] border border-[#7a5cff]/20">{e}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Reassignment Notice */}
+            {booking.reassignmentReason && (
+              <div className="ds-card p-5 border border-amber-500/20 bg-amber-500/[0.02]">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="w-4 h-4 text-amber-400" strokeWidth={2} />
+                  <p className="text-[14px] font-semibold text-amber-300">Technician Changed</p>
+                </div>
+                <p className="text-[14px] text-white/80 leading-relaxed">{booking.reassignmentReason}</p>
               </div>
             )}
 

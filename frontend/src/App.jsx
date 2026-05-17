@@ -61,6 +61,7 @@ import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminServicesPage from './pages/admin/AdminServicesPage';
 import AdminServiceCreatePage from './pages/admin/AdminServiceCreatePage';
 import AdminServiceEditPage from './pages/admin/AdminServiceEditPage';
+import AdminServiceSettingsPage from './pages/admin/AdminServiceSettingsPage';
 import AdminPaymentSettingsPage from './pages/admin/AdminPaymentSettingsPage';
 import AdminDeliveryTaxPage from './pages/admin/AdminDeliveryTaxPage';
 
@@ -89,8 +90,8 @@ function AppContent() {
         <Route index element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
-        {/* Services — requires auth */}
-        <Route path="services" element={<CustomerRoute><ServicesPage /></CustomerRoute>} />
+        {/* Services — public browsing, auth checked on booking action */}
+        <Route path="services" element={<ServicesPage />} />
         {/* Cart checkout — no auth required */}
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="order-success" element={<OrderSuccessPage />} />
@@ -153,6 +154,7 @@ function AppContent() {
         <Route path="services" element={<AdminServicesPage />} />
         <Route path="services/new" element={<AdminServiceCreatePage />} />
         <Route path="services/:id/edit" element={<AdminServiceEditPage />} />
+        <Route path="service-settings" element={<AdminServiceSettingsPage />} />
         <Route path="time-slots" element={<AdminTimeSlotsPage />} />
         <Route path="chat" element={<AdminChatPage />} />
       </Route>

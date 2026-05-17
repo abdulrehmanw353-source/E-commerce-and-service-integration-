@@ -10,6 +10,7 @@ import {
    rejectBookingService,
    assignTechnicianService,
    updateBookingStatusService,
+   updateBookingPaymentService,
 } from "../services/admin.booking.service.js";
 
 // ------ GET ALL BOOKINGS (ADMIN)
@@ -63,7 +64,7 @@ const rejectBooking = asyncHandler(async (req, res) => {
 // ------ ASSIGN TECHNICIAN (ADMIN)
 
 const assignTechnician = asyncHandler(async (req, res) => {
-   const { technicianName, technicianId } = req.body;
+   const { technicianName, technicianId, reassignmentReason, sendEmail } = req.body;
 
    if (!technicianName && !technicianId) {
       throw new ApiError(400, "Technician name or technician ID is required");
@@ -73,6 +74,8 @@ const assignTechnician = asyncHandler(async (req, res) => {
       req.params.id,
       technicianName,
       technicianId,
+      reassignmentReason,
+      !!sendEmail,
    );
 
    return res
@@ -104,6 +107,20 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
       );
 });
 
+// ------ UPDATE BOOKING PAYMENT (ADMIN)
+
+const updateBookingPayment = asyncHandler(async (req, res) => {
+   const payload = req.body;
+   
+   const booking = await updateBookingPaymentService(req.params.id, payload);
+
+   return res
+      .status(200)
+      .json(
+         new ApiResponse(200, booking, "Booking payment updated successfully"),
+      );
+});
+
 // ------ EXPORTING CONTROLLERS
 
 export {
@@ -113,4 +130,5 @@ export {
    rejectBooking,
    assignTechnician,
    updateBookingStatus,
+   updateBookingPayment,
 };

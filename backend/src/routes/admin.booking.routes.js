@@ -15,6 +15,7 @@ import {
    rejectBooking,
    assignTechnician,
    updateBookingStatus,
+   updateBookingPayment,
 } from "../controllers/admin.booking.controller.js";
 
 // ------ GET ALL BOOKINGS
@@ -49,6 +50,15 @@ router.patch(
    verifyJWT,
    authorizeRoles("admin"),
    updateBookingStatus,
+);
+
+// ------ UPDATE BOOKING PAYMENT
+
+router.patch(
+   "/:id/payment",
+   verifyJWT,
+   authorizeRoles("admin"),
+   updateBookingPayment,
 );
 
 // ------ EXPORTING ROUTER

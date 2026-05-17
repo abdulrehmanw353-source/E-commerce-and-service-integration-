@@ -14,3 +14,11 @@ export const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
 export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+
+// ------ EMAIL (SMTP)
+export const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
+export const SMTP_PORT = Number(process.env.SMTP_PORT) || 587;
+export const SMTP_USER = process.env.SMTP_USER || "";
+export const SMTP_PASS = process.env.SMTP_PASS || "";
+export const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || "DoorSetFix";
+export const SMTP_FROM_EMAIL = process.env.SMTP_FROM_EMAIL || SMTP_USER;

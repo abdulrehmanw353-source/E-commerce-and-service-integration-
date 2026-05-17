@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Package, ImageIcon, Plus, X, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Plus, X, ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

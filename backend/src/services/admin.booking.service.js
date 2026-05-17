@@ -6,6 +6,7 @@ import Booking from "../models/booking.model.js";
 import Technician from "../models/technician.model.js";
 import ApiError from "../utils/ApiError.js";
 import { recomputeTechnicianLoad } from "./technician.service.js";
+import { sendTechnicianReassignmentEmail } from "../utils/email.js";
 
 // ------ GET ALL BOOKINGS (ADMIN)
 
@@ -56,7 +57,6 @@ const getAdminSingleBookingService = async (bookingId) => {
 
    const booking = await Booking.findById(bookingId)
       .populate("customer", "firstName lastName email phoneNo address")
-      .populate("preferredTimeSlot")
       .populate("technician", "firstName lastName status expertise");
 
    if (!booking) {
@@ -119,9 +119,7 @@ const rejectBookingService = async (bookingId, rejectionReason) => {
    return booking;
 };
 
-// ------ ASSIGN TECHNICIAN (ADMIN)
-
-const assignTechnicianService = async (bookingId, technicianName, technicianId) => {
+const assignTechnicianService = async (bookingId, technicianName, technicianId, reassignmentReason, shouldSendEmail) => {
    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
       throw new ApiError(400, "Invalid booking ID");
    }
@@ -130,7 +128,7 @@ const assignTechnicianService = async (bookingId, technicianName, technicianId) 
       throw new ApiError(400, "Technician name or technician ID is required");
    }
 
-   const booking = await Booking.findById(bookingId);
+   const booking = await Booking.findById(bookingId).populate("customer", "firstName lastName email");
 
    if (!booking) {
       throw new ApiError(404, "Booking not found");
@@ -140,6 +138,11 @@ const assignTechnicianService = async (bookingId, technicianName, technicianId) 
       throw new ApiError(400, "Cannot assign technician to cancelled or rejected booking");
    }
 
+   // Store old technician info for load recomputation + email
+   const oldTechnicianId = booking.technician;
+   const oldTechnicianName = booking.assignedTechnician || null;
+
+   // Find new technician
    let technician = null;
    if (technicianId && mongoose.Types.ObjectId.isValid(technicianId)) {
       technician = await Technician.findById(technicianId);
@@ -162,13 +165,48 @@ const assignTechnicianService = async (bookingId, technicianName, technicianId) 
    if (!technician) {
       throw new ApiError(404, "Technician not found");
    }
-   booking.assignedTechnician = `${technician.firstName} ${technician.lastName || ""}`.trim();
+
+   // Update booking
+   const newTechName = `${technician.firstName} ${technician.lastName || ""}`.trim();
+   booking.assignedTechnician = newTechName;
    booking.technician = technician._id;
+   if (reassignmentReason) booking.reassignmentReason = reassignmentReason;
 
    await booking.save();
+
+   // Recompute NEW technician load
    await recomputeTechnicianLoad(technician._id);
 
-   return booking;
+   // Recompute OLD technician load (if different from new)
+   if (oldTechnicianId && oldTechnicianId.toString() !== technician._id.toString()) {
+      await recomputeTechnicianLoad(oldTechnicianId);
+   }
+
+   // Send email notification if requested
+   if (shouldSendEmail && booking.customer?.email) {
+      try {
+         await sendTechnicianReassignmentEmail({
+            customerEmail: booking.customer.email,
+            customerName: `${booking.customer.firstName || ""} ${booking.customer.lastName || ""}`.trim(),
+            bookingId: booking._id.toString(),
+            oldTechnicianName,
+            newTechnicianName: newTechName,
+            reassignmentReason: reassignmentReason || "",
+            preferredDate: booking.preferredDate,
+            preferredTime: booking.preferredTime,
+         });
+      } catch (emailErr) {
+         console.error("[email] Failed to send reassignment email:", emailErr.message);
+         // Don't throw — assignment was successful, email is best-effort
+      }
+   }
+
+   // Re-populate for response
+   const populated = await Booking.findById(bookingId)
+      .populate("customer", "firstName lastName email phoneNo address")
+      .populate("technician", "firstName lastName status expertise");
+
+   return populated;
 };
 
 // ------ UPDATE BOOKING STATUS (ADMIN)
@@ -209,6 +247,47 @@ const updateBookingStatusService = async (bookingId, status, finalCost) => {
    return booking;
 };
 
+// ------ UPDATE BOOKING PAYMENT (ADMIN)
+
+const updateBookingPaymentService = async (bookingId, payload) => {
+   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
+      throw new ApiError(400, "Invalid booking ID");
+   }
+
+   const booking = await Booking.findById(bookingId);
+
+   if (!booking) {
+      throw new ApiError(404, "Booking not found");
+   }
+
+   const { paymentStatus, paymentMethod, advancePaidAmount, remainingBalance, finalCost } = payload;
+
+   if (paymentStatus) {
+      const allowedPaymentStatus = [
+         "pending_payment",
+         "pending_verification",
+         "partially_paid",
+         "paid",
+         "pay_on_completion",
+         "cancelled",
+         "refunded"
+      ];
+      if (!allowedPaymentStatus.includes(paymentStatus)) {
+         throw new ApiError(400, "Invalid payment status");
+      }
+      booking.paymentStatus = paymentStatus;
+   }
+
+   if (paymentMethod) booking.paymentMethod = paymentMethod;
+   if (advancePaidAmount !== undefined) booking.advancePaidAmount = advancePaidAmount;
+   if (remainingBalance !== undefined) booking.remainingBalance = remainingBalance;
+   if (finalCost !== undefined) booking.finalCost = finalCost;
+
+   await booking.save();
+
+   return booking;
+};
+
 // ------ EXPORTING SERVICES
 
 export {
@@ -218,4 +297,5 @@ export {
    rejectBookingService,
    assignTechnicianService,
    updateBookingStatusService,
+   updateBookingPaymentService,
 };

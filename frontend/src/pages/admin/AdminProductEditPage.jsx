@@ -68,6 +68,7 @@ export default function AdminProductEditPage() {
         stock: data.stock ?? 0,
         description: data.description || '',
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setImageUrls(data.images?.length ? data.images : ['']);
     }
   }, [data, reset]);

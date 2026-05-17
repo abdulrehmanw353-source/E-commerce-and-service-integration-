@@ -46,7 +46,7 @@ export default function AdminDashboardPage() {
       </h2>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Revenue" value={`$${Math.round(stats?.totalRevenue || 0).toLocaleString()}`} icon={DollarSign} sub="Total revenue" />
+        <StatCard label="Total Revenue" value={`$${Math.round(stats?.totalRevenue || 0).toLocaleString()}`} icon={DollarSign} sub={`Ecommerce: $${Math.round(stats?.ecommerceRevenue || 0).toLocaleString()} | Repair: $${Math.round(stats?.repairRevenue || 0).toLocaleString()}`} />
         <StatCard label="Active Bookings" value={stats?.pendingBookings ?? stats?.totalBookings ?? '—'} icon={Clock3} sub="Currently in progress" />
         <StatCard label="Completed Services" value={stats?.completedBookings ?? '—'} icon={CheckCircle2} sub="Total successfully fixed" />
         <StatCard label="Pending Orders" value={stats?.pendingOrders ?? stats?.totalOrders ?? '—'} icon={ShoppingBag} sub="Awaiting confirmation" />
@@ -80,12 +80,17 @@ export default function AdminDashboardPage() {
                       <stop offset="5%" stopColor="#9d84ff" stopOpacity={0.45} />
                       <stop offset="95%" stopColor="#9d84ff" stopOpacity={0.02} />
                     </linearGradient>
+                    <linearGradient id="tealRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00f5d4" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#00f5d4" stopOpacity={0.02} />
+                    </linearGradient>
                   </defs>
                   <CartesianGrid stroke="rgba(255,255,255,0.06)" />
                   <XAxis dataKey={chartKeyRevenue} tick={{ fill: '#c9bfef', fontSize: 11 }} />
                   <YAxis tick={{ fill: '#c9bfef', fontSize: 11 }} />
                   <Tooltip contentStyle={{ background: '#171d31', border: '1px solid rgba(157,132,255,0.4)', borderRadius: 10, color: '#fff' }} />
-                  <Area type="monotone" dataKey="revenue" stroke="#b8a8ff" fill="url(#purpleRevenue)" strokeWidth={2.5} />
+                  <Area type="monotone" dataKey="ecommerceRevenue" name="Ecommerce" stackId="1" stroke="#b8a8ff" fill="url(#purpleRevenue)" strokeWidth={2.5} />
+                  <Area type="monotone" dataKey="repairRevenue" name="Repair" stackId="1" stroke="#00f5d4" fill="url(#tealRevenue)" strokeWidth={2.5} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : <div className="h-full flex items-center justify-center text-white/40">No revenue data available</div>

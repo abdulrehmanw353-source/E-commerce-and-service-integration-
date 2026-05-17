@@ -2,7 +2,7 @@ import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import {
   LayoutDashboard, ShoppingBag, Package, Users, Calendar,
-  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, ChevronUp, Layers, CreditCard, Truck
+  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, ChevronUp, Layers, CreditCard, Truck, Shield
 } from 'lucide-react';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import adminApi from '../../lib/adminAxios';
@@ -20,6 +20,7 @@ const navItems = [
   { label: 'Analytics',   to: '/admin/analytics',    icon: BarChart3 },
   { label: 'Payments',    to: '/admin/payments',     icon: CreditCard },
   { label: 'Delivery & Taxes', to: '/admin/delivery-tax', icon: Truck },
+  { label: 'Service Rules', to: '/admin/service-settings', icon: Shield },
   { label: 'Support',     to: '/admin/chat',         icon: MessageSquare },
 ];
 
@@ -29,7 +30,7 @@ export default function AdminSidebar({ collapsed }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleLogout = async () => {
-    try { await adminApi.post('/auth/admin/logout'); } catch {}
+    try { await adminApi.post('/auth/admin/logout'); } catch { /* ignore */ }
     logout();
     toast.success('Signed out.');
     navigate('/admin/login');

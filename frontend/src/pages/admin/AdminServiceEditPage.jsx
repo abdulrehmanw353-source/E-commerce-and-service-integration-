@@ -26,6 +26,7 @@ export default function AdminServiceEditPage() {
 
   useEffect(() => {
     if (!service) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm({
       title: service.title || '',
       slug: service.slug || '',

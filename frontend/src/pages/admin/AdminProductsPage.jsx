@@ -4,7 +4,7 @@ import { Plus, Search, Pencil, Trash2, Package, ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
-import StatusBadge from '../../components/admin/StatusBadge';
+
 
 const fetchProducts = (params) =>
   adminApi.get('/admin/products/', { params }).then(r => r.data.data ?? r.data);

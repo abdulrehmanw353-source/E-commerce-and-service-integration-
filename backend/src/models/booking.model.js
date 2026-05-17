@@ -50,9 +50,9 @@ const bookingSchema = new Schema(
          type: Date,
          required: true,
       },
-      preferredTimeSlot: {
-         type: Schema.Types.ObjectId,
-         ref: "TimeSlot",
+      preferredTime: {
+         type: String,
+         required: true,
       },
       technician: {
          type: Schema.Types.ObjectId,
@@ -97,15 +97,64 @@ const bookingSchema = new Schema(
          type: String,
          trim: true,
       },
+      reassignmentReason: {
+         type: String,
+         trim: true,
+      },
 
       // ------ Pricing
       estimatedCost: {
          type: Number,
          min: 0,
+         default: 0,
       },
       finalCost: {
          type: Number,
          min: 0,
+         default: 0,
+      },
+
+      // ------ Payment Management
+      paymentMethod: {
+         type: String,
+         enum: ["cod", "jazzcash", "easypaisa", "bank_transfer"],
+         default: "cod",
+      },
+      paymentStatus: {
+         type: String,
+         enum: [
+            "pending_payment",
+            "pending_verification",
+            "partially_paid",
+            "paid",
+            "pay_on_completion",
+            "cancelled",
+            "refunded"
+         ],
+         default: "pending_payment",
+      },
+      paymentModeRule: {
+         type: String,
+         enum: [
+            "advance_required",
+            "pay_after_inspection",
+            "pay_after_service_completion",
+            "partial_advance"
+         ],
+         default: "pay_after_service_completion",
+      },
+      advancePaidAmount: {
+         type: Number,
+         min: 0,
+         default: 0,
+      },
+      remainingBalance: {
+         type: Number,
+         min: 0,
+         default: 0,
+      },
+      paymentProofImage: {
+         type: String, // Cloudinary URL if user uploads payment proof
       },
    },
    {
@@ -117,7 +166,7 @@ const bookingSchema = new Schema(
 
 bookingSchema.index({ customer: 1, createdAt: -1 });
 bookingSchema.index({ status: 1 });
-bookingSchema.index({ technician: 1, preferredDate: 1, preferredTimeSlot: 1 });
+bookingSchema.index({ technician: 1, preferredDate: 1, preferredTime: 1 });
 
 // ------ BOOKING MODEL
 

@@ -12,7 +12,6 @@ import Product from "../models/product.model.js";
 import Review from "../models/review.model.js";
 import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
-import TimeSlot from "../models/timeSlot.model.js";
 import Booking from "../models/booking.model.js";
 import Technician from "../models/technician.model.js";
 import Service from "../models/service.model.js";
@@ -49,7 +48,6 @@ async function seedDummyData() {
       Cart.deleteMany({}),
       Order.deleteMany({}),
       Booking.deleteMany({}),
-      TimeSlot.deleteMany({}),
       Technician.deleteMany({}),
       Service.deleteMany({}),
       Product.deleteMany({}),
@@ -293,17 +291,7 @@ async function seedDummyData() {
       })),
     );
 
-    // ─── Time Slots ────────────────────────────────────────
-    const slots = await TimeSlot.insertMany([
-      { date: datePlusDays(1), startTime: "10:00", endTime: "11:00", maxBookings: 2, currentBookings: 1, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(1), startTime: "12:00", endTime: "13:00", maxBookings: 2, currentBookings: 2, isAvailable: false, createdBy: admin._id },
-      { date: datePlusDays(1), startTime: "14:00", endTime: "15:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(2), startTime: "09:00", endTime: "10:00", maxBookings: 3, currentBookings: 1, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(2), startTime: "11:00", endTime: "12:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(2), startTime: "15:00", endTime: "16:00", maxBookings: 1, currentBookings: 0, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(3), startTime: "10:00", endTime: "11:00", maxBookings: 3, currentBookings: 0, isAvailable: true, createdBy: admin._id },
-      { date: datePlusDays(3), startTime: "14:00", endTime: "15:00", maxBookings: 2, currentBookings: 0, isAvailable: true, createdBy: admin._id },
-    ]);
+
 
     // ─── Bookings ──────────────────────────────────────────
     await Booking.insertMany(
@@ -311,7 +299,7 @@ async function seedDummyData() {
         ...b,
         customer: customerDocs[idx % customerDocs.length]._id,
         preferredDate: datePlusDays((idx % 4) + 1),
-        preferredTimeSlot: slots[idx % slots.length]._id,
+        preferredTime: ["10:00", "11:00", "12:00", "14:00"][idx % 4],
         technician: technicians[idx % technicians.length]._id,
         assignedTechnician: `${technicians[idx % technicians.length].firstName} ${technicians[idx % technicians.length].lastName || ""}`.trim(),
         images: [
@@ -385,7 +373,6 @@ async function seedDummyData() {
     console.log(`- Services: ${services.length}`);
     console.log(`- Technicians: ${technicians.length}`);
     console.log(`- Products: ${products.length}`);
-    console.log(`- Time Slots: ${slots.length}`);
     console.log("- Collections: generated from product categories");
     console.log("- Analytics: generated from dated orders/bookings");
     console.log("- Login credentials:");

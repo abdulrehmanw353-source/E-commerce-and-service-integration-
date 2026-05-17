@@ -1,7 +1,7 @@
 import { Menu, Bell } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getAdminSocket, initAdminSocket } from '../../lib/socket';
+import { initAdminSocket } from '../../lib/socket';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import toast from 'react-hot-toast';
 

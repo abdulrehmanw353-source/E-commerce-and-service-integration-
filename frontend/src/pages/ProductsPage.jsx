@@ -22,6 +22,7 @@ export default function ProductsPage() {
   });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilters((prev) => ({
       ...prev,
       keyword: searchParams.get('keyword') || '',

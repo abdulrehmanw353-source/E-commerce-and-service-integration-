@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
 import Review from "../models/review.model.js";
+import Booking from "../models/booking.model.js";
 
 // ====== DASHBOARD STATS ======
 
@@ -16,7 +17,8 @@ const getDashboardStatsService = async () => {
       pendingOrders,
       deliveredOrders,
       cancelledOrders,
-      revenueResult,
+      ecommerceRevenueResult,
+      repairRevenueResult,
    ] = await Promise.all([
       User.countDocuments({ role: "customer" }),
       Product.countDocuments({ isDeleted: false }),
@@ -28,15 +30,30 @@ const getDashboardStatsService = async () => {
          { $match: { paymentStatus: "paid" } },
          { $group: { _id: null, total: { $sum: "$totalAmount" } } },
       ]),
+      Booking.aggregate([
+         {
+            $group: {
+               _id: null,
+               total: { $sum: { $add: ["$advancePaidAmount", "$remainingBalance"] } }
+            }
+         }
+      ])
    ]);
 
-   const totalRevenue =
-      revenueResult.length > 0 ? revenueResult[0].total : 0;
+   const ecommerceRevenue =
+      ecommerceRevenueResult.length > 0 ? ecommerceRevenueResult[0].total : 0;
+      
+   const repairRevenue =
+      repairRevenueResult.length > 0 ? repairRevenueResult[0].total : 0;
+
+   const totalRevenue = ecommerceRevenue + repairRevenue;
 
    return {
       totalCustomers,
       totalProducts,
       totalOrders,
+      ecommerceRevenue,
+      repairRevenue,
       totalRevenue,
       pendingOrders,
       deliveredOrders,
@@ -87,7 +104,7 @@ const getRevenueAnalyticsService = async (months = 12) => {
    const startDate = new Date();
    startDate.setMonth(startDate.getMonth() - Number(months));
 
-   const revenue = await Order.aggregate([
+   const ecommerceRevenue = await Order.aggregate([
       {
          $match: {
             paymentStatus: "paid",
@@ -104,21 +121,63 @@ const getRevenueAnalyticsService = async (months = 12) => {
             orderCount: { $sum: 1 },
          },
       },
+   ]);
+
+   const repairRevenue = await Booking.aggregate([
       {
-         $sort: { "_id.year": 1, "_id.month": 1 },
+         $match: {
+            createdAt: { $gte: startDate },
+         },
       },
       {
-         $project: {
-            _id: 0,
-            year: "$_id.year",
-            month: "$_id.month",
-            totalRevenue: 1,
-            orderCount: 1,
+         $group: {
+            _id: {
+               year: { $year: "$createdAt" },
+               month: { $month: "$createdAt" },
+            },
+            totalRevenue: { $sum: { $add: ["$advancePaidAmount", "$remainingBalance"] } },
+            bookingCount: { $sum: 1 },
          },
       },
    ]);
 
-   return revenue;
+   // Merge the arrays
+   const mergedRevenue = {};
+
+   const mergeItem = (item, type) => {
+      const key = `${item._id.year}-${item._id.month}`;
+      if (!mergedRevenue[key]) {
+         mergedRevenue[key] = {
+            year: item._id.year,
+            month: item._id.month,
+            ecommerceRevenue: 0,
+            repairRevenue: 0,
+            totalRevenue: 0,
+            orderCount: 0,
+            bookingCount: 0,
+         };
+      }
+      
+      if (type === "ecommerce") {
+         mergedRevenue[key].ecommerceRevenue = item.totalRevenue;
+         mergedRevenue[key].orderCount = item.orderCount;
+      } else {
+         mergedRevenue[key].repairRevenue = item.totalRevenue;
+         mergedRevenue[key].bookingCount = item.bookingCount;
+      }
+      mergedRevenue[key].totalRevenue = mergedRevenue[key].ecommerceRevenue + mergedRevenue[key].repairRevenue;
+   };
+
+   ecommerceRevenue.forEach(item => mergeItem(item, "ecommerce"));
+   repairRevenue.forEach(item => mergeItem(item, "repair"));
+
+   // Sort by year and month
+   const finalRevenue = Object.values(mergedRevenue).sort((a, b) => {
+      if (a.year === b.year) return a.month - b.month;
+      return a.year - b.year;
+   });
+
+   return finalRevenue;
 };
 
 // ------ ORDER ANALYTICS (monthly breakdown for last 12 months)

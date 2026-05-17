@@ -90,7 +90,11 @@
 - implementing payment method selector (COD, JazzCash, EasyPaisa) to checkout page
 - implementing order cancellation functionality for customers
 - implementing payment status (pending, paid, refunded, cancelled) for orders
-- implementing category-based delivery tax rules for admins
+- implementing ServiceSettings model, routes, and controllers for global service area constraints
+- integrating substring-based dynamic service area validation for booking locations
+- expanding Booking model with payment tracking fields (paymentMethod, paymentStatus, advancePaidAmount, remainingBalance, finalCost)
+- implementing admin booking payment update endpoint
+- splitting admin dashboard analytics to aggregate ecommerce revenue and repair service revenue independently
 ```
 
 #### Frontend
@@ -213,6 +217,10 @@
 - fixing overall store currency from $USD to PKR Rs
 - show expected delivery date for products
 - changing the complete store placeholders to a pakistani data
+- implementing AdminServiceSettingsPage to manage service availability and geographic location rules
+- updating AdminBookingDetailPage with payment management interface for advance/remaining balances
+- updating AdminDashboardPage to display stacked area charts for combined Ecommerce & Repair revenues
+- integrating dynamic payment UI into ServicesPage with WhatsApp screenshot flow and advance payment rules
 ```
 
 ### By "Pull Requests"

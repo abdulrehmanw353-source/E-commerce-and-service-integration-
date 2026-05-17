@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CheckCircle, Package, ArrowRight, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Package, ShoppingBag } from 'lucide-react';
 import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
 
@@ -12,7 +12,10 @@ export default function OrderSuccessPage() {
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    if (!orderId || !isAuthenticated) { setLoading(false); return; }
+    if (!orderId || !isAuthenticated) { 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoading(false); return; 
+    }
     api.get(`/orders/${orderId}`)
       .then(r => setOrder(r.data.data ?? r.data))
       .catch(() => {/* order may not be accessible - show generic success */})

@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Package, MapPin, CheckCircle, Clock, ShoppingBag, X, Truck } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, ShoppingBag, X, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/axios';
 

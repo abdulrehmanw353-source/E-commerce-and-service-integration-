@@ -19,6 +19,7 @@ export function useSocket() {
   useEffect(() => {
     if (!accessToken) {
       destroySocket();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConnected(false);
       return;
     }
@@ -40,6 +41,7 @@ export function useSocket() {
     };
   }, [accessToken]);
 
+  // eslint-disable-next-line react-hooks/refs
   return { socket: socketRef.current ?? getSocket(), connected };
 }
 

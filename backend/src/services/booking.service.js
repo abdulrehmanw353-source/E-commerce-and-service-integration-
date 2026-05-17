@@ -5,12 +5,13 @@ import mongoose from "mongoose";
 import Booking from "../models/booking.model.js";
 import ApiError from "../utils/ApiError.js";
 import { uploadMultipleToCloudinary } from "../utils/cloudinary.upload.js";
-import TimeSlot from "../models/timeSlot.model.js";
+
 import Technician from "../models/technician.model.js";
 import {
    ACTIVE_BOOKING_STATUSES,
    recomputeTechnicianLoad,
 } from "./technician.service.js";
+import ServiceSettings from "../models/serviceSettings.model.js";
 
 // ------ CREATE BOOKING SERVICE
 
@@ -27,11 +28,8 @@ const createBookingService = async (userId, payload, files) => {
    if (!payload.preferredDate) {
       throw new ApiError(400, "Preferred date is required");
    }
-   if (!payload.technicianId) {
-      throw new ApiError(400, "Technician selection is required");
-   }
-   if (!payload.preferredTimeSlot) {
-      throw new ApiError(400, "Preferred time slot is required");
+   if (!payload.preferredTime) {
+      throw new ApiError(400, "Preferred time is required");
    }
 
    // ------ validate preferred date is in the future
@@ -41,29 +39,56 @@ const createBookingService = async (userId, payload, files) => {
       throw new ApiError(400, "Preferred date must be in the future");
    }
 
-   const technician = await Technician.findById(payload.technicianId);
-   if (!technician) throw new ApiError(404, "Technician not found");
-   if (!technician.isAvailable || technician.status === "unavailable") {
-      throw new ApiError(400, "Selected technician is unavailable");
+   const availableTechs = await Technician.find({ isAvailable: true, status: { $ne: "unavailable" } });
+   if (availableTechs.length === 0) throw new ApiError(400, "No technicians are currently operating");
+
+   // ------ validate service area
+   if (payload.location) {
+      const { address, city, state, country } = payload.location;
+      const serviceSettings = await ServiceSettings.getSettings();
+      
+      if (!serviceSettings.isServiceActive) {
+         throw new ApiError(400, "Service is currently inactive.");
+      }
+
+      const isMatch = (allowedList, value1, value2) => {
+         if (!allowedList || allowedList.length === 0) return true;
+         const str1 = (value1 || "").toLowerCase();
+         const str2 = (value2 || "").toLowerCase();
+         return allowedList.some((allowed) => {
+            const allowedLower = allowed.toLowerCase();
+            return str1.includes(allowedLower) || str2.includes(allowedLower);
+         });
+      };
+
+      if (
+         !isMatch(serviceSettings.allowedCities, city, address) ||
+         !isMatch(serviceSettings.allowedStates, state, address) ||
+         !isMatch(serviceSettings.allowedCountries, country, address)
+      ) {
+         throw new ApiError(
+            400,
+            `Service is not available in your area. Currently serving: ${serviceSettings.allowedCities.map((c) => c.charAt(0).toUpperCase() + c.slice(1)).join(", ")}.`
+         );
+      }
+   } else {
+      throw new ApiError(400, "Location details are required to book a service.");
    }
 
-   const slot = await TimeSlot.findById(payload.preferredTimeSlot);
-   if (!slot) throw new ApiError(404, "Time slot not found");
-   if (!slot.isAvailable || slot.currentBookings >= slot.maxBookings) {
-      throw new ApiError(400, "Selected time slot is unavailable");
-   }
+   const startOfDay = new Date(preferredDate);
+   startOfDay.setHours(0, 0, 0, 0);
+   const endOfDay = new Date(preferredDate);
+   endOfDay.setHours(23, 59, 59, 999);
 
-   const existingTechnicianBooking = await Booking.findOne({
-      technician: payload.technicianId,
-      preferredDate,
-      preferredTimeSlot: payload.preferredTimeSlot,
+   const bookedTechIds = await Booking.find({
+      preferredDate: { $gte: startOfDay, $lte: endOfDay },
+      preferredTime: payload.preferredTime,
       status: { $in: ACTIVE_BOOKING_STATUSES },
-   });
-   if (existingTechnicianBooking) {
-      throw new ApiError(
-         409,
-         "Selected slot is already booked for this technician",
-      );
+   }).distinct("technician");
+
+   const assignedTech = availableTechs.find(t => !bookedTechIds.some(id => id.toString() === t._id.toString()));
+   if (!assignedTech) {
+      throw new ApiError(400, "No technicians available for this time slot. Please choose another time.");
    }
 
    // ------ upload images to Cloudinary (if provided)
@@ -72,6 +97,10 @@ const createBookingService = async (userId, payload, files) => {
    if (files && files.length > 0) {
       imageUrls = await uploadMultipleToCloudinary(files, "bookings");
    }
+
+   // ------ get payment rule
+   const serviceSettings = await ServiceSettings.getSettings();
+   const paymentModeRule = serviceSettings.defaultPaymentModeRule || "pay_after_service_completion";
 
    // ------ create booking
    const booking = await Booking.create({
@@ -83,16 +112,16 @@ const createBookingService = async (userId, payload, files) => {
       deviceModel: payload.deviceModel,
       images: imageUrls,
       preferredDate,
-      preferredTimeSlot: payload.preferredTimeSlot,
-      technician: payload.technicianId,
-      assignedTechnician: `${technician.firstName} ${technician.lastName || ""}`.trim(),
+      preferredTime: payload.preferredTime,
+      technician: assignedTech._id,
+      assignedTechnician: `${assignedTech.firstName} ${assignedTech.lastName || ""}`.trim(),
       status: "pending",
+      paymentModeRule,
+      paymentMethod: payload.paymentMethod || "cod",
       ...(payload.location ? { location: payload.location } : {}),
    });
 
-   slot.currentBookings += 1;
-   await slot.save({ validateBeforeSave: false });
-   await recomputeTechnicianLoad(payload.technicianId);
+   await recomputeTechnicianLoad(assignedTech._id);
 
    return booking;
 };
@@ -186,11 +215,6 @@ const cancelBookingService = async (bookingId, userId) => {
 
    booking.status = "cancelled";
    await booking.save();
-   if (booking.preferredTimeSlot) {
-      await TimeSlot.findByIdAndUpdate(booking.preferredTimeSlot, {
-         $inc: { currentBookings: -1 },
-      });
-   }
    await recomputeTechnicianLoad(booking.technician);
 
    return booking;
