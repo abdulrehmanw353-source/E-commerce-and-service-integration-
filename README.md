@@ -192,6 +192,7 @@
 - UI POLISH: wrapping ServicesPage booking form in high-fidelity Apple-style card layout
 - integrating Google OAuth (sign in with Google) and Google Search API for product/category data
 - fixing filters on the services page
+- fixing the scroll to top functionality on navigation
 ```
 
 ### By "Pull Requests"

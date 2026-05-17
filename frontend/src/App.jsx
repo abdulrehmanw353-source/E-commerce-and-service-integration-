@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { queryClient } from './lib/queryClient';
 import { useInitAuth } from './hooks/useInitAuth';
 import { useInitAdminAuth } from './hooks/useInitAdminAuth';
+import ScrollToTop from './components/utils/ScrollToTop';
 
 // Pages — Storefront
 import HomePage from './pages/HomePage';
@@ -162,6 +163,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <AppContent />
         <Toaster
           position="top-center"
