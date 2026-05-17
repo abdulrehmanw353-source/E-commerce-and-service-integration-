@@ -58,7 +58,7 @@ export default function OrderSuccessPage() {
               <div className="flex justify-between text-[14px]">
                 <span className="text-white/55">Total Paid</span>
                 <span className="text-white font-bold">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total)}
+                  {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(total)}
                 </span>
               </div>
             )}

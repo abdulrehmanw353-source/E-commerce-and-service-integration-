@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                         </div>
                         <div>
                           <p className="text-[14px] font-semibold text-white">Checking out as Guest</p>
-                          <p className="text-[13px] text-white/50 mt-0.5">
+                          <p className="text-[13px] text-white/80 mt-0.5">
                             No account needed! Fill in your details below to place your order.
                             {' '}
                             <Link to="/login?redirect=/checkout" className="text-[#d7ccff] font-semibold hover:text-white transition-colors">
@@ -309,8 +309,8 @@ export default function CheckoutPage() {
                   <div className="ds-card p-5 sm:p-6">
                     <h2 className="text-[15px] font-semibold text-white mb-5">Contact Information</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <InputField label="First Name" name="firstName" placeholder="John" register={register} error={errors.firstName?.message} />
-                      <InputField label="Last Name" name="lastName" placeholder="Doe" register={register} error={errors.lastName?.message} />
+                      <InputField label="First Name" name="firstName" placeholder="Ali" register={register} error={errors.firstName?.message} />
+                      <InputField label="Last Name" name="lastName" placeholder="Khan" register={register} error={errors.lastName?.message} />
                       <InputField label="Email" type="email" name="email" placeholder="you@gmail.com" register={register} error={errors.email?.message} />
                       <InputField label="Phone" type="tel" name="phone" placeholder="0300 1234567" register={register} error={errors.phone?.message} />
                     </div>
@@ -412,7 +412,7 @@ export default function CheckoutPage() {
                             className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
                           <div>
                             <p className="text-[14px] font-semibold text-white">Cash on Delivery (COD)</p>
-                            <p className="text-[12px] text-white/50">Pay when you receive your order</p>
+                            <p className="text-[12px] text-white/80">Pay when you receive your order</p>
                           </div>
                         </label>
                       )}
@@ -428,7 +428,7 @@ export default function CheckoutPage() {
                               className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
                             <div>
                               <p className="text-[14px] font-semibold text-white">JazzCash</p>
-                              <p className="text-[12px] text-white/50">Pay via JazzCash and send screenshot</p>
+                              <p className="text-[12px] text-white/80">Pay via JazzCash and send screenshot</p>
                             </div>
                           </div>
                           {paymentMethod === 'jazzcash' && (
@@ -463,7 +463,7 @@ export default function CheckoutPage() {
                               className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
                             <div>
                               <p className="text-[14px] font-semibold text-white">EasyPaisa</p>
-                              <p className="text-[12px] text-white/50">Pay via EasyPaisa and send screenshot</p>
+                              <p className="text-[12px] text-white/80">Pay via EasyPaisa and send screenshot</p>
                             </div>
                           </div>
                           {paymentMethod === 'easypaisa' && (
@@ -519,7 +519,7 @@ export default function CheckoutPage() {
                             <p className="text-[12px] text-white/45">Qty: {item.quantity}</p>
                           </div>
                           <p className="text-[13px] font-bold text-white flex-shrink-0">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(item.price * item.quantity)}
+                            {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(item.price * item.quantity)}
                           </p>
                         </div>
                       ))}
@@ -529,21 +529,21 @@ export default function CheckoutPage() {
                       <div className="flex justify-between text-[13px]">
                         <span className="text-white/45">Subtotal</span>
                         <span className="text-white font-semibold">
-                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(subtotal)}
+                          {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(subtotal)}
                         </span>
                       </div>
                       {deliveryTaxSettings?.taxEnabled && (
                         <div className="flex justify-between text-[13px]">
                           <span className="text-white/45">Tax ({deliveryTaxSettings.taxPercentage}%)</span>
                           <span className="text-white font-semibold">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(taxAmount)}
+                            {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(taxAmount)}
                           </span>
                         </div>
                       )}
                       <div className="flex justify-between text-[13px]">
                         <span className="text-white/45">Delivery Fee</span>
                         <span className={deliveryCharge === 0 ? "text-green-300 font-semibold" : "text-white font-semibold"}>
-                          {deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(deliveryCharge)}
+                          {deliveryCharge === 0 ? 'Free' : ((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(deliveryCharge)}
                         </span>
                       </div>
                       <div className="flex justify-between text-[13px] bg-white/[0.04] p-3 rounded-xl border border-white/[0.04] mt-2">
@@ -555,7 +555,7 @@ export default function CheckoutPage() {
                       <div className="flex justify-between text-[16px] font-bold pt-2 border-t border-white/[0.08]">
                         <span className="text-white">Total</span>
                         <span className="text-white">
-                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total)}
+                          {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(total)}
                         </span>
                       </div>
                     </div>

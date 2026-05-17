@@ -60,12 +60,16 @@ const getAllProductsService = async (query) => {
    // ------ counting the total products stored in DB
    const totalProducts = await Product.countDocuments(filter);
 
+   // ------ fetching unique categories
+   const availableCategories = await Product.distinct("category", { isDeleted: false });
+
    // ------ returning data
    return {
       products,
       totalProducts,
       page,
       totalPages: Math.ceil(totalProducts / limit),
+      availableCategories,
    };
 };
 

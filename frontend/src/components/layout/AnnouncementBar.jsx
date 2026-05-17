@@ -19,7 +19,7 @@ export default function AnnouncementBar() {
           className="inline-flex items-center gap-1.5 text-[14px] font-normal text-white/90 hover:text-white transition-colors"
         >
           <span>
-            Free shipping on all orders over $50.{' '}
+            Free shipping on all orders over RS 5,000.{' '}
             <span className="text-apple-teal font-medium">Shop now</span>
           </span>
           <ChevronRight className="w-3.5 h-3.5 text-apple-teal" strokeWidth={2.5} />

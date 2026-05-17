@@ -21,7 +21,7 @@ const CATEGORIES = ['Laptops', 'Desktops', 'Mobiles', 'Tablets', 'Audio', 'Gamin
 function FormSection({ title, children }) {
   return (
     <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-2xl p-5 space-y-4">
-      <h3 className="text-[13px] font-semibold text-white/50 uppercase tracking-wider">{title}</h3>
+      <h3 className="text-[13px] font-semibold text-white/80 uppercase tracking-wider">{title}</h3>
       {children}
     </div>
   );
@@ -177,7 +177,7 @@ export default function AdminProductEditPage() {
           {/* ─── Right ─── */}
           <div className="space-y-5">
             <FormSection title="Pricing">
-              <Field label="Price (USD)" required error={errors.price?.message}>
+              <Field label="Price (RS)" required error={errors.price?.message}>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-[14px]">$</span>
                   <input type="number" step="0.01" {...register('price')} placeholder="0.00"

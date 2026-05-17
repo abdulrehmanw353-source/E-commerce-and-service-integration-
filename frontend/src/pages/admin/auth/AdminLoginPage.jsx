@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} id="admin-login-form">
             {/* Email */}
             <div style={{ marginBottom: '24px' }}>
-              <label htmlFor="admin-email" className="block text-[13px] font-semibold text-white/50 uppercase tracking-[0.04em]" style={{ marginBottom: '10px' }}>
+              <label htmlFor="admin-email" className="block text-[13px] font-semibold text-white/80 uppercase tracking-[0.04em]" style={{ marginBottom: '10px' }}>
                 Email Address
               </label>
               <input
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
 
             {/* Password */}
             <div style={{ marginBottom: '32px' }}>
-              <label htmlFor="admin-password" className="block text-[13px] font-semibold text-white/50 uppercase tracking-[0.04em]" style={{ marginBottom: '10px' }}>
+              <label htmlFor="admin-password" className="block text-[13px] font-semibold text-white/80 uppercase tracking-[0.04em]" style={{ marginBottom: '10px' }}>
                 Password
               </label>
               <input

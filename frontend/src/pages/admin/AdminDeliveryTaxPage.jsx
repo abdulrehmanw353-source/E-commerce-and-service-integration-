@@ -90,7 +90,7 @@ export default function AdminDeliveryTaxPage() {
   };
 
   if (isLoading) {
-    return <div className="p-6 text-white/50 animate-pulse">Loading settings...</div>;
+    return <div className="p-6 text-white/80 animate-pulse">Loading settings...</div>;
   }
 
   return (
@@ -176,7 +176,7 @@ export default function AdminDeliveryTaxPage() {
             {categoryRules.length === 0 ? (
               <div className="text-center py-12 border border-white/[0.04] rounded-xl border-dashed">
                 <Truck className="w-8 h-8 text-white/20 mx-auto mb-3" />
-                <p className="text-[14px] text-white/50">No delivery rules defined.</p>
+                <p className="text-[14px] text-white/80">No delivery rules defined.</p>
                 <p className="text-[12px] text-white/30 mt-1">Default delivery charge is 0 and default time is 3 days.</p>
               </div>
             ) : (
@@ -203,7 +203,7 @@ export default function AdminDeliveryTaxPage() {
                   
                   <div className="grid sm:grid-cols-3 gap-4 pr-16">
                     <div>
-                      <label className="block text-[11px] font-medium text-white/50 uppercase tracking-wider mb-1.5">Category Name</label>
+                      <label className="block text-[11px] font-medium text-white/80 uppercase tracking-wider mb-1.5">Category Name</label>
                       {rule.isEditing ? (
                         <div className="relative">
                           <select
@@ -216,7 +216,7 @@ export default function AdminDeliveryTaxPage() {
                               <option key={cat} value={cat} className="bg-[#1C1C1E] capitalize">{cat}</option>
                             ))}
                           </select>
-                          <ChevronDown className="w-4 h-4 text-white/50 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                          <ChevronDown className="w-4 h-4 text-white/80 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         </div>
                       ) : (
                         <div className="px-3 py-2 bg-white/[0.02] border border-transparent rounded-lg text-[13px] text-white font-semibold capitalize">
@@ -225,7 +225,7 @@ export default function AdminDeliveryTaxPage() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-[11px] font-medium text-white/50 uppercase tracking-wider mb-1.5">Delivery Fee (PKR)</label>
+                      <label className="block text-[11px] font-medium text-white/80 uppercase tracking-wider mb-1.5">Delivery Fee (PKR)</label>
                       {rule.isEditing ? (
                         <input
                           type="number"
@@ -241,7 +241,7 @@ export default function AdminDeliveryTaxPage() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-[11px] font-medium text-white/50 uppercase tracking-wider mb-1.5">Expected Days</label>
+                      <label className="block text-[11px] font-medium text-white/80 uppercase tracking-wider mb-1.5">Expected Days</label>
                       {rule.isEditing ? (
                         <input
                           type="number"
@@ -268,7 +268,7 @@ export default function AdminDeliveryTaxPage() {
                           }
                           updateCategoryRule(idx, 'isEditing', false);
                         }}
-                        className="px-4 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg text-[12px] font-semibold transition-all border border-blue-500/20"
+                        className="px-4 py-1.5 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-lg text-[12px] font-semibold transition-all border border-blue-500/20"
                       >
                         Done
                       </button>

@@ -31,7 +31,7 @@ function MsgBubble({ m }) {
         }
       `}>
         {m.content ?? m.message ?? m.text}
-        {time && <p className={`text-[10px] mt-1 ${isAdmin ? 'text-white/50' : 'text-white/30'}`}>{time}</p>}
+        {time && <p className={`text-[10px] mt-1 ${isAdmin ? 'text-white/80' : 'text-white/30'}`}>{time}</p>}
       </div>
     </div>
   );

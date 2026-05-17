@@ -84,9 +84,9 @@ export default function AdminOrdersPage() {
                         <p className="font-medium text-white">{o.user?.firstName} {o.user?.lastName}</p>
                         <p className="text-[11px] text-white/35">{o.user?.email}</p>
                       </td>
-                      <td className="px-5 py-3.5 text-white/50">{o.items?.length ?? '—'}</td>
+                      <td className="px-5 py-3.5 text-white/80">{o.items?.length ?? '—'}</td>
                       <td className="px-5 py-3.5 font-semibold text-white">
-                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(o.totalAmount)}
+                        {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(o.totalAmount)}
                       </td>
                       <td className="px-5 py-3.5"><StatusBadge status={o.status} /></td>
                       <td className="px-5 py-3.5 text-white/40 whitespace-nowrap">
@@ -109,9 +109,9 @@ export default function AdminOrdersPage() {
             <p className="text-[12px] text-white/35">Page {page} of {totalPages}</p>
             <div className="flex gap-2">
               <button disabled={page === 1} onClick={() => setPage(p => p - 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
               <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
             </div>
           </div>
         )}

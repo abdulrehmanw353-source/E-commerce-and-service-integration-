@@ -94,10 +94,10 @@ export default function ProductDetailPage() {
       <div className="bg-transparent min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/[0.03] flex items-center justify-center">
-            <Package className="w-9 h-9 text-white/50" strokeWidth={1.5} />
+            <Package className="w-9 h-9 text-white/80" strokeWidth={1.5} />
           </div>
           <h2 className="text-[24px] font-bold text-white mb-2">Product not found</h2>
-          <p className="text-[17px] text-white/50 mb-8">The product you're looking for doesn't exist.</p>
+          <p className="text-[17px] text-white/80 mb-8">The product you're looking for doesn't exist.</p>
           <Link to="/products" className="text-[#9b82ff] hover:opacity-80 transition-opacity text-[17px] inline-flex items-center gap-1">
             Browse all products <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
           </Link>
@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
   }
 
   const images = product.images?.length ? product.images : ['/placeholder-product.png'];
-  const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price);
+  const formattedPrice = ((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(product.price);
   const availableToAdd = product ? Math.max(0, product.stock - cartQty) : 0;
   const inStock = product.stock > 0;
   const canAddMore = availableToAdd > 0;
@@ -119,7 +119,7 @@ export default function ProductDetailPage() {
     <div className="bg-transparent min-h-screen">
       {/* Breadcrumb */}
       <div className="apple-section-wide pt-4 pb-2">
-        <nav className="flex items-center gap-1.5 text-[13px] text-white/50">
+        <nav className="flex items-center gap-1.5 text-[13px] text-white/80">
           <Link to="/" className="hover:text-white transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" strokeWidth={2} />
           <Link to="/products" className="hover:text-white transition-colors">Products</Link>
@@ -261,7 +261,7 @@ export default function ProductDetailPage() {
                     {/* Buy Now */}
                     <button
                       onClick={handleBuyNow}
-                      className="w-full h-[52px] rounded-xl font-bold bg-white text-[#0a0a0a] hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
+                      className="w-full h-[52px] rounded-xl font-bold bg-[#00f5d4] text-[#0a0a0a] shadow-[0_0_20px_rgba(0,245,212,0.3)] hover:bg-[#00d4b8] transition-colors flex items-center justify-center gap-2"
                     >
                       Buy Now
                     </button>

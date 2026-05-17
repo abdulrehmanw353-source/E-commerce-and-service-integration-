@@ -113,9 +113,9 @@ export default function AdminProductsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 text-white/50 capitalize">{p.category}</td>
+                      <td className="px-5 py-3.5 text-white/80 capitalize">{p.category}</td>
                       <td className="px-5 py-3.5 font-semibold text-white">
-                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.price)}
+                        {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(p.price)}
                       </td>
                       <td className="px-5 py-3.5">
                         <span className={`font-semibold tabular-nums ${p.stock === 0 ? 'text-red-400' : p.stock < 5 ? 'text-yellow-400' : 'text-white/70'}`}>
@@ -156,9 +156,9 @@ export default function AdminProductsPage() {
             <p className="text-[12px] text-white/35">Page {page} of {totalPages}</p>
             <div className="flex gap-2">
               <button disabled={page === 1} onClick={() => setPage(p => p - 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
               <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
             </div>
           </div>
         )}

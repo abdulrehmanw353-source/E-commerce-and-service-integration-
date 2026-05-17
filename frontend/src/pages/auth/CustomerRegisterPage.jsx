@@ -59,8 +59,8 @@ export default function CustomerRegisterPage() {
       <form onSubmit={handleSubmit(onSubmit)} id="customer-register-form">
         {/* Name Row */}
         <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '20px' }}>
-          <InputField label="First Name" name="firstName" placeholder="John" register={register} error={errors.firstName?.message} />
-          <InputField label="Last Name" name="lastName" placeholder="Doe" register={register} error={errors.lastName?.message} />
+          <InputField label="First Name" name="firstName" placeholder="Ali" register={register} error={errors.firstName?.message} />
+          <InputField label="Last Name" name="lastName" placeholder="Khan" register={register} error={errors.lastName?.message} />
         </div>
 
         {/* Email */}
@@ -70,7 +70,7 @@ export default function CustomerRegisterPage() {
 
         {/* Phone */}
         <div style={{ marginBottom: '20px' }}>
-          <InputField label="Phone Number" type="tel" name="phoneNo" placeholder="+1 (555) 000-0000" register={register} error={errors.phoneNo?.message} />
+          <InputField label="Phone Number" type="tel" name="phoneNo" placeholder="+92 300 1234567" register={register} error={errors.phoneNo?.message} />
         </div>
 
         {/* Password Row */}

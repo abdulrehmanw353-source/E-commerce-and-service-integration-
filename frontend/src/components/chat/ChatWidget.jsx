@@ -68,8 +68,8 @@ export default function ChatWidget() {
       >
         <div className={`transition-all duration-200 ${isOpen ? 'rotate-0 scale-100' : 'rotate-0 scale-100'}`}>
           {isOpen
-            ? <X className="w-6 h-6 text-[#0f1425]" strokeWidth={2.5} />
-            : <MessageCircle className="w-6 h-6 text-[#0f1425]" strokeWidth={2.25} />
+            ? <X className="w-6 h-6 text-white" strokeWidth={2.5} />
+            : <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.25} />
           }
         </div>
 

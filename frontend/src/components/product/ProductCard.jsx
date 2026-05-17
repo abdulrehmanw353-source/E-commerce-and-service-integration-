@@ -9,10 +9,7 @@ import { Star, ShoppingBag } from 'lucide-react';
 export default function ProductCard({ product }) {
   const { _id, title, price, images, category, ratings, numReviews } = product;
   const imageUrl = images?.[0] || '/placeholder-product.png';
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(price);
+  const formattedPrice = `RS ${new Intl.NumberFormat('en-US').format(price)}`;
 
   return (
     <Link

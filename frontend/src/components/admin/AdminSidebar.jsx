@@ -67,7 +67,7 @@ export default function AdminSidebar({ collapsed }) {
               transition-all duration-150 group
               ${isActive
                 ? 'bg-gradient-to-r from-[#6f50ff] to-[#8c72ff] text-white shadow-[0_0_20px_rgba(122,92,255,0.35)]'
-                : 'text-white/50 hover:text-white/90 hover:bg-white/[0.05]'}
+                : 'text-white/80 hover:text-white/90 hover:bg-white/[0.05]'}
               ${collapsed ? 'justify-center px-2' : ''}
             `}
             title={collapsed ? label : undefined}

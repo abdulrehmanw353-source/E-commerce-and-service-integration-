@@ -48,7 +48,7 @@ export default function AdminCustomerDetailPage() {
         <div className="bg-[#111111] border border-white/[0.08] rounded-2xl p-8 text-center max-w-md mx-auto">
           <User className="w-12 h-12 text-white/20 mx-auto mb-4" strokeWidth={1.5} />
           <h2 className="text-[20px] font-semibold text-white mb-2">Customer Not Found</h2>
-          <p className="text-[14px] text-white/50 mb-6">This customer may have been deleted or does not exist.</p>
+          <p className="text-[14px] text-white/80 mb-6">This customer may have been deleted or does not exist.</p>
           <button
             onClick={() => navigate('/admin/customers')}
             className="px-6 py-2.5 bg-[#0071E3] text-white text-[14px] font-medium rounded-full hover:bg-[#0077ED] transition-all"
@@ -168,7 +168,7 @@ export default function AdminCustomerDetailPage() {
               <h2 className="text-[16px] font-semibold text-white">Permissions</h2>
             </div>
             
-            <p className="text-[13px] text-white/50 mb-6 leading-relaxed">
+            <p className="text-[13px] text-white/80 mb-6 leading-relaxed">
               Admins have full access to the dashboard, orders, and products. Customers only have access to the storefront.
             </p>
 

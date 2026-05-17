@@ -144,11 +144,11 @@ export default function AdminOrderDetailPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-[14px] font-medium text-white line-clamp-1">{title}</p>
                           <p className="text-[12px] text-white/40 mt-0.5">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price)} × {item.quantity}
+                            {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(price)} × {item.quantity}
                           </p>
                         </div>
                         <p className="text-[14px] font-semibold text-white flex-shrink-0">
-                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price * (item.quantity ?? 1))}
+                          {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(price * (item.quantity ?? 1))}
                         </p>
                       </div>
                     );
@@ -158,7 +158,7 @@ export default function AdminOrderDetailPage() {
             <div className="px-5 py-4 border-t border-white/[0.06] flex justify-between items-center">
               <span className="text-[14px] font-bold text-white/70">Total</span>
               <span className="text-[20px] font-bold text-white">
-                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalAmount ?? 0)}
+                {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.totalAmount ?? 0)}
               </span>
             </div>
           </div>
@@ -271,7 +271,7 @@ export default function AdminOrderDetailPage() {
               <div className="flex justify-between text-[13px]">
                 <span className="text-white/40">Subtotal</span>
                 <span className="text-white/70">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.subtotal)}
+                  {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.subtotal)}
                 </span>
               </div>
             )}
@@ -279,14 +279,14 @@ export default function AdminOrderDetailPage() {
               <div className="flex justify-between text-[13px]">
                 <span className="text-white/40">Tax</span>
                 <span className="text-white/70">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.taxAmount)}
+                  {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.taxAmount)}
                 </span>
               </div>
             )}
             <div className="flex justify-between text-[13px]">
               <span className="text-white/40">Delivery Fee</span>
               <span className="text-white/70">
-                {order.deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.deliveryCharge || 0)}
+                {order.deliveryCharge === 0 ? 'Free' : ((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.deliveryCharge || 0)}
               </span>
             </div>
             {order.expectedDeliveryDate && (
@@ -302,7 +302,7 @@ export default function AdminOrderDetailPage() {
             <div className="flex justify-between text-[15px] pt-2 border-t border-white/[0.06]">
               <span className="text-white font-semibold">Total</span>
               <span className="text-white font-bold">
-                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalAmount ?? 0)}
+                {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.totalAmount ?? 0)}
               </span>
             </div>
           </div>

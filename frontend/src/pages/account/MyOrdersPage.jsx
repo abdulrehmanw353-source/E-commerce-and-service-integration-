@@ -73,7 +73,7 @@ export default function MyOrdersPage() {
                 <div className="flex items-center gap-4 flex-shrink-0">
                   <div className="text-right">
                     <p className="text-[15px] font-bold text-white">
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(o.totalAmount)}
+                      {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(o.totalAmount)}
                     </p>
                     <span className={`text-[11px] font-semibold uppercase px-2.5 py-0.5 rounded-full ${STATUS_STYLE[o.status] || 'bg-white/[0.06] text-white/45 border border-white/10'}`}>
                       {o.status}

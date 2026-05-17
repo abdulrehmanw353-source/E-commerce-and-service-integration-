@@ -210,6 +210,7 @@
 - adding order cancellation functionality for customers
 - adding payment status (pending, paid, refunded, cancelled) for orders
 - refactored admin delivery tax page to show category-based rules in editable table format
+- fixing overall store currency from $USD to PKR Rs
 ```
 
 ### By "Pull Requests"

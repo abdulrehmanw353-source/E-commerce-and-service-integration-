@@ -90,7 +90,7 @@ export default function CartSlideOut() {
             <div className="flex justify-between items-center">
               <span className="text-[13px] text-white/45">Subtotal ({items.reduce((s,i)=>s+i.quantity,0)} items)</span>
               <span className="text-[18px] font-bold text-white">
-                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(subtotal)}
+                {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(subtotal)}
               </span>
             </div>
             <p className="text-[12px] text-white/35">

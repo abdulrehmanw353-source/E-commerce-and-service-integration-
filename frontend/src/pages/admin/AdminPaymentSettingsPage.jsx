@@ -63,7 +63,7 @@ export default function AdminPaymentSettingsPage() {
         </div>
         <div>
           <h1 className="text-[22px] font-bold text-white tracking-[-0.02em] leading-tight">Payment Settings</h1>
-          <p className="text-[13px] text-white/50">Manage dynamic payment methods for checkout</p>
+          <p className="text-[13px] text-white/80">Manage dynamic payment methods for checkout</p>
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function AdminPaymentSettingsPage() {
             <input type="checkbox" id="codEnabled" {...register('codEnabled')} className="w-4 h-4 rounded bg-[#1c2340] border-white/10 text-[#7a5cff] focus:ring-[#7a5cff]/30 cursor-pointer" />
             <label htmlFor="codEnabled" className="text-[15px] font-semibold text-white cursor-pointer">Enable Cash on Delivery (COD)</label>
           </div>
-          <p className="text-[13px] text-white/50 pl-7">Allows customers to place an order and pay upon delivery.</p>
+          <p className="text-[13px] text-white/80 pl-7">Allows customers to place an order and pay upon delivery.</p>
         </div>
 
         {/* WhatsApp & Instructions */}

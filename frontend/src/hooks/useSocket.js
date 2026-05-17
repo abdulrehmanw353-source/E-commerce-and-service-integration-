@@ -47,7 +47,7 @@ export function useSocket() {
  * useConversation — manages a single chat conversation room.
  *
  * Joins the room, listens for new messages, handles typing indicators.
- * Does NOT fetch history — use the REST API for that.
+ * Khans NOT fetch history — use the REST API for that.
  */
 export function useConversation(conversationId) {
   const { socket, connected } = useSocket();

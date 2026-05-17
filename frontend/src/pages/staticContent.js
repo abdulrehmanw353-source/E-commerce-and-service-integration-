@@ -7,7 +7,7 @@ export const aboutContent = [
 export const contactContent = [
   "We'd love to hear from you! Whether you have a question about our services, need help with a repair, or just want to provide feedback, our team is ready to assist.",
   "Email Support: support@doorsetfix.com",
-  "Phone: +1 (555) 123-4567",
+  "Phone: +92 300 1234567",
   "Working Hours: Monday to Friday, 9:00 AM - 6:00 PM (EST)",
   "Location: 123 Tech Avenue, Silicon Valley, CA 94025",
   "For instant assistance, you can also use the Live Chat feature in the bottom right corner of your screen during our working hours."

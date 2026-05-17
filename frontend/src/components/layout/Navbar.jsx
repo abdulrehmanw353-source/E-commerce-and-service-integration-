@@ -156,7 +156,7 @@ export default function Navbar({ onOpenSidebar }) {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-[14px] text-white/90 font-medium truncate group-hover:text-[#9d84ff] transition-colors">{product.title}</p>
-                                <p className="text-[13px] text-white/50">${product.price}</p>
+                                <p className="text-[13px] text-white/80">${product.price}</p>
                               </div>
                             </Link>
                           ))}
@@ -170,17 +170,17 @@ export default function Navbar({ onOpenSidebar }) {
                         </div>
                       ) : (
                         <div className="py-8 text-center">
-                          <p className="text-[13px] text-white/50">No products found for "{debouncedSearch}"</p>
+                          <p className="text-[13px] text-white/80">No products found for "{debouncedSearch}"</p>
                         </div>
                       )
                     ) : (
                       <div className="border-t border-white/10 px-4 py-3">
                         <p className="text-[11px] text-white/40 uppercase tracking-wider font-medium mb-2">Quick Links</p>
                         <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
-                          <Package className="w-4 h-4 text-white/50" strokeWidth={1.5} />All Products
+                          <Package className="w-4 h-4 text-white/80" strokeWidth={1.5} />All Products
                         </Link>
                         <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
-                          <Wrench className="w-4 h-4 text-white/50" strokeWidth={1.5} />Repair Services
+                          <Wrench className="w-4 h-4 text-white/80" strokeWidth={1.5} />Repair Services
                         </Link>
                       </div>
                     )}

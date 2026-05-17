@@ -50,32 +50,32 @@ function SlotForm({ slot, onClose, onSubmit, isPending }) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="text-[12px] font-medium text-white/50 mb-1.5 block">Date <span className="text-red-400">*</span></label>
+            <label className="text-[12px] font-medium text-white/80 mb-1.5 block">Date <span className="text-red-400">*</span></label>
             <input type="date" {...register('date')} className={INPUT}
               min={new Date().toISOString().split('T')[0]} />
             {errors.date && <p className="text-[11px] text-red-400 mt-1">{errors.date.message}</p>}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[12px] font-medium text-white/50 mb-1.5 block">Start Time <span className="text-red-400">*</span></label>
+              <label className="text-[12px] font-medium text-white/80 mb-1.5 block">Start Time <span className="text-red-400">*</span></label>
               <input type="time" {...register('startTime')} className={INPUT} />
               {errors.startTime && <p className="text-[11px] text-red-400 mt-1">{errors.startTime.message}</p>}
             </div>
             <div>
-              <label className="text-[12px] font-medium text-white/50 mb-1.5 block">End Time <span className="text-red-400">*</span></label>
+              <label className="text-[12px] font-medium text-white/80 mb-1.5 block">End Time <span className="text-red-400">*</span></label>
               <input type="time" {...register('endTime')} className={INPUT} />
               {errors.endTime && <p className="text-[11px] text-red-400 mt-1">{errors.endTime.message}</p>}
             </div>
           </div>
           <div>
-            <label className="text-[12px] font-medium text-white/50 mb-1.5 block">Max Bookings <span className="text-red-400">*</span></label>
+            <label className="text-[12px] font-medium text-white/80 mb-1.5 block">Max Bookings <span className="text-red-400">*</span></label>
             <input type="number" {...register('maxBookings')} min={1} max={50} className={INPUT} />
             {errors.maxBookings && <p className="text-[11px] text-red-400 mt-1">{errors.maxBookings.message}</p>}
           </div>
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl text-[13px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] transition-all">
+              className="flex-1 py-2.5 rounded-xl text-[13px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] transition-all">
               Cancel
             </button>
             <button type="submit" disabled={isPending}
@@ -192,7 +192,7 @@ export default function AdminTimeSlotsPage() {
               {/* Date header */}
               <div className="flex items-center gap-2 mb-3">
                 <Calendar className="w-4 h-4 text-white/30" strokeWidth={1.75} />
-                <h3 className="text-[13px] font-semibold text-white/50">
+                <h3 className="text-[13px] font-semibold text-white/80">
                   {new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
                     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
                   })}

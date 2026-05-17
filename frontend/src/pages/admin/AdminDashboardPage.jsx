@@ -21,7 +21,7 @@ function StatCard({ label, value, icon: Icon, sub }) {
         </div>
       </div>
       <p className="text-[36px] sm:text-[46px] lg:text-[50px] leading-none mt-4 font-bold tracking-[-0.03em] text-[#b8a8ff]">{value ?? '—'}</p>
-      <p className="text-[13px] text-white/50 mt-2">{sub}</p>
+      <p className="text-[13px] text-white/80 mt-2">{sub}</p>
     </div>
   );
 }

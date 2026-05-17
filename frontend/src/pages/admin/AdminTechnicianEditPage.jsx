@@ -129,7 +129,7 @@ export default function AdminTechnicianEditPage() {
 
       <form onSubmit={onSubmit} className="space-y-5">
         <div className="ds-card p-5">
-          <h3 className="text-[13px] font-semibold text-white/50 uppercase tracking-wider mb-4">Basic Info</h3>
+          <h3 className="text-[13px] font-semibold text-white/80 uppercase tracking-wider mb-4">Basic Info</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <Field label="First Name">
               <input value={form.firstName} onChange={(e) => setForm((s) => ({ ...s, firstName: e.target.value }))} className={INPUT} placeholder="First name" />
@@ -168,7 +168,7 @@ export default function AdminTechnicianEditPage() {
         </div>
 
         <div className="ds-card p-5">
-          <h3 className="text-[13px] font-semibold text-white/50 uppercase tracking-wider mb-4">Address</h3>
+          <h3 className="text-[13px] font-semibold text-white/80 uppercase tracking-wider mb-4">Address</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <Field label="Street">
               <input value={form.address.street} onChange={(e) => setForm((s) => ({ ...s, address: { ...s.address, street: e.target.value } }))} className={INPUT} placeholder="Street" />

@@ -77,7 +77,7 @@ export default function OrderDetailPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-[26px] sm:text-[32px] font-extrabold tracking-[-0.03em] text-white">
-              Order <span className="font-mono text-white/50">#{id?.slice(-8)?.toUpperCase()}</span>
+              Order <span className="font-mono text-white/80">#{id?.slice(-8)?.toUpperCase()}</span>
             </h1>
             <p className="text-[14px] text-white/45 mt-1">
               Placed on {new Date(order.createdAt).toLocaleDateString('en-US', {
@@ -116,7 +116,7 @@ export default function OrderDetailPage() {
                         <p className="text-[13px] text-white/45 mt-0.5">Qty: {item.quantity}</p>
                       </div>
                       <p className="text-[15px] font-bold text-white flex-shrink-0">
-                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price * (item.quantity ?? 1))}
+                        {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(price * (item.quantity ?? 1))}
                       </p>
                     </div>
                   );
@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
                   <div className="flex justify-between">
                     <span className="text-white/45">Subtotal</span>
                     <span className="text-white">
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.subtotal)}
+                      {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.subtotal)}
                     </span>
                   </div>
                 )}
@@ -152,14 +152,14 @@ export default function OrderDetailPage() {
                   <div className="flex justify-between">
                     <span className="text-white/45">Tax</span>
                     <span className="text-white">
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.taxAmount)}
+                      {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.taxAmount)}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="text-white/45">Delivery Fee</span>
                   <span className={order.deliveryCharge === 0 ? "text-green-300" : "text-white"}>
-                    {order.deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.deliveryCharge || 0)}
+                    {order.deliveryCharge === 0 ? 'Free' : ((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.deliveryCharge || 0)}
                   </span>
                 </div>
                 {order.expectedDeliveryDate && (
@@ -173,7 +173,7 @@ export default function OrderDetailPage() {
                 <div className="flex justify-between pt-3 border-t border-white/[0.06]">
                   <span className="text-white font-semibold">Total</span>
                   <span className="text-[20px] font-bold text-[#00f5d4]">
-                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalAmount ?? 0)}
+                    {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(order.totalAmount ?? 0)}
                   </span>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function OrderDetailPage() {
             {(order.status === 'pending' || order.status === 'processing') && (
               <div className="ds-card p-5 sm:p-6">
                 <h2 className="text-[15px] font-bold text-white mb-3">Cancel Order</h2>
-                <p className="text-[13px] text-white/50 mb-4">You can cancel this order before it is processed or shipped.</p>
+                <p className="text-[13px] text-white/80 mb-4">You can cancel this order before it is processed or shipped.</p>
                 <button 
                   onClick={() => {
                     if (window.confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
@@ -204,7 +204,7 @@ export default function OrderDetailPage() {
                     }
                   }}
                   disabled={cancelMut.isPending}
-                  className="w-full py-3.5 bg-[#ff3b57]/10 hover:bg-[#ff3b57]/20 border border-[#ff3b57]/30 text-[#ff5e7d] rounded-xl text-[13px] font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-[#ff3b57] hover:bg-[#ff1f40] text-white border-transparent shadow-[0_4px_14px_rgba(255,59,87,0.35)] rounded-xl text-[13px] font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <X className="w-4 h-4" strokeWidth={2} />
                   {cancelMut.isPending ? 'Cancelling...' : 'Cancel Order'}

@@ -20,7 +20,7 @@ export default function CartItem({ item }) {
       <div className="flex-1 min-w-0">
         <p className="text-[13px] font-semibold text-white line-clamp-2 leading-snug">{item.title}</p>
         <p className="text-[12px] text-white/45 mt-0.5">
-          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(item.price)} each
+          {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(item.price)} each
         </p>
 
         {/* Qty stepper */}
@@ -48,7 +48,7 @@ export default function CartItem({ item }) {
       {/* Line total + remove */}
       <div className="flex flex-col items-end gap-2 flex-shrink-0">
         <p className="text-[13px] font-bold text-white">
-          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(lineTotal)}
+          {((val) => `RS ${new Intl.NumberFormat("en-US").format(val)}`)(lineTotal)}
         </p>
         <button
           onClick={() => removeItem(item.productId)}

@@ -146,9 +146,9 @@ export default function AdminBookingsPage() {
             <p className="text-[12px] text-white/35">Page {page} of {totalPages}</p>
             <div className="flex gap-2">
               <button disabled={page === 1} onClick={() => setPage(p => p - 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Prev</button>
               <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/50 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
+                className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-white/80 bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-30 transition-all">Next</button>
             </div>
           </div>
         )}
