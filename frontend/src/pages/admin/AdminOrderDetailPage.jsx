@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft, ShoppingBag, Package, MapPin, User, Calendar,
-  AlertCircle, Clock, ChevronDown
+  AlertCircle, Clock, ChevronDown, Truck
 } from 'lucide-react';
 import adminApi from '../../lib/adminAxios';
 
@@ -267,6 +267,38 @@ export default function AdminOrderDetailPage() {
                 {order.paymentStatus ?? 'Pending'}
               </span>
             </div>
+            {order.subtotal !== undefined && (
+              <div className="flex justify-between text-[13px]">
+                <span className="text-white/40">Subtotal</span>
+                <span className="text-white/70">
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.subtotal)}
+                </span>
+              </div>
+            )}
+            {order.taxAmount > 0 && (
+              <div className="flex justify-between text-[13px]">
+                <span className="text-white/40">Tax</span>
+                <span className="text-white/70">
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.taxAmount)}
+                </span>
+              </div>
+            )}
+            <div className="flex justify-between text-[13px]">
+              <span className="text-white/40">Delivery Fee</span>
+              <span className="text-white/70">
+                {order.deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.deliveryCharge || 0)}
+              </span>
+            </div>
+            {order.expectedDeliveryDate && (
+              <div className="flex justify-between text-[13px]">
+                <span className="text-white/40 flex items-center gap-1.5">
+                  <Truck className="w-3.5 h-3.5" /> Expected Date
+                </span>
+                <span className="text-white/70">
+                  {new Date(order.expectedDeliveryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between text-[15px] pt-2 border-t border-white/[0.06]">
               <span className="text-white font-semibold">Total</span>
               <span className="text-white font-bold">

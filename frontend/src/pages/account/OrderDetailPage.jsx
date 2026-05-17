@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Package, MapPin, CheckCircle, Clock, ShoppingBag, X } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, CheckCircle, Clock, ShoppingBag, X, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/axios';
 
@@ -140,6 +140,36 @@ export default function OrderDetailPage() {
                     {order.paymentStatus ?? 'Pending'}
                   </span>
                 </div>
+                {order.subtotal !== undefined && (
+                  <div className="flex justify-between">
+                    <span className="text-white/45">Subtotal</span>
+                    <span className="text-white">
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.subtotal)}
+                    </span>
+                  </div>
+                )}
+                {order.taxAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-white/45">Tax</span>
+                    <span className="text-white">
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.taxAmount)}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-white/45">Delivery Fee</span>
+                  <span className={order.deliveryCharge === 0 ? "text-green-300" : "text-white"}>
+                    {order.deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.deliveryCharge || 0)}
+                  </span>
+                </div>
+                {order.expectedDeliveryDate && (
+                  <div className="flex justify-between text-[13px] bg-white/[0.04] p-3 rounded-xl border border-white/[0.04] mt-2 mb-2">
+                    <span className="text-white/45 flex items-center gap-2"><Truck className="w-4 h-4" /> Expected Delivery</span>
+                    <span className="text-white font-semibold">
+                      {new Date(order.expectedDeliveryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between pt-3 border-t border-white/[0.06]">
                   <span className="text-white font-semibold">Total</span>
                   <span className="text-[20px] font-bold text-[#00f5d4]">

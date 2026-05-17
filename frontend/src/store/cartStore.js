@@ -53,6 +53,7 @@ export const useCartStore = create(
                 image:     product.images?.[0] ?? null,
                 quantity,
                 stock:     product.stock,
+                category:  product.category,
               },
             ],
           });

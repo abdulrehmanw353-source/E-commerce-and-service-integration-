@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { ShoppingBag, ChevronRight, Lock, User, ArrowLeft, CheckCircle, MapPin } from 'lucide-react';
+import { ShoppingBag, ChevronRight, Lock, User, ArrowLeft, CheckCircle, MapPin, Truck } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
@@ -66,6 +66,11 @@ export default function CheckoutPage() {
   const { data: paymentSettings } = useQuery({
     queryKey: ['payment-settings'],
     queryFn: () => api.get('/payment-settings').then(r => r.data.data ?? r.data),
+  });
+
+  const { data: deliveryTaxSettings } = useQuery({
+    queryKey: ['delivery-tax-settings'],
+    queryFn: () => api.get('/delivery-tax-settings').then(r => r.data.data ?? r.data),
   });
 
   // ─── Address Autocomplete State ──────────────────────
@@ -218,7 +223,37 @@ export default function CheckoutPage() {
   };
 
   const itemCount = items.reduce((s, i) => s + i.quantity, 0);
-  const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
+
+  let taxAmount = 0;
+  if (deliveryTaxSettings?.taxEnabled && deliveryTaxSettings?.taxPercentage > 0) {
+    taxAmount = (subtotal * deliveryTaxSettings.taxPercentage) / 100;
+  }
+
+  let deliveryCharge = 0;
+  let expectedDays = 3;
+
+  if (deliveryTaxSettings?.categoryRules) {
+    let maxCharge = 0;
+    let maxDays = 0;
+    const categories = [...new Set(items.map(i => i.category).filter(Boolean))];
+    
+    categories.forEach(cat => {
+      const rule = deliveryTaxSettings.categoryRules.find(r => r.category.toLowerCase() === cat.toLowerCase());
+      if (rule) {
+        if (rule.deliveryCharge > maxCharge) maxCharge = rule.deliveryCharge;
+        if (rule.expectedDeliveryDays > maxDays) maxDays = rule.expectedDeliveryDays;
+      }
+    });
+
+    if (maxDays > 0) expectedDays = maxDays;
+    deliveryCharge = maxCharge;
+  }
+
+  const expectedDate = new Date();
+  expectedDate.setDate(expectedDate.getDate() + expectedDays);
+
+  const total = subtotal + taxAmount + deliveryCharge;
 
   return (
     <div className="min-h-screen">
@@ -494,12 +529,28 @@ export default function CheckoutPage() {
                       <div className="flex justify-between text-[13px]">
                         <span className="text-white/45">Subtotal</span>
                         <span className="text-white font-semibold">
-                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total)}
+                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(subtotal)}
                         </span>
                       </div>
+                      {deliveryTaxSettings?.taxEnabled && (
+                        <div className="flex justify-between text-[13px]">
+                          <span className="text-white/45">Tax ({deliveryTaxSettings.taxPercentage}%)</span>
+                          <span className="text-white font-semibold">
+                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(taxAmount)}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-[13px]">
-                        <span className="text-white/45">Shipping</span>
-                        <span className="text-green-300 font-semibold">Free</span>
+                        <span className="text-white/45">Delivery Fee</span>
+                        <span className={deliveryCharge === 0 ? "text-green-300 font-semibold" : "text-white font-semibold"}>
+                          {deliveryCharge === 0 ? 'Free' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(deliveryCharge)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-[13px] bg-white/[0.04] p-3 rounded-xl border border-white/[0.04] mt-2">
+                        <span className="text-white/45 flex items-center gap-2"><Truck className="w-4 h-4" /> Expected Delivery</span>
+                        <span className="text-white font-semibold">
+                          {expectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
                       </div>
                       <div className="flex justify-between text-[16px] font-bold pt-2 border-t border-white/[0.08]">
                         <span className="text-white">Total</span>

@@ -90,6 +90,7 @@
 - implementing payment method selector (COD, JazzCash, EasyPaisa) to checkout page
 - implementing order cancellation functionality for customers
 - implementing payment status (pending, paid, refunded, cancelled) for orders
+- implementing category-based delivery tax rules for admins
 ```
 
 #### Frontend
@@ -208,6 +209,7 @@
 - adding payment method selector (COD, JazzCash, EasyPaisa) to checkout page
 - adding order cancellation functionality for customers
 - adding payment status (pending, paid, refunded, cancelled) for orders
+- refactored admin delivery tax page to show category-based rules in editable table format
 ```
 
 ### By "Pull Requests"

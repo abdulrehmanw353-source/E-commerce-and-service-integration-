@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import DeliveryTaxSettings from "../models/deliveryTaxSettings.model.js";
 import ApiError from "../utils/ApiError.js";
 
 // ------ CREATE ORDER FROM CART
@@ -48,14 +49,48 @@ const createOrderFromCartService = async (userId, shippingAddress, contact, paym
          price: item.price,
          quantity: item.quantity,
          image: product.images?.[0],
+         category: product.category,
       });
    }
+
+   const dtSettings = await DeliveryTaxSettings.getSettings();
+   let taxAmount = 0;
+   let subtotal = totalAmount;
+   if (dtSettings.taxEnabled && dtSettings.taxPercentage > 0) {
+      taxAmount = (subtotal * dtSettings.taxPercentage) / 100;
+   }
+
+   let maxDeliveryCharge = 0;
+   let maxDeliveryDays = 0;
+
+   const categoriesInOrder = [...new Set(orderItems.map(item => item.category))];
+   
+   for (const cat of categoriesInOrder) {
+      const rule = dtSettings.categoryRules.find(r => r.category.toLowerCase() === cat.toLowerCase());
+      if (rule) {
+         if (rule.deliveryCharge > maxDeliveryCharge) maxDeliveryCharge = rule.deliveryCharge;
+         if (rule.expectedDeliveryDays > maxDeliveryDays) maxDeliveryDays = rule.expectedDeliveryDays;
+      }
+   }
+
+   // Default delivery settings if no rules match
+   if (maxDeliveryDays === 0) maxDeliveryDays = 3;
+
+   const deliveryCharge = maxDeliveryCharge;
+   totalAmount = subtotal + taxAmount + deliveryCharge;
+
+   const expectedDeliveryDate = new Date();
+   expectedDeliveryDate.setDate(expectedDeliveryDate.getDate() + maxDeliveryDays);
 
    // ------ create order
    const order = await Order.create({
       user: userId,
       items: orderItems,
+      subtotal,
+      taxAmount,
+      deliveryCharge,
       totalAmount,
+      expectedDeliveryDate,
       status: "pending",
       paymentStatus: paymentMethod === 'cod' ? 'cod' : 'pending_verification',
       shippingAddress,
@@ -184,13 +219,46 @@ const createGuestOrderService = async (cartItems, shippingAddress, contact, paym
          price: product.price,
          quantity: item.quantity,
          image: product.images?.[0],
+         category: product.category,
       });
    }
+
+   const dtSettings = await DeliveryTaxSettings.getSettings();
+   let taxAmount = 0;
+   let subtotal = totalAmount;
+   if (dtSettings.taxEnabled && dtSettings.taxPercentage > 0) {
+      taxAmount = (subtotal * dtSettings.taxPercentage) / 100;
+   }
+
+   let maxDeliveryCharge = 0;
+   let maxDeliveryDays = 0;
+
+   const categoriesInOrder = [...new Set(orderItems.map(item => item.category))];
+   
+   for (const cat of categoriesInOrder) {
+      const rule = dtSettings.categoryRules.find(r => r.category.toLowerCase() === cat.toLowerCase());
+      if (rule) {
+         if (rule.deliveryCharge > maxDeliveryCharge) maxDeliveryCharge = rule.deliveryCharge;
+         if (rule.expectedDeliveryDays > maxDeliveryDays) maxDeliveryDays = rule.expectedDeliveryDays;
+      }
+   }
+
+   if (maxDeliveryDays === 0) maxDeliveryDays = 3;
+
+   const deliveryCharge = maxDeliveryCharge;
+   totalAmount = subtotal + taxAmount + deliveryCharge;
+
+   const expectedDeliveryDate = new Date();
+   expectedDeliveryDate.setDate(expectedDeliveryDate.getDate() + maxDeliveryDays);
 
    const order = await Order.create({
       user: null,
       items: orderItems,
+      subtotal,
+      taxAmount,
+      deliveryCharge,
       totalAmount,
+      expectedDeliveryDate,
       status: "pending",
       paymentStatus: paymentMethod === 'cod' ? 'cod' : 'pending_verification',
       shippingAddress,
