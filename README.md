@@ -202,6 +202,7 @@
 - fixing the order success page for guest users
 - adding location selector (current location + manual map selection) to checkout and services pages
 - adding payment settings configuration (COD, JazzCash, EasyPaisa) for admins
+- adding payment method selector (COD, JazzCash, EasyPaisa) to checkout page
 ```
 
 ### By "Pull Requests"
