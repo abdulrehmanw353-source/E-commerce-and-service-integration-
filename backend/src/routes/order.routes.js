@@ -9,6 +9,7 @@ const router = Router();
 import verifyJWT from "../middlewares/auth.middleware.js";
 import {
    createOrder,
+   createGuestOrder,
    getUserOrders,
    getSingleOrder,
 } from "../controllers/order.controller.js";
@@ -16,6 +17,10 @@ import {
 // ------ CREATE ORDER (CHECKOUT)
 
 router.post("/create", verifyJWT, createOrder);
+
+// ------ GUEST CHECKOUT (NO AUTH)
+
+router.post("/guest", createGuestOrder);
 
 // ------ GET USER ORDERS
 

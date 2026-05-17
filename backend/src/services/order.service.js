@@ -142,10 +142,63 @@ const updateOrderStatusService = async (orderId, status, paymentStatus) => {
    return order;
 };
 
+// ------ CREATE GUEST ORDER (NO AUTH)
+
+const createGuestOrderService = async (cartItems, shippingAddress, contact) => {
+   if (!cartItems || cartItems.length === 0) {
+      throw new ApiError(400, "Cart is empty");
+   }
+
+   let totalAmount = 0;
+   const orderItems = [];
+
+   for (const item of cartItems) {
+      if (!mongoose.Types.ObjectId.isValid(item.productId)) {
+         throw new ApiError(400, "Invalid product ID in cart");
+      }
+
+      const product = await Product.findById(item.productId);
+
+      if (!product || product.isDeleted) {
+         throw new ApiError(404, `Product not found: ${item.productId}`);
+      }
+
+      if (product.stock < item.quantity) {
+         throw new ApiError(400, `Insufficient stock for ${product.title}`);
+      }
+
+      product.stock -= item.quantity;
+      await product.save();
+
+      totalAmount += product.price * item.quantity;
+
+      orderItems.push({
+         product: product._id,
+         title: product.title,
+         price: product.price,
+         quantity: item.quantity,
+         image: product.images?.[0],
+      });
+   }
+
+   const order = await Order.create({
+      user: null,
+      items: orderItems,
+      totalAmount,
+      status: "pending",
+      paymentStatus: "pending",
+      shippingAddress,
+      contact,
+   });
+
+   return order;
+};
+
 // ------ EXPORTING SERVICES
 
 export {
    createOrderFromCartService,
+   createGuestOrderService,
    getUserOrdersService,
    getSingleOrderService,
    updateOrderStatusService,

@@ -5,6 +5,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
 import {
    createOrderFromCartService,
+   createGuestOrderService,
    getUserOrdersService,
    getSingleOrderService,
    updateOrderStatusService,
@@ -61,6 +62,28 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, order, "Order status updated successfully"));
 });
 
+// ------ CREATE GUEST ORDER (NO AUTH)
+
+const createGuestOrder = asyncHandler(async (req, res) => {
+   const { shippingAddress, contact, items } = req.body;
+
+   if (!items || items.length === 0) {
+      throw new ApiError(400, "Cart items are required");
+   }
+   if (!contact?.email || !contact?.firstName || !contact?.phone) {
+      throw new ApiError(400, "Contact info (firstName, email, phone) is required");
+   }
+   if (!shippingAddress?.street || !shippingAddress?.city || !shippingAddress?.country) {
+      throw new ApiError(400, "Shipping address (street, city, country) is required");
+   }
+
+   const order = await createGuestOrderService(items, shippingAddress, contact);
+
+   return res
+      .status(201)
+      .json(new ApiResponse(201, order, "Order placed successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { createOrder, getUserOrders, getSingleOrder, updateOrderStatus };
+export { createOrder, createGuestOrder, getUserOrders, getSingleOrder, updateOrderStatus };

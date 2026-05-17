@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, Package, ArrowRight, ShoppingBag } from 'lucide-react';
 import api from '../lib/axios';
+import { useAuthStore } from '../store/authStore';
 
 export default function OrderSuccessPage() {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('orderId');
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    if (!orderId) { setLoading(false); return; }
+    if (!orderId || !isAuthenticated) { setLoading(false); return; }
     api.get(`/orders/${orderId}`)
       .then(r => setOrder(r.data.data ?? r.data))
       .catch(() => {/* order may not be accessible - show generic success */})
       .finally(() => setLoading(false));
-  }, [orderId]);
+  }, [orderId, isAuthenticated]);
 
   const itemCount = order?.items?.length ?? order?.orderItems?.length ?? 0;
   const total = order?.totalAmount ?? 0;
@@ -69,7 +71,7 @@ export default function OrderSuccessPage() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          {orderId && (
+          {isAuthenticated && orderId && (
             <Link to={`/account/orders`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#7a5cff] text-white rounded-full text-[15px] font-bold hover:bg-[#8c72ff] transition-all shadow-[0_0_20px_rgba(122,92,255,0.25)]">
               <Package className="w-4 h-4" strokeWidth={1.75} /> View My Orders

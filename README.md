@@ -84,6 +84,7 @@
 - creating admin seed script (npm run seed:admin) for default admin user creation
 - packages: multer, cloudinary, socket.io are added
 - implementing Google OAuth (sign in with Google) and Google Search API integration
+- adding route for order success page for guest users
 ```
 
 #### Frontend
@@ -196,6 +197,7 @@
 - fixing the cart items display in the cart page
 - updating the ui of the product detail page by adding buy now button
 - fixing the category filter (dynamically)
+- fixing the order success page for guest users
 ```
 
 ### By "Pull Requests"
