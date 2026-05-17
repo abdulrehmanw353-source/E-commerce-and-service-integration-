@@ -191,6 +191,7 @@
 - UI POLISH: refining CRUD forms in AdminProductCreatePage and AdminProductEditPage with elevated Apple HIG inputs and buttons
 - UI POLISH: wrapping ServicesPage booking form in high-fidelity Apple-style card layout
 - integrating Google OAuth (sign in with Google) and Google Search API for product/category data
+- fixing filters on the services page
 ```
 
 ### By "Pull Requests"
