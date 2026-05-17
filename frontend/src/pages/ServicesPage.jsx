@@ -18,21 +18,21 @@ const fetchTechnicians = () =>
 
 // ─── Schema ──────────────────────────────────────────────────
 const schema = yup.object({
-  problemTitle:       yup.string().min(5, 'Min 5 characters').required('Problem title is required'),
+  problemTitle: yup.string().min(5, 'Min 5 characters').required('Problem title is required'),
   problemDescription: yup.string().min(20, 'Min 20 characters').required('Description is required'),
-  deviceType:         yup.string().oneOf(['laptop','desktop','mobile','tablet','other']).required('Select a device type'),
-  deviceBrand:        yup.string().optional(),
-  deviceModel:        yup.string().optional(),
-  technicianId:       yup.string().required('Please select a technician'),
-  preferredTimeSlot:  yup.string().required('Please select a time slot'),
+  deviceType: yup.string().oneOf(['laptop', 'desktop', 'mobile', 'tablet', 'other']).required('Select a device type'),
+  deviceBrand: yup.string().optional(),
+  deviceModel: yup.string().optional(),
+  technicianId: yup.string().required('Please select a technician'),
+  preferredTimeSlot: yup.string().required('Please select a time slot'),
 });
 
 const DEVICE_TYPES = [
-  { key: 'laptop',  label: 'Laptop',  icon: Laptop },
+  { key: 'laptop', label: 'Laptop', icon: Laptop },
   { key: 'desktop', label: 'Desktop', icon: Monitor },
-  { key: 'mobile',  label: 'Phone',   icon: Smartphone },
-  { key: 'tablet',  label: 'Tablet',  icon: Tablet },
-  { key: 'other',   label: 'Other',   icon: Package },
+  { key: 'mobile', label: 'Phone', icon: Smartphone },
+  { key: 'tablet', label: 'Tablet', icon: Tablet },
+  { key: 'other', label: 'Other', icon: Package },
 ];
 
 // ─── Field ───────────────────────────────────────────────────
@@ -52,8 +52,24 @@ export default function ServicesPage() {
   const { isAuthenticated } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
   const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [maxPrice, setMaxPrice] = useState(150);
+
   const { data: servicesData, isLoading: servicesLoading } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : (servicesData?.services || []);
+
+  const filteredServices = services.filter((s) => {
+    if (selectedCategories.length > 0) {
+      const normalizedTitle = s.title === "PC Build & Repair" ? "PC Builds & Repair" : s.title;
+      if (!selectedCategories.includes(normalizedTitle)) return false;
+    }
+
+    const price = typeof s.startingPrice === 'number' ? s.startingPrice : s.price || 0;
+    if (price > maxPrice) return false;
+
+    return true;
+  });
 
   const { data: techniciansData } = useQuery({
     queryKey: ['public-technicians'],
@@ -101,24 +117,44 @@ export default function ServicesPage() {
             <aside className="ds-card p-5">
               <p className="text-white font-semibold text-[20px] mb-4">Service Categories</p>
               <div className="space-y-2 text-[15px]">
-                {['Phone Repair', 'Laptop Repair', 'PC Builds & Repair', 'Tablet Repair', 'Data Recovery'].map((c) => (
-                  <div key={c} className="px-3 py-2.5 rounded-xl border border-white/10 text-white/85 bg-white/[0.02]">{c}</div>
-                ))}
+                {['Phone Repair', 'Laptop Repair', 'PC Builds & Repair', 'Tablet Repair', 'Data Recovery'].map((c) => {
+                  const isSelected = selectedCategories.includes(c);
+                  return (
+                    <div
+                      key={c}
+                      onClick={() => {
+                        if (isSelected) setSelectedCategories(prev => prev.filter(cat => cat !== c));
+                        else setSelectedCategories(prev => [...prev, c]);
+                      }}
+                      className={`px-3 py-2.5 rounded-xl border cursor-pointer transition-colors ${isSelected
+                          ? 'border-[#8b72ff] text-white bg-[#8b72ff]/10'
+                          : 'border-white/10 text-white/85 bg-white/[0.02] hover:bg-white/[0.05]'
+                        }`}
+                    >
+                      {c}
+                    </div>
+                  );
+                })}
               </div>
               <div className="mt-8 pt-6 border-t border-white/10">
                 <p className="text-white font-semibold mb-3">Filter Options</p>
-                <p className="text-white/65 text-sm">Price</p>
-                <div className="h-1 bg-white/10 rounded-full my-3">
-                  <div className="h-1 w-2/3 rounded-full bg-[#8b72ff]" />
+                <div className="flex justify-between items-center mb-1">
+                  <p className="text-white/65 text-sm">Price</p>
+                  <p className="text-white text-sm font-semibold">${maxPrice}</p>
                 </div>
-                <p className="text-white/65 text-sm mt-4">Availability</p>
-                <div className="w-12 h-6 rounded-full bg-white/10 mt-2 relative"><span className="w-5 h-5 rounded-full bg-white absolute top-0.5 left-0.5" /></div>
+                <input
+                  type="range"
+                  min="0" max="300" step="10"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="w-full h-1 bg-white/10 rounded-full my-3 appearance-none cursor-pointer accent-[#8b72ff]"
+                />
               </div>
             </aside>
 
             <div>
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                {(servicesLoading ? Array.from({ length: 6 }).map((_, i) => ({ _skeleton: true, i })) : services).map((s, i) => (
+                {(servicesLoading ? Array.from({ length: 6 }).map((_, i) => ({ _skeleton: true, i })) : filteredServices).map((s, i) => (
                   s?._skeleton ? (
                     <div key={i} className="ds-card p-6 animate-pulse">
                       <div className="h-10 w-10 rounded-2xl bg-white/[0.08] mb-5" />
@@ -128,27 +164,27 @@ export default function ServicesPage() {
                       <div className="h-10 w-full rounded-xl bg-white/[0.08]" />
                     </div>
                   ) : (
-                  <div key={s.title} className={`ds-card p-6 flex flex-col ${i === 0 ? 'ds-card-glow' : ''}`}>
-                    <div className="text-4xl mb-5">{s.icon || '🔧'}</div>
-                    <h3 className="text-[28px] font-bold text-white tracking-[-0.02em] leading-tight mb-2">{s.title}</h3>
-                    <p className="text-[15px] text-white/65 min-h-[60px]">{s.shortDesc || s.desc || s.description}</p>
-                    <button
-                      onClick={() => {
-                        if (!isAuthenticated) { toast.error('Please sign in to book a repair.'); navigate('/login'); return; }
-                        setShowForm(true);
-                        setTimeout(() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
-                      }}
-                      className={`mt-5 rounded-full py-2.5 font-semibold transition-all ${i === 0 ? 'ds-btn-primary' : 'ds-btn-outline'}`}
-                    >
-                      Book Now
-                    </button>
-                    <p className="text-white/75 mt-4 text-[20px]">
-                      Starting from{' '}
-                      <span className="font-bold text-white">
-                        {typeof s.startingPrice === 'number' ? `$${s.startingPrice}` : (s.price || '—')}
-                      </span>
-                    </p>
-                  </div>
+                    <div key={s.title} className={`ds-card p-6 flex flex-col ${i === 0 ? 'ds-card-glow' : ''}`}>
+                      <div className="text-4xl mb-5">{s.icon || '🔧'}</div>
+                      <h3 className="text-[28px] font-bold text-white tracking-[-0.02em] leading-tight mb-2">{s.title}</h3>
+                      <p className="text-[15px] text-white/65 min-h-[60px]">{s.shortDesc || s.desc || s.description}</p>
+                      <button
+                        onClick={() => {
+                          if (!isAuthenticated) { toast.error('Please sign in to book a repair.'); navigate('/login'); return; }
+                          setShowForm(true);
+                          setTimeout(() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                        }}
+                        className={`mt-5 rounded-full py-2.5 font-semibold transition-all ${i === 0 ? 'ds-btn-primary' : 'ds-btn-outline'}`}
+                      >
+                        Book Now
+                      </button>
+                      <p className="text-white/75 mt-4 text-[20px]">
+                        Starting from{' '}
+                        <span className="font-bold text-white">
+                          {typeof s.startingPrice === 'number' ? `$${s.startingPrice}` : (s.price || '—')}
+                        </span>
+                      </p>
+                    </div>
                   )
                 ))}
               </div>
@@ -169,110 +205,110 @@ export default function ServicesPage() {
             <div className="ds-card p-6 sm:p-10 rounded-[32px]">
               <form onSubmit={handleSubmit((data) => bookMut.mutate(data))} className="space-y-8">
 
-              {/* Device Type */}
-              <Field label="Device Type" error={errors.deviceType?.message}>
-                <div className="relative">
-                  <select
-                    {...register('deviceType')}
-                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled>Select device type</option>
-                    {DEVICE_TYPES.map(({ key, label }) => (
-                      <option key={key} value={key}>{label}</option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
-                    <ChevronRight className="w-4 h-4 rotate-90" />
-                  </div>
-                </div>
-              </Field>
-
-              {/* Device Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Brand (optional)" error={errors.deviceBrand?.message}>
-                  <input placeholder="e.g. Apple, Dell, Samsung"
-                    {...register('deviceBrand')}
-                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
-                </Field>
-                <Field label="Model (optional)" error={errors.deviceModel?.message}>
-                  <input placeholder="e.g. MacBook Pro 2023"
-                    {...register('deviceModel')}
-                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
-                </Field>
-              </div>
-
-              {/* Problem */}
-              <Field label="Problem Title" error={errors.problemTitle?.message}>
-                <input placeholder="e.g. Cracked screen, won't turn on"
-                  {...register('problemTitle')}
-                  className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
-              </Field>
-
-              <Field label="Problem Description" error={errors.problemDescription?.message}
-                hint="Describe the issue in detail (minimum 20 characters)">
-                <textarea rows={4} placeholder="Tell us what's happening with your device..."
-                  {...register('problemDescription')}
-                  className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all resize-none" />
-              </Field>
-
-              {/* Technician */}
-              <Field label="Select Technician" error={errors.technicianId?.message}>
-                <div className="relative">
-                  <select
-                    {...register('technicianId')}
-                    onChange={(e) => {
-                      register('technicianId').onChange(e);
-                      setSelectedTechnicianId(e.target.value);
-                      setValue('preferredTimeSlot', '');
-                    }}
-                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled>Select a technician</option>
-                    {technicians.map((tech) => (
-                      <option key={tech._id} value={tech._id}>
-                        {tech.firstName} {tech.lastName || ''} - {(tech.expertise || []).join(', ') || 'General'}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
-                    <ChevronRight className="w-4 h-4 rotate-90" />
-                  </div>
-                </div>
-              </Field>
-
-              {/* Time Slots */}
-              {selectedTechnicianId && slots.length > 0 && (
-                <Field label="Available Appointments" error={errors.preferredTimeSlot?.message}>
+                {/* Device Type */}
+                <Field label="Device Type" error={errors.deviceType?.message}>
                   <div className="relative">
                     <select
-                      {...register('preferredTimeSlot')}
+                      {...register('deviceType')}
                       className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
                     >
-                      <option value="" disabled>Select an available date & time</option>
-                      {slots.map((slot) => {
-                        const dateStr = new Date(slot.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-                        return (
-                          <option key={slot._id} value={slot._id} disabled={!slot.isAvailable}>
-                            {dateStr} — {slot.startTime} to {slot.endTime} {!slot.isAvailable ? '(Unavailable)' : ''}
-                          </option>
-                        );
-                      })}
+                      <option value="" disabled>Select device type</option>
+                      {DEVICE_TYPES.map(({ key, label }) => (
+                        <option key={key} value={key}>{label}</option>
+                      ))}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
                       <ChevronRight className="w-4 h-4 rotate-90" />
                     </div>
                   </div>
                 </Field>
-              )}
-              {selectedTechnicianId && slots.length === 0 && (
-                <p className="text-[12px] text-[#ff9aad]">No available slots for this technician.</p>
-              )}
 
-              <button type="submit" disabled={bookMut.isPending}
-                className="w-full py-4 mt-2 bg-[#00f5d4] hover:bg-[#00f5d4]/90 disabled:opacity-60 text-[#0b0f1d] rounded-full text-[15px] font-bold transition-all shadow-[0_0_20px_rgba(0,245,212,0.25)] hover:shadow-[0_0_25px_rgba(0,245,212,0.4)] active:scale-[0.98]">
-                {bookMut.isPending ? 'Submitting…' : 'Submit Booking Request'}
-              </button>
-            </form>
+                {/* Device Details */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Brand (optional)" error={errors.deviceBrand?.message}>
+                    <input placeholder="e.g. Apple, Dell, Samsung"
+                      {...register('deviceBrand')}
+                      className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
+                  </Field>
+                  <Field label="Model (optional)" error={errors.deviceModel?.message}>
+                    <input placeholder="e.g. MacBook Pro 2023"
+                      {...register('deviceModel')}
+                      className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
+                  </Field>
+                </div>
+
+                {/* Problem */}
+                <Field label="Problem Title" error={errors.problemTitle?.message}>
+                  <input placeholder="e.g. Cracked screen, won't turn on"
+                    {...register('problemTitle')}
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all" />
+                </Field>
+
+                <Field label="Problem Description" error={errors.problemDescription?.message}
+                  hint="Describe the issue in detail (minimum 20 characters)">
+                  <textarea rows={4} placeholder="Tell us what's happening with your device..."
+                    {...register('problemDescription')}
+                    className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all resize-none" />
+                </Field>
+
+                {/* Technician */}
+                <Field label="Select Technician" error={errors.technicianId?.message}>
+                  <div className="relative">
+                    <select
+                      {...register('technicianId')}
+                      onChange={(e) => {
+                        register('technicianId').onChange(e);
+                        setSelectedTechnicianId(e.target.value);
+                        setValue('preferredTimeSlot', '');
+                      }}
+                      className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled>Select a technician</option>
+                      {technicians.map((tech) => (
+                        <option key={tech._id} value={tech._id}>
+                          {tech.firstName} {tech.lastName || ''} - {(tech.expertise || []).join(', ') || 'General'}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                      <ChevronRight className="w-4 h-4 rotate-90" />
+                    </div>
+                  </div>
+                </Field>
+
+                {/* Time Slots */}
+                {selectedTechnicianId && slots.length > 0 && (
+                  <Field label="Available Appointments" error={errors.preferredTimeSlot?.message}>
+                    <div className="relative">
+                      <select
+                        {...register('preferredTimeSlot')}
+                        className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all appearance-none cursor-pointer"
+                      >
+                        <option value="" disabled>Select an available date & time</option>
+                        {slots.map((slot) => {
+                          const dateStr = new Date(slot.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+                          return (
+                            <option key={slot._id} value={slot._id} disabled={!slot.isAvailable}>
+                              {dateStr} — {slot.startTime} to {slot.endTime} {!slot.isAvailable ? '(Unavailable)' : ''}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                        <ChevronRight className="w-4 h-4 rotate-90" />
+                      </div>
+                    </div>
+                  </Field>
+                )}
+                {selectedTechnicianId && slots.length === 0 && (
+                  <p className="text-[12px] text-[#ff9aad]">No available slots for this technician.</p>
+                )}
+
+                <button type="submit" disabled={bookMut.isPending}
+                  className="w-full py-4 mt-2 bg-[#00f5d4] hover:bg-[#00f5d4]/90 disabled:opacity-60 text-[#0b0f1d] rounded-full text-[15px] font-bold transition-all shadow-[0_0_20px_rgba(0,245,212,0.25)] hover:shadow-[0_0_25px_rgba(0,245,212,0.4)] active:scale-[0.98]">
+                  {bookMut.isPending ? 'Submitting…' : 'Submit Booking Request'}
+                </button>
+              </form>
             </div>
           </div>
         </section>
