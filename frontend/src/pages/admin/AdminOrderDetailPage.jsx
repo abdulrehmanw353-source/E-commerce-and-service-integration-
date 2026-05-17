@@ -13,16 +13,20 @@ const updateStatus = ({ id, status, paymentStatus }) =>
 
 import toast from 'react-hot-toast';
 
-const ORDER_STATUSES = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
-const PAYMENT_STATUSES = ['pending', 'paid', 'failed'];
+const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+const PAYMENT_STATUSES = ['pending', 'pending_verification', 'paid', 'failed', 'refunded', 'cancelled', 'cod'];
 
 const STATUS_COLOR = {
-  pending:    'bg-yellow-500/15 text-yellow-300',
-  paid:       'bg-emerald-500/15 text-emerald-300',
-  shipped:    'bg-indigo-500/15 text-indigo-300',
-  delivered:  'bg-green-500/15 text-green-300',
-  cancelled:  'bg-red-500/15 text-red-300',
-  failed:     'bg-red-500/15 text-red-300',
+  pending:              'bg-yellow-500/15 text-yellow-300',
+  pending_verification: 'bg-orange-500/15 text-orange-300',
+  processing:           'bg-blue-500/15 text-blue-300',
+  paid:                 'bg-emerald-500/15 text-emerald-300',
+  shipped:              'bg-indigo-500/15 text-indigo-300',
+  delivered:            'bg-green-500/15 text-green-300',
+  cancelled:            'bg-red-500/15 text-red-300',
+  failed:               'bg-red-500/15 text-red-300',
+  refunded:             'bg-purple-500/15 text-purple-300',
+  cod:                  'bg-cyan-500/15 text-cyan-300',
 };
 
 export default function AdminOrderDetailPage() {
@@ -83,6 +87,30 @@ export default function AdminOrderDetailPage() {
           </p>
         </div>
       </div>
+
+      {order.status === 'cancelled' && (
+        <div className="mb-6 p-4 rounded-xl bg-[#ff3b57]/10 border border-[#ff3b57]/20 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-[#ff5e7d] flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-[14px] font-semibold text-[#ff5e7d]">Order Cancelled</p>
+            <p className="text-[13px] text-[#ff5e7d]/80 mt-0.5">
+              This order has been cancelled and its status can no longer be modified.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {order.paymentStatus === 'pending_verification' && order.status !== 'cancelled' && (
+        <div className="mb-6 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-start gap-3">
+          <Clock className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-[14px] font-semibold text-orange-400">Payment Verification Required</p>
+            <p className="text-[13px] text-orange-400/80 mt-0.5">
+              Customer selected a digital payment method (e.g. JazzCash, EasyPaisa). Please verify their payment screenshot before marking as Paid.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid xl:grid-cols-[1fr_340px] gap-5">
         {/* ─── Left ─── */}
@@ -188,8 +216,8 @@ export default function AdminOrderDetailPage() {
                   <select
                     defaultValue={order.status}
                     onChange={e => statusMut.mutate({ id, status: e.target.value })}
-                    disabled={statusMut.isPending}
-                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer"
+                    disabled={statusMut.isPending || order.status === 'cancelled'}
+                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer disabled:opacity-50"
                   >
                     {ORDER_STATUSES.map(s => (
                       <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>
@@ -204,8 +232,8 @@ export default function AdminOrderDetailPage() {
                   <select
                     defaultValue={order.paymentStatus ?? 'pending'}
                     onChange={e => statusMut.mutate({ id, paymentStatus: e.target.value })}
-                    disabled={statusMut.isPending}
-                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer"
+                    disabled={statusMut.isPending || order.status === 'cancelled'}
+                    className="w-full bg-[#2C2C2E] border border-[#8f74ff]/35 rounded-xl px-3 py-2.5 pr-10 appearance-none text-[13px] text-white outline-none focus:border-[#a994ff] transition-all cursor-pointer disabled:opacity-50"
                   >
                     {PAYMENT_STATUSES.map(s => (
                       <option key={s} value={s} className="bg-[#1C1C1E] capitalize">{s}</option>

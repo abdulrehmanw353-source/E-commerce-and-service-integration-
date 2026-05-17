@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ShoppingBag, ChevronRight, Lock, User, ArrowLeft, CheckCircle, MapPin } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { useCartStore } from '../store/cartStore';
@@ -56,6 +56,7 @@ const checkoutSchema = yup.object({
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { items, clearCart } = useCartStore();
   const { isAuthenticated, user } = useAuthStore();
   const [placing, setPlacing] = useState(false);
@@ -195,6 +196,7 @@ export default function CheckoutPage() {
         const { data } = await api.post('/orders/create', payload);
         const order = data.data ?? data;
         clearCart();
+        queryClient.invalidateQueries({ queryKey: ['my-orders'] });
         navigate(`/order-success?orderId=${order._id}`);
       } else {
         // Guest flow: send cart items directly

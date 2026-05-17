@@ -57,7 +57,7 @@ const createOrderFromCartService = async (userId, shippingAddress, contact, paym
       items: orderItems,
       totalAmount,
       status: "pending",
-      paymentStatus: "pending",
+      paymentStatus: paymentMethod === 'cod' ? 'cod' : 'pending_verification',
       shippingAddress,
       contact,
       paymentMethod,
@@ -112,15 +112,20 @@ const updateOrderStatusService = async (orderId, status, paymentStatus) => {
       throw new ApiError(404, "Order not found");
    }
 
+   if (order.status === "cancelled") {
+      throw new ApiError(400, "Cannot modify a cancelled order");
+   }
+
    const allowedStatus = [
       "pending",
-      "paid",
+      "processing",
       "shipped",
       "delivered",
       "cancelled",
+      "paid"
    ];
 
-   const allowedPaymentStatus = ["pending", "paid", "failed"];
+   const allowedPaymentStatus = ["pending", "pending_verification", "paid", "failed", "refunded", "cancelled", "cod"];
 
    if (status && !allowedStatus.includes(status)) {
       throw new ApiError(400, "Invalid order status");
@@ -187,7 +192,7 @@ const createGuestOrderService = async (cartItems, shippingAddress, contact, paym
       items: orderItems,
       totalAmount,
       status: "pending",
-      paymentStatus: "pending",
+      paymentStatus: paymentMethod === 'cod' ? 'cod' : 'pending_verification',
       shippingAddress,
       contact,
       paymentMethod,

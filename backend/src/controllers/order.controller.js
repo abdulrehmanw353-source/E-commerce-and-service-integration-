@@ -89,11 +89,16 @@ const createGuestOrder = asyncHandler(async (req, res) => {
 const cancelOrder = asyncHandler(async (req, res) => {
    const order = await getSingleOrderService(req.params.id, req.user._id);
 
-   if (order.status !== "pending") {
-      throw new ApiError(400, "Only pending orders can be cancelled");
+   if (order.status !== "pending" && order.status !== "processing") {
+      throw new ApiError(400, "Only pending or processing orders can be cancelled");
    }
 
    order.status = "cancelled";
+   if (order.paymentStatus === "paid") {
+      order.paymentStatus = "refunded";
+   } else {
+      order.paymentStatus = "cancelled";
+   }
    await order.save();
 
    return res

@@ -8,6 +8,7 @@ const fetchOrders = () => api.get('/orders/').then(r => r.data.data ?? r.data);
 
 const STATUS_STYLE = {
   pending:    'bg-yellow-500/15 text-yellow-300 border border-yellow-500/25',
+  processing: 'bg-blue-500/15 text-blue-300 border border-blue-500/25',
   paid:       'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25',
   shipped:    'bg-indigo-500/15 text-indigo-300 border border-indigo-500/25',
   delivered:  'bg-green-500/15 text-green-300 border border-green-500/25',
@@ -18,7 +19,6 @@ export default function MyOrdersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['my-orders'],
     queryFn: fetchOrders,
-    staleTime: 30_000,
   });
 
   const orders = Array.isArray(data) ? data : (data?.orders || []);

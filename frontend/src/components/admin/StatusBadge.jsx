@@ -3,12 +3,16 @@
  */
 const STATUS_MAP = {
   // Orders
-  pending:    { label: 'Pending',    bg: 'bg-yellow-500/15', text: 'text-yellow-400' },
-  paid:       { label: 'Paid',       bg: 'bg-emerald-500/15',text: 'text-emerald-300' },
-  shipped:    { label: 'Shipped',    bg: 'bg-indigo-500/15', text: 'text-indigo-400' },
-  delivered:  { label: 'Delivered',  bg: 'bg-green-500/15',  text: 'text-green-400'  },
-  cancelled:  { label: 'Cancelled',  bg: 'bg-red-500/15',    text: 'text-red-400'    },
-  failed:     { label: 'Failed',     bg: 'bg-red-500/15',    text: 'text-red-400' },
+  pending:              { label: 'Pending',              bg: 'bg-yellow-500/15', text: 'text-yellow-400' },
+  pending_verification: { label: 'Pending Verification', bg: 'bg-orange-500/15', text: 'text-orange-400' },
+  processing:           { label: 'Processing',           bg: 'bg-blue-500/15',   text: 'text-blue-300' },
+  paid:                 { label: 'Paid',                 bg: 'bg-emerald-500/15',text: 'text-emerald-300' },
+  shipped:              { label: 'Shipped',              bg: 'bg-indigo-500/15', text: 'text-indigo-400' },
+  delivered:            { label: 'Delivered',            bg: 'bg-green-500/15',  text: 'text-green-400'  },
+  cancelled:            { label: 'Cancelled',            bg: 'bg-red-500/15',    text: 'text-red-400'    },
+  failed:               { label: 'Failed',               bg: 'bg-red-500/15',    text: 'text-red-400' },
+  refunded:             { label: 'Refunded',             bg: 'bg-purple-500/15', text: 'text-purple-300' },
+  cod:                  { label: 'COD',                  bg: 'bg-cyan-500/15',   text: 'text-cyan-300' },
   // Bookings
   approved:   { label: 'Approved',   bg: 'bg-green-500/15',  text: 'text-green-400'  },
   rejected:   { label: 'Rejected',   bg: 'bg-red-500/15',    text: 'text-red-400'    },

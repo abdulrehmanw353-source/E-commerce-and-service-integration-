@@ -9,6 +9,7 @@ const fetchOrder = (id) =>
 
 const STATUS_COLOR = {
   pending:    'bg-yellow-500/15 text-yellow-300 border border-yellow-500/25',
+  processing: 'bg-blue-500/15 text-blue-300 border border-blue-500/25',
   paid:       'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25',
   shipped:    'bg-indigo-500/15 text-indigo-300 border border-indigo-500/25',
   delivered:  'bg-green-500/15 text-green-300 border border-green-500/25',
@@ -162,7 +163,7 @@ export default function OrderDetailPage() {
               </div>
             )}
 
-            {order.status === 'pending' && (
+            {(order.status === 'pending' || order.status === 'processing') && (
               <div className="ds-card p-5 sm:p-6">
                 <h2 className="text-[15px] font-bold text-white mb-3">Cancel Order</h2>
                 <p className="text-[13px] text-white/50 mb-4">You can cancel this order before it is processed or shipped.</p>

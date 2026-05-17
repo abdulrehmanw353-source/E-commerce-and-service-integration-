@@ -8,7 +8,7 @@ import StatusBadge from '../../components/admin/StatusBadge';
 const fetchOrders = (params) =>
   adminApi.get('/admin/orders/', { params }).then(r => r.data.data ?? r.data);
 
-const ORDER_STATUSES = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
+const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 export default function AdminOrdersPage() {
   const [search, setSearch] = useState('');
@@ -19,7 +19,6 @@ export default function AdminOrdersPage() {
     queryKey: ['admin-orders', page, search, statusFilter],
     queryFn: () => fetchOrders({ page, limit: 15, keyword: search || undefined, status: statusFilter || undefined }),
     keepPreviousData: true,
-    staleTime: 30_000,
   });
 
   const orders = Array.isArray(data) ? data : (data?.orders || []);

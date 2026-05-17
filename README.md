@@ -87,6 +87,9 @@
 - adding route for order success page for guest users
 - adding location selector (current location + manual map selection) to checkout and services pages
 - implementing payment settings configuration (COD, JazzCash, EasyPaisa) for admins
+- implementing payment method selector (COD, JazzCash, EasyPaisa) to checkout page
+- implementing order cancellation functionality for customers
+- implementing payment status (pending, paid, refunded, cancelled) for orders
 ```
 
 #### Frontend
@@ -203,6 +206,8 @@
 - adding location selector (current location + manual map selection) to checkout and services pages
 - adding payment settings configuration (COD, JazzCash, EasyPaisa) for admins
 - adding payment method selector (COD, JazzCash, EasyPaisa) to checkout page
+- adding order cancellation functionality for customers
+- adding payment status (pending, paid, refunded, cancelled) for orders
 ```
 
 ### By "Pull Requests"
