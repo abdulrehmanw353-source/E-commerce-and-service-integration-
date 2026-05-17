@@ -11,6 +11,7 @@ import InputField from '../../components/ui/InputField';
 import Button from '../../components/ui/Button';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/axios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const loginSchema = yup.object({
   email: yup.string().email('Please enter a valid email address.').required('Email is required.'),
@@ -36,6 +37,23 @@ export default function CustomerLoginPage() {
       navigate('/', { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    try {
+      const { data } = await api.post('/auth/customer/google', {
+        token: credentialResponse.credential,
+        role: 'customer'
+      });
+      setAuth(data.data.user, data.data.accessToken);
+      toast.success(`Welcome back, ${data.data.user.firstName}!`);
+      navigate('/', { replace: true });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Google Login failed.');
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +89,20 @@ export default function CustomerLoginPage() {
           <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
         </Button>
       </form>
+
+      <div className="flex items-center gap-4 my-6">
+        <div className="h-px bg-white/10 flex-1"></div>
+        <span className="text-white/40 text-[13px] font-medium">OR</span>
+        <div className="h-px bg-white/10 flex-1"></div>
+      </div>
+      
+      <div className="flex justify-center" style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={() => toast.error('Google Login failed')}
+          useOneTap
+        />
+      </div>
 
       <div className="text-center mt-8 pt-6 border-t border-white/10">
         <p className="text-[13px] text-white/55">

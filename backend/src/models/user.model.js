@@ -38,6 +38,12 @@ const userSchema = new Schema(
          lowercase: true,
          required: true,
       },
+      googleId: {
+         type: String,
+      },
+      profilePicture: {
+         type: String,
+      },
       password: {
          type: String,
          select: false,

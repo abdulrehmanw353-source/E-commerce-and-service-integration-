@@ -8,6 +8,7 @@ import { Lock, ChevronRight } from 'lucide-react';
 
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import adminApi from '../../../lib/adminAxios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const loginSchema = yup.object({
   email: yup.string().email('Please enter a valid email address.').required('Email is required.'),
@@ -33,6 +34,23 @@ export default function AdminLoginPage() {
       navigate('/admin', { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    try {
+      const { data } = await adminApi.post('/auth/admin/google', {
+        token: credentialResponse.credential,
+        role: 'admin'
+      });
+      setAuth(data.data.user, data.data.accessToken);
+      toast.success('Welcome to the admin dashboard.');
+      navigate('/admin', { replace: true });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Google Login failed.');
     } finally {
       setIsLoading(false);
     }
@@ -117,6 +135,20 @@ export default function AdminLoginPage() {
               <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
             </button>
           </form>
+
+          <div className="flex items-center gap-4 my-6">
+            <div className="h-px bg-white/10 flex-1"></div>
+            <span className="text-white/40 text-[13px] font-medium">OR</span>
+            <div className="h-px bg-white/10 flex-1"></div>
+          </div>
+          
+          <div className="flex justify-center" style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => toast.error('Google Login failed')}
+              useOneTap
+            />
+          </div>
           <p className="text-center text-[13px] text-white/55 mt-5">
             Need a new admin? <Link to="/admin/register" className="text-[#aa96ff] font-semibold">Create account</Link>
           </p>

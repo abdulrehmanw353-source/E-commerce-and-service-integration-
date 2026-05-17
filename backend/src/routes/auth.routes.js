@@ -15,6 +15,7 @@ import {
    logoutCustomer,
    loginAdmin,
    logoutAdmin,
+   googleLogin,
 } from "../controllers/auth.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 
@@ -24,6 +25,7 @@ router.post("/customer/register", registerCustomer);
 router.post("/customer/login", loginCustomer);
 router.post("/customer/refresh-token", refreshAccessToken);
 router.post("/customer/logout", verifyJWT, logoutCustomer);
+router.post("/customer/google", googleLogin);
 
 // ------ ADMIN ROUTES
 
@@ -32,6 +34,7 @@ router.get("/admin/register-status", getAdminRegisterStatus);
 router.post("/admin/login", loginAdmin);
 router.post("/admin/refresh-token", refreshAccessToken);
 router.post("/admin/logout", verifyJWT, logoutAdmin);
+router.post("/admin/google", googleLogin);
 
 // ------ EXPORTING ROUTER
 

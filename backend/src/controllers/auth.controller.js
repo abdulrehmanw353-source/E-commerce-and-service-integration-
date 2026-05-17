@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ------ EXPORTING FROM FILES
 
@@ -334,6 +337,101 @@ const logoutAdmin = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, {}, "Admin logged out successfully"));
 });
 
+// ------ GOOGLE LOGIN
+
+const googleLogin = asyncHandler(async (req, res) => {
+   const { token, role } = req.body;
+
+   if (!token) {
+      throw new ApiError(400, "Google token is missing");
+   }
+
+   const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+   });
+
+   const payload = ticket.getPayload();
+   const { email, name, picture, sub: googleId } = payload;
+
+   if (role === "admin") {
+      let admin = await User.findOne({ email, role: "admin" }).select("+password");
+
+      if (!admin) {
+         throw new ApiError(403, "Access denied. Not an authorized admin.");
+      }
+
+      const refreshToken = generateRefreshToken(admin);
+      const accessToken = generateAccessToken(admin);
+
+      admin.refreshToken = refreshToken;
+      await admin.save({ validateBeforeSave: false });
+
+      const adminObj = admin.toObject();
+
+      const options = {
+         maxAge: 7 * 24 * 60 * 60 * 1000,
+         httpOnly: true,
+         secure: NODE_ENV === "production",
+         sameSite: "strict",
+      };
+
+      res.cookie("refreshToken", refreshToken, options);
+
+      return res.status(200).json(
+         new ApiResponse(
+            200,
+            { user: adminObj, accessToken },
+            "Admin logged-in successfully with Google",
+         ),
+      );
+   } else {
+      let user = await User.findOne({ email, role: "customer" }).select("+password");
+
+      if (!user) {
+         const randomPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+         const nameParts = name ? name.split(' ') : ['GoogleUser'];
+         const firstName = nameParts[0];
+         const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+         user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password: randomPassword,
+            role: "customer",
+            googleId,
+            profilePicture: picture,
+         });
+      }
+
+      const refreshToken = generateRefreshToken(user);
+      const accessToken = generateAccessToken(user);
+
+      user.refreshToken = refreshToken;
+      await user.save({ validateBeforeSave: false });
+
+      const userObj = user.toObject();
+
+      const options = {
+         maxAge: 7 * 24 * 60 * 60 * 1000,
+         httpOnly: true,
+         secure: NODE_ENV === "production",
+         sameSite: "strict",
+      };
+
+      res.cookie("refreshToken", refreshToken, options);
+
+      return res.status(200).json(
+         new ApiResponse(
+            200,
+            { user: userObj, accessToken },
+            "Customer logged-in successfully with Google",
+         ),
+      );
+   }
+});
+
 // ------ EXPORTING CONTROLLERS
 
 export {
@@ -345,4 +443,5 @@ export {
    logoutCustomer,
    loginAdmin,
    logoutAdmin,
+   googleLogin,
 };
