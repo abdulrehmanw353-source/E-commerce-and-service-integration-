@@ -68,7 +68,7 @@ export default function ProductsPage() {
           </div>
 
           {/* Filters */}
-          <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
+          <ProductFilters filters={filters} onFilterChange={handleFilterChange} availableCategories={data?.availableCategories || []} />
         </div>
       </section>
 

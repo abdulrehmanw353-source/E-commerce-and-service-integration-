@@ -73,11 +73,15 @@ const getPublicProductsService = async (query) => {
    // ------ TOTAL COUNT
    const totalProducts = await Product.countDocuments(filter);
 
+   // ------ DISTINCT CATEGORIES
+   const availableCategories = await Product.distinct("category", { isDeleted: false });
+
    return {
       products,
       totalProducts,
       page: pageNumber,
       totalPages: Math.ceil(totalProducts / limitNumber),
+      availableCategories,
    };
 };
 

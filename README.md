@@ -195,6 +195,7 @@
 - fixing the scroll to top functionality on navigation
 - fixing the cart items display in the cart page
 - updating the ui of the product detail page by adding buy now button
+- fixing the category filter (dynamically)
 ```
 
 ### By "Pull Requests"

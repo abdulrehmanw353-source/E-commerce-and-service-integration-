@@ -1,16 +1,7 @@
 import { Search, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 import { useState } from 'react';
 
-const categories = [
-  { label: 'All Categories', value: '' },
-  { label: 'Door & Lock Services', value: 'Door & Lock Services' },
-  { label: 'Home Security', value: 'Home Security' },
-  { label: 'HVAC & AC Repair', value: 'HVAC & AC Repair' },
-  { label: 'Plumbing Services', value: 'Plumbing Services' },
-  { label: 'Electrical Services', value: 'Electrical Services' },
-  { label: 'Appliance Repair', value: 'Appliance Repair' },
-  { label: 'Carpentry Services', value: 'Carpentry Services' },
-];
+
 
 const sortOptions = [
   { label: 'Newest', value: '-createdAt' },
@@ -22,8 +13,16 @@ const sortOptions = [
 /**
  * ProductFilters — Search, category, sort controls
  */
-export default function ProductFilters({ filters, onFilterChange }) {
+export default function ProductFilters({ filters, onFilterChange, availableCategories = [] }) {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const dynamicCategories = [
+    { label: 'All Categories', value: '' },
+    ...availableCategories.map((cat) => ({
+      label: cat,
+      value: cat,
+    })),
+  ];
 
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
@@ -73,7 +72,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
               onChange={(e) => onFilterChange({ ...filters, category: e.target.value, page: 1 })}
               className="appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 hover:border-[#8f74ff]/35 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff] focus:ring-4 focus:ring-[#8f74ff]/20 cursor-pointer transition-colors"
             >
-              {categories.map((cat) => (
+              {dynamicCategories.map((cat) => (
                 <option key={cat.value} value={cat.value}>{cat.label}</option>
               ))}
             </select>
@@ -105,7 +104,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
               onChange={(e) => onFilterChange({ ...filters, category: e.target.value, page: 1 })}
               className="w-full appearance-none pl-4 pr-9 py-3 bg-[#12182a] border border-white/10 rounded-xl text-[13px] text-white/80 outline-none focus:border-[#a894ff]"
             >
-              {categories.map((cat) => (
+              {dynamicCategories.map((cat) => (
                 <option key={cat.value} value={cat.value}>{cat.label}</option>
               ))}
             </select>
