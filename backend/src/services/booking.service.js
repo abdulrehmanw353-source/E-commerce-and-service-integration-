@@ -87,6 +87,7 @@ const createBookingService = async (userId, payload, files) => {
       technician: payload.technicianId,
       assignedTechnician: `${technician.firstName} ${technician.lastName || ""}`.trim(),
       status: "pending",
+      ...(payload.location ? { location: payload.location } : {}),
    });
 
    slot.currentBookings += 1;

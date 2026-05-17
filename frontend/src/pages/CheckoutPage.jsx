@@ -9,6 +9,7 @@ import api from '../lib/axios';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import InputField from '../components/ui/InputField';
+import LocationPicker from '../components/ui/LocationPicker';
 
 // ─── Validation Schema ───────────────────────────────────────
 const checkoutSchema = yup.object({
@@ -57,6 +58,7 @@ export default function CheckoutPage() {
   const { items, clearCart } = useCartStore();
   const { isAuthenticated, user } = useAuthStore();
   const [placing, setPlacing] = useState(false);
+  const [locationCoords, setLocationCoords] = useState(null);
 
   // ─── Address Autocomplete State ──────────────────────
   const [addressQuery, setAddressQuery] = useState('');
@@ -166,6 +168,7 @@ export default function CheckoutPage() {
           state: formData.state,
           zip: formData.zip,
           country: formData.country,
+          ...(locationCoords ? { lat: locationCoords.lat, lng: locationCoords.lng } : {}),
         },
       };
 
@@ -272,6 +275,20 @@ export default function CheckoutPage() {
                   <div className="ds-card p-5 sm:p-6">
                     <h2 className="text-[15px] font-semibold text-white mb-5">Shipping Address</h2>
                     <div className="space-y-4">
+                      {/* Location Picker */}
+                      <LocationPicker
+                        onLocationSelect={(loc) => {
+                          setLocationCoords({ lat: loc.lat, lng: loc.lng });
+                          if (loc.address) {
+                            setValue('address', loc.address, { shouldValidate: true });
+                            setAddressQuery(loc.address);
+                          }
+                          if (loc.city) setValue('city', loc.city, { shouldValidate: true });
+                          if (loc.state) setValue('state', loc.state, { shouldValidate: true });
+                          if (loc.zip) setValue('zip', loc.zip, { shouldValidate: true });
+                          if (loc.country) setValue('country', loc.country, { shouldValidate: true });
+                        }}
+                      />
                       {/* Address with autocomplete */}
                       <div ref={addressDropdownRef} className="relative">
                         <label htmlFor="address" className="text-[11px] font-semibold text-white/45 uppercase tracking-[0.08em] block mb-2">

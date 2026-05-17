@@ -85,6 +85,7 @@
 - packages: multer, cloudinary, socket.io are added
 - implementing Google OAuth (sign in with Google) and Google Search API integration
 - adding route for order success page for guest users
+- adding location selector (current location + manual map selection) to checkout and services pages
 ```
 
 #### Frontend
@@ -198,6 +199,7 @@
 - updating the ui of the product detail page by adding buy now button
 - fixing the category filter (dynamically)
 - fixing the order success page for guest users
+- adding location selector (current location + manual map selection) to checkout and services pages
 ```
 
 ### By "Pull Requests"

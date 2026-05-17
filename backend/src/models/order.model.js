@@ -52,6 +52,8 @@ const orderSchema = new Schema(
          state: String,
          zip: String,
          country: String,
+         lat: Number,
+         lng: Number,
       },
       
       contact: {

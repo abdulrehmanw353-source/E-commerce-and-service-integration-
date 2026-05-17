@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Wrench, Calendar, ChevronRight, Laptop, Smartphone, Monitor, Tablet, Package } from 'lucide-react';
+import { Wrench, Calendar, ChevronRight, Laptop, Smartphone, Monitor, Tablet, Package, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
 import { useServices } from '../hooks/useServices';
+import LocationPicker from '../components/ui/LocationPicker';
 
 // ─── Fetchers ────────────────────────────────────────────────
 const fetchSlots = (technicianId) =>
@@ -52,6 +53,7 @@ export default function ServicesPage() {
   const { isAuthenticated } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
   const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
+  const [bookingLocation, setBookingLocation] = useState(null);
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [maxPrice, setMaxPrice] = useState(150);
@@ -99,6 +101,10 @@ export default function ServicesPage() {
       const selectedSlotObj = slots.find(s => s._id === body.preferredTimeSlot);
       if (selectedSlotObj) {
         body.preferredDate = selectedSlotObj.date;
+      }
+      // Attach location data if available
+      if (bookingLocation) {
+        body.location = bookingLocation;
       }
       return api.post('/bookings/', body).then(r => r.data);
     },
@@ -303,6 +309,31 @@ export default function ServicesPage() {
                 {selectedTechnicianId && slots.length === 0 && (
                   <p className="text-[12px] text-[#ff9aad]">No available slots for this technician.</p>
                 )}
+
+                {/* Location */}
+                <Field label="Your Location" hint="Help our technician find you faster">
+                  <LocationPicker
+                    onLocationSelect={(loc) => {
+                      setBookingLocation({
+                        address: loc.address,
+                        city: loc.city,
+                        state: loc.state,
+                        zip: loc.zip,
+                        country: loc.country,
+                        lat: loc.lat,
+                        lng: loc.lng,
+                      });
+                    }}
+                  />
+                  {bookingLocation?.address && (
+                    <div className="mt-2 flex items-start gap-2 p-3 rounded-xl bg-[#00f5d4]/5 border border-[#00f5d4]/15">
+                      <MapPin className="w-4 h-4 text-[#00f5d4] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                      <p className="text-[13px] text-white/70 line-clamp-2">
+                        {[bookingLocation.address, bookingLocation.city, bookingLocation.state, bookingLocation.country].filter(Boolean).join(', ')}
+                      </p>
+                    </div>
+                  )}
+                </Field>
 
                 <button type="submit" disabled={bookMut.isPending}
                   className="w-full py-4 mt-2 bg-[#00f5d4] hover:bg-[#00f5d4]/90 disabled:opacity-60 text-[#0b0f1d] rounded-full text-[15px] font-bold transition-all shadow-[0_0_20px_rgba(0,245,212,0.25)] hover:shadow-[0_0_25px_rgba(0,245,212,0.4)] active:scale-[0.98]">

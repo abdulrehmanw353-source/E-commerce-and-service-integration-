@@ -59,6 +59,17 @@ const bookingSchema = new Schema(
          ref: "Technician",
       },
 
+      // ------ Location
+      location: {
+         address: { type: String, trim: true },
+         city: { type: String, trim: true },
+         state: { type: String, trim: true },
+         zip: { type: String, trim: true },
+         country: { type: String, trim: true },
+         lat: Number,
+         lng: Number,
+      },
+
       // ------ Status Management
       status: {
          type: String,
