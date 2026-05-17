@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Navbar({ onOpenSidebar }) {
   const navigate = useNavigate();
@@ -16,6 +17,24 @@ export default function Navbar({ onOpenSidebar }) {
   const [showSearch, setShowSearch] = useState(false);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const { data: searchResults, isFetching: isSearchLoading } = useQuery({
+    queryKey: ['navbar-search', debouncedSearch],
+    queryFn: async () => {
+      if (!debouncedSearch) return [];
+      const { data } = await api.get('/products', { params: { keyword: debouncedSearch, limit: 5 } });
+      return data.data?.products || [];
+    },
+    enabled: !!debouncedSearch,
+  });
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -90,7 +109,7 @@ export default function Navbar({ onOpenSidebar }) {
 
               {/* Search Dropdown */}
               {showSearch && (
-                <div className="absolute right-0 top-full mt-3 w-[320px] bg-[#141a2c] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] border border-white/10 overflow-hidden animate-scale-in origin-top-right">
+                <div className="absolute right-0 top-full mt-3 w-[320px] sm:w-[400px] bg-[#141a2c] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] border border-white/10 overflow-hidden animate-scale-in origin-top-right">
                   <div className="p-3">
                     <div className="flex items-center gap-2.5 bg-white/5 rounded-xl px-3.5 py-2.5 border border-white/10">
                       <Search className="w-4 h-4 text-white/40 flex-shrink-0" strokeWidth={1.5} />
@@ -98,24 +117,73 @@ export default function Navbar({ onOpenSidebar }) {
                         type="text"
                         placeholder="Search products..."
                         autoFocus
-                        className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none rounded-xl"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="bg-transparent w-full text-[15px] text-white placeholder:text-white/40 outline-none rounded-xl py-1 pl-1"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && e.target.value.trim()) {
                             navigate(`/products?keyword=${encodeURIComponent(e.target.value.trim())}`);
                             setShowSearch(false);
+                            setSearchTerm('');
                           }
                         }}
                       />
                     </div>
                   </div>
-                  <div className="border-t border-white/10 px-4 py-3">
-                    <p className="text-[11px] text-white/40 uppercase tracking-wider font-medium mb-2">Quick Links</p>
-                    <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
-                      <Package className="w-4 h-4 text-white/50" strokeWidth={1.5} />All Products
-                    </Link>
-                    <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
-                      <Wrench className="w-4 h-4 text-white/50" strokeWidth={1.5} />Repair Services
-                    </Link>
+
+                  <div className="max-h-[360px] overflow-y-auto custom-scrollbar">
+                    {debouncedSearch ? (
+                      isSearchLoading ? (
+                        <div className="flex justify-center items-center py-8">
+                          <div className="w-5 h-5 border-2 border-white/20 border-t-[#8f74ff] rounded-full animate-spin"></div>
+                        </div>
+                      ) : searchResults?.length > 0 ? (
+                        <div className="px-2 pb-2">
+                          <p className="px-3 py-2 text-[11px] text-white/40 uppercase tracking-wider font-medium">Matching Products</p>
+                          {searchResults.map((product) => (
+                            <Link 
+                              key={product._id} 
+                              to={`/products/${product._id}`}
+                              onClick={() => { setShowSearch(false); setSearchTerm(''); }}
+                              className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors group"
+                            >
+                              <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                {product.images?.[0] ? (
+                                  <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover" />
+                                ) : (
+                                  <Package className="w-4 h-4 text-white/40" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[14px] text-white/90 font-medium truncate group-hover:text-[#9d84ff] transition-colors">{product.title}</p>
+                                <p className="text-[13px] text-white/50">${product.price}</p>
+                              </div>
+                            </Link>
+                          ))}
+                          <Link
+                            to={`/products?keyword=${encodeURIComponent(debouncedSearch)}`}
+                            onClick={() => { setShowSearch(false); setSearchTerm(''); }}
+                            className="block text-center mt-2 py-2 text-[13px] text-[#8f74ff] hover:bg-[#8f74ff]/10 rounded-lg transition-colors font-medium"
+                          >
+                            View all results
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="py-8 text-center">
+                          <p className="text-[13px] text-white/50">No products found for "{debouncedSearch}"</p>
+                        </div>
+                      )
+                    ) : (
+                      <div className="border-t border-white/10 px-4 py-3">
+                        <p className="text-[11px] text-white/40 uppercase tracking-wider font-medium mb-2">Quick Links</p>
+                        <Link to="/products" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
+                          <Package className="w-4 h-4 text-white/50" strokeWidth={1.5} />All Products
+                        </Link>
+                        <Link to="/services" onClick={() => setShowSearch(false)} className="flex items-center gap-2 py-1.5 text-[14px] text-white/90 hover:text-[#9d84ff] transition-colors">
+                          <Wrench className="w-4 h-4 text-white/50" strokeWidth={1.5} />Repair Services
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

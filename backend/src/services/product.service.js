@@ -43,21 +43,22 @@ const getAllProductsService = async (query) => {
    // ------ skip (products calculations) for next pages
    const skip = (page - 1) * limit;
 
+   // ------ query filter
+   const filter = { isDeleted: false };
+   if (query.keyword) {
+      filter.title = { $regex: query.keyword, $options: "i" };
+   }
+
    // ------ fetching limited products
-   const products = await Product.find({ isDeleted: false })
+   const products = await Product.find(filter)
       .select("title price stock images category createdBy")
       .populate("createdBy", "firstName email")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-   // ------ error handling for empty product list
-   if (products.length === 0) {
-      throw new ApiError(404, "No products found");
-   }
-
    // ------ counting the total products stored in DB
-   const totalProducts = await Product.countDocuments({ isDeleted: false });
+   const totalProducts = await Product.countDocuments(filter);
 
    // ------ returning data
    return {

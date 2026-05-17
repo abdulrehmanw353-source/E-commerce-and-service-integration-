@@ -23,7 +23,11 @@ const getPublicProductsService = async (query) => {
 
    // ------ TEXT SEARCH
    if (keyword) {
-      filter.$text = { $search: keyword };
+      filter.$or = [
+         { title: { $regex: keyword, $options: "i" } },
+         { description: { $regex: keyword, $options: "i" } },
+         { brand: { $regex: keyword, $options: "i" } }
+      ];
    }
 
    // ------ CATEGORY FILTER
@@ -49,10 +53,7 @@ const getPublicProductsService = async (query) => {
 
    const allowedSortFields = ["price", "createdAt", "ratings"];
 
-   if (keyword) {
-      // prioritize text relevance
-      sortOption = { score: { $meta: "textScore" } };
-   } else if (sort && allowedSortFields.includes(sort.replace("-", ""))) {
+   if (sort && allowedSortFields.includes(sort.replace("-", ""))) {
       const sortField = sort.startsWith("-") ? sort.slice(1) : sort;
       const sortOrder = sort.startsWith("-") ? -1 : 1;
 
@@ -62,24 +63,10 @@ const getPublicProductsService = async (query) => {
    // ------ QUERY EXECUTION
    let queryBuilder = Product.find(filter).skip(skip).limit(limitNumber);
 
-   // ------ APPLY TEXT SCORE
-   if (keyword) {
-      queryBuilder = queryBuilder
-         .select({
-            title: 1,
-            price: 1,
-            images: 1,
-            category: 1,
-            ratings: 1,
-            numReviews: 1,
-            score: { $meta: "textScore" },
-         })
-         .sort(sortOption);
-   } else {
-      queryBuilder = queryBuilder
-         .select("title price images category ratings numReviews")
-         .sort(sortOption);
-   }
+   // ------ SELECT FIELDS
+   queryBuilder = queryBuilder
+      .select("title price images category ratings numReviews")
+      .sort(sortOption);
 
    const products = await queryBuilder;
 

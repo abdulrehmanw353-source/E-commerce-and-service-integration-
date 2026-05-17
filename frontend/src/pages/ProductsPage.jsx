@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Package } from 'lucide-react';
 
@@ -20,6 +20,16 @@ export default function ProductsPage() {
     page: Number(searchParams.get('page')) || 1,
     limit: 12,
   });
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      keyword: searchParams.get('keyword') || '',
+      category: searchParams.get('category') || prev.category,
+      sort: searchParams.get('sort') || prev.sort,
+      page: Number(searchParams.get('page')) || 1,
+    }));
+  }, [searchParams]);
 
   const { data, isLoading, isError } = useProducts(filters);
 
