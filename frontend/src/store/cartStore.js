@@ -25,15 +25,24 @@ export const useCartStore = create(
       addItem: (product, quantity = 1) => {
         const { items } = get();
         const existing = items.find((i) => i.productId === product._id);
+        
         if (existing) {
+          const newQty = existing.quantity + quantity;
+          if (newQty > product.stock) {
+            return { success: false, message: "Maximum available stock already added to cart." };
+          }
           set({
             items: items.map((i) =>
               i.productId === product._id
-                ? { ...i, quantity: i.quantity + quantity }
+                ? { ...i, quantity: newQty, stock: product.stock }
                 : i
             ),
           });
+          return { success: true };
         } else {
+          if (quantity > product.stock) {
+            return { success: false, message: "Maximum available stock already added to cart." };
+          }
           set({
             items: [
               ...items,
@@ -43,9 +52,11 @@ export const useCartStore = create(
                 price:     product.price,
                 image:     product.images?.[0] ?? null,
                 quantity,
+                stock:     product.stock,
               },
             ],
           });
+          return { success: true };
         }
       },
 
@@ -53,9 +64,13 @@ export const useCartStore = create(
       updateQty: (productId, quantity) => {
         if (quantity < 1) return;
         set({
-          items: get().items.map((i) =>
-            i.productId === productId ? { ...i, quantity } : i
-          ),
+          items: get().items.map((i) => {
+            if (i.productId === productId) {
+              const safeQty = i.stock ? Math.min(quantity, i.stock) : quantity;
+              return { ...i, quantity: safeQty };
+            }
+            return i;
+          }),
         });
       },
 

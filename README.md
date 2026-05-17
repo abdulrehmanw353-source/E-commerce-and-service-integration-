@@ -193,6 +193,8 @@
 - integrating Google OAuth (sign in with Google) and Google Search API for product/category data
 - fixing filters on the services page
 - fixing the scroll to top functionality on navigation
+- fixing the cart items display in the cart page
+- updating the ui of the product detail page by adding buy now button
 ```
 
 ### By "Pull Requests"

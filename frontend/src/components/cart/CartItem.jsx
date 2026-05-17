@@ -37,7 +37,8 @@ export default function CartItem({ item }) {
           </span>
           <button
             onClick={() => updateQty(item.productId, item.quantity + 1)}
-            className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/[0.06] transition-all"
+            disabled={item.stock && item.quantity >= item.stock}
+            className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/[0.06] disabled:opacity-40 transition-all"
           >
             <Plus className="w-3 h-3" strokeWidth={2} />
           </button>

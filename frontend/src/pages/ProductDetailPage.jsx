@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronRight, Star, ShoppingBag, Truck, Shield, RotateCcw, Package } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +18,11 @@ export default function ProductDetailPage() {
   const { data: product, isLoading, isError } = useProduct(id);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { addItem, open: openCart } = useCartStore();
+  const navigate = useNavigate();
+  const { addItem, open: openCart, items: cartItems } = useCartStore();
+
+  const existingCartItem = cartItems.find((i) => i.productId === id);
+  const cartQty = existingCartItem?.quantity || 0;
 
   // Fetch reviews
   const { data: reviewsData } = useQuery({
@@ -34,9 +38,25 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addItem(product, quantity);
+    const result = addItem(product, quantity);
+    if (result && !result.success) {
+      toast.error(result.message);
+      return;
+    }
     toast.success('Added to cart!');
+    setQuantity(1); // Reset local quantity selection
     openCart();
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    const result = addItem(product, quantity);
+    if (result && !result.success) {
+      toast.error(result.message);
+      return;
+    }
+    setQuantity(1);
+    navigate('/checkout');
   };
 
   // Loading
@@ -88,7 +108,12 @@ export default function ProductDetailPage() {
 
   const images = product.images?.length ? product.images : ['/placeholder-product.png'];
   const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price);
+  const availableToAdd = product ? Math.max(0, product.stock - cartQty) : 0;
   const inStock = product.stock > 0;
+  const canAddMore = availableToAdd > 0;
+  
+  // Safe display quantity
+  const displayQty = Math.min(Math.max(1, quantity), availableToAdd);
 
   return (
     <div className="bg-transparent min-h-screen">
@@ -201,34 +226,51 @@ export default function ProductDetailPage() {
               </span>
             </div>
 
-            {/* Quantity + Add to Cart */}
+            {/* Quantity + Add to Cart + Buy Now */}
             {inStock && (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
-                {/* Quantity Selector */}
-                <div className="flex items-center justify-between sm:justify-center bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden h-[52px]">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-full flex items-center justify-center text-[20px] text-white hover:bg-white/[0.06] transition-colors font-light"
-                  >
-                    −
-                  </button>
-                  <span className="w-12 text-center text-[17px] font-medium text-white">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-12 h-full flex items-center justify-center text-[20px] text-white hover:bg-white/[0.06] transition-colors font-light"
-                  >
-                    +
-                  </button>
-                </div>
+              <div className="flex flex-col gap-4 mb-10">
+                {canAddMore ? (
+                  <>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                      {/* Quantity Selector */}
+                      <div className="flex items-center justify-between sm:justify-center bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden h-[52px]">
+                        <button
+                          onClick={() => setQuantity(Math.max(1, displayQty - 1))}
+                          className="w-12 h-full flex items-center justify-center text-[20px] text-white hover:bg-white/[0.06] transition-colors font-light"
+                        >
+                          −
+                        </button>
+                        <span className="w-12 text-center text-[17px] font-medium text-white">{displayQty}</span>
+                        <button
+                          onClick={() => setQuantity(Math.min(availableToAdd, displayQty + 1))}
+                          className="w-12 h-full flex items-center justify-center text-[20px] text-white hover:bg-white/[0.06] transition-colors font-light"
+                        >
+                          +
+                        </button>
+                      </div>
 
-                {/* Add to Cart */}
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 ds-btn-primary h-[52px] rounded-xl font-semibold inline-flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
-                  Add to Cart
-                </button>
+                      {/* Add to Cart */}
+                      <button
+                        onClick={handleAddToCart}
+                        className="flex-1 ds-btn-primary h-[52px] rounded-xl font-semibold inline-flex items-center justify-center gap-2"
+                      >
+                        <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                        Add to Cart
+                      </button>
+                    </div>
+                    {/* Buy Now */}
+                    <button
+                      onClick={handleBuyNow}
+                      className="w-full h-[52px] rounded-xl font-bold bg-white text-[#0a0a0a] hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
+                    >
+                      Buy Now
+                    </button>
+                  </>
+                ) : (
+                  <div className="w-full h-[52px] bg-[#ff9aad]/10 border border-[#ff5e7d]/20 rounded-xl flex items-center justify-center text-[14px] font-semibold text-[#ff5e7d]">
+                    Maximum available stock already in cart
+                  </div>
+                )}
               </div>
             )}
 
