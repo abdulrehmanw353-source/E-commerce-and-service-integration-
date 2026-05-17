@@ -61,7 +61,13 @@ const orderSchema = new Schema(
          lastName: String,
          email: String,
          phone: String,
-      }
+      },
+
+      paymentMethod: {
+         type: String,
+         enum: ["cod", "jazzcash", "easypaisa", "bank"],
+         default: "cod",
+      },
    },
    {
       timestamps: true,

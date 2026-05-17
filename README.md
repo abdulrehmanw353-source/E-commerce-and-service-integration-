@@ -86,6 +86,7 @@
 - implementing Google OAuth (sign in with Google) and Google Search API integration
 - adding route for order success page for guest users
 - adding location selector (current location + manual map selection) to checkout and services pages
+- implementing payment settings configuration (COD, JazzCash, EasyPaisa) for admins
 ```
 
 #### Frontend
@@ -200,6 +201,7 @@
 - fixing the category filter (dynamically)
 - fixing the order success page for guest users
 - adding location selector (current location + manual map selection) to checkout and services pages
+- adding payment settings configuration (COD, JazzCash, EasyPaisa) for admins
 ```
 
 ### By "Pull Requests"

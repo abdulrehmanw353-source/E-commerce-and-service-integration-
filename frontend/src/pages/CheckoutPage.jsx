@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ShoppingBag, ChevronRight, Lock, User, ArrowLeft, CheckCircle, MapPin } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { useCartStore } from '../store/cartStore';
@@ -59,6 +60,12 @@ export default function CheckoutPage() {
   const { isAuthenticated, user } = useAuthStore();
   const [placing, setPlacing] = useState(false);
   const [locationCoords, setLocationCoords] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('cod');
+
+  const { data: paymentSettings } = useQuery({
+    queryKey: ['payment-settings'],
+    queryFn: () => api.get('/payment-settings').then(r => r.data.data ?? r.data),
+  });
 
   // ─── Address Autocomplete State ──────────────────────
   const [addressQuery, setAddressQuery] = useState('');
@@ -170,6 +177,7 @@ export default function CheckoutPage() {
           country: formData.country,
           ...(locationCoords ? { lat: locationCoords.lat, lng: locationCoords.lng } : {}),
         },
+        paymentMethod,
       };
 
       if (isAuthenticated) {
@@ -349,6 +357,99 @@ export default function CheckoutPage() {
                         <InputField label="Postal Code" name="zip" placeholder="54000" register={register} error={errors.zip?.message} />
                         <InputField label="Country" name="country" placeholder="Pakistan" register={register} error={errors.country?.message} />
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Method */}
+                  <div className="ds-card p-5 sm:p-6">
+                    <h2 className="text-[15px] font-semibold text-white mb-5">Payment Method</h2>
+                    
+                    <div className="space-y-3">
+                      {paymentSettings?.codEnabled && (
+                        <label className={`
+                          flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all
+                          ${paymentMethod === 'cod' ? 'bg-[#7a5cff]/10 border-[#7a5cff]' : 'bg-[#1c2340] border-white/10 hover:border-white/20'}
+                        `}>
+                          <input type="radio" name="paymentMethod" value="cod"
+                            checked={paymentMethod === 'cod'} onChange={(e) => setPaymentMethod(e.target.value)}
+                            className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
+                          <div>
+                            <p className="text-[14px] font-semibold text-white">Cash on Delivery (COD)</p>
+                            <p className="text-[12px] text-white/50">Pay when you receive your order</p>
+                          </div>
+                        </label>
+                      )}
+
+                      {paymentSettings?.jazzcashEnabled && (
+                        <label className={`
+                          flex flex-col gap-3 p-4 rounded-xl border cursor-pointer transition-all
+                          ${paymentMethod === 'jazzcash' ? 'bg-[#7a5cff]/10 border-[#7a5cff]' : 'bg-[#1c2340] border-white/10 hover:border-white/20'}
+                        `}>
+                          <div className="flex items-center gap-3">
+                            <input type="radio" name="paymentMethod" value="jazzcash"
+                              checked={paymentMethod === 'jazzcash'} onChange={(e) => setPaymentMethod(e.target.value)}
+                              className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
+                            <div>
+                              <p className="text-[14px] font-semibold text-white">JazzCash</p>
+                              <p className="text-[12px] text-white/50">Pay via JazzCash and send screenshot</p>
+                            </div>
+                          </div>
+                          {paymentMethod === 'jazzcash' && (
+                            <div className="pl-7 mt-1 animate-fade-in space-y-3">
+                              <div className="p-3 rounded-lg bg-[#141a2c] border border-white/5 text-[13px]">
+                                <p className="text-white/60 mb-1">Send payment to:</p>
+                                <p className="text-white font-semibold">{paymentSettings.jazzcashAccountName}</p>
+                                <p className="text-[#00f5d4] font-bold text-[16px] mt-0.5 tracking-wide">{paymentSettings.jazzcashAccountNumber}</p>
+                              </div>
+                              {paymentSettings.whatsappNumber && (
+                                <a href={`https://wa.me/${paymentSettings.whatsappNumber.replace('+', '')}`} target="_blank" rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-lg text-[13px] font-semibold transition-colors">
+                                  Open WhatsApp to send screenshot
+                                </a>
+                              )}
+                              {paymentSettings.paymentInstructions && (
+                                <p className="text-[12px] text-[#ff9aad] italic">{paymentSettings.paymentInstructions}</p>
+                              )}
+                            </div>
+                          )}
+                        </label>
+                      )}
+
+                      {paymentSettings?.easypaisaEnabled && (
+                        <label className={`
+                          flex flex-col gap-3 p-4 rounded-xl border cursor-pointer transition-all
+                          ${paymentMethod === 'easypaisa' ? 'bg-[#7a5cff]/10 border-[#7a5cff]' : 'bg-[#1c2340] border-white/10 hover:border-white/20'}
+                        `}>
+                          <div className="flex items-center gap-3">
+                            <input type="radio" name="paymentMethod" value="easypaisa"
+                              checked={paymentMethod === 'easypaisa'} onChange={(e) => setPaymentMethod(e.target.value)}
+                              className="w-4 h-4 text-[#7a5cff] bg-[#141a2c] border-white/20 focus:ring-[#7a5cff]/30" />
+                            <div>
+                              <p className="text-[14px] font-semibold text-white">EasyPaisa</p>
+                              <p className="text-[12px] text-white/50">Pay via EasyPaisa and send screenshot</p>
+                            </div>
+                          </div>
+                          {paymentMethod === 'easypaisa' && (
+                            <div className="pl-7 mt-1 animate-fade-in space-y-3">
+                              <div className="p-3 rounded-lg bg-[#141a2c] border border-white/5 text-[13px]">
+                                <p className="text-white/60 mb-1">Send payment to:</p>
+                                <p className="text-white font-semibold">{paymentSettings.easypaisaAccountName}</p>
+                                <p className="text-[#00f5d4] font-bold text-[16px] mt-0.5 tracking-wide">{paymentSettings.easypaisaAccountNumber}</p>
+                              </div>
+                              {paymentSettings.whatsappNumber && (
+                                <a href={`https://wa.me/${paymentSettings.whatsappNumber.replace('+', '')}`} target="_blank" rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-lg text-[13px] font-semibold transition-colors">
+                                  Open WhatsApp to send screenshot
+                                </a>
+                              )}
+                              {paymentSettings.paymentInstructions && (
+                                <p className="text-[12px] text-[#ff9aad] italic">{paymentSettings.paymentInstructions}</p>
+                              )}
+                            </div>
+                          )}
+                        </label>
+                      )}
+
                     </div>
                   </div>
 

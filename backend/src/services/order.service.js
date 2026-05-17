@@ -9,7 +9,7 @@ import ApiError from "../utils/ApiError.js";
 
 // ------ CREATE ORDER FROM CART
 
-const createOrderFromCartService = async (userId, shippingAddress, contact) => {
+const createOrderFromCartService = async (userId, shippingAddress, contact, paymentMethod = "cod") => {
    // ------ get cart
    const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
@@ -60,6 +60,7 @@ const createOrderFromCartService = async (userId, shippingAddress, contact) => {
       paymentStatus: "pending",
       shippingAddress,
       contact,
+      paymentMethod,
    });
 
    // ------ clear cart
@@ -144,7 +145,7 @@ const updateOrderStatusService = async (orderId, status, paymentStatus) => {
 
 // ------ CREATE GUEST ORDER (NO AUTH)
 
-const createGuestOrderService = async (cartItems, shippingAddress, contact) => {
+const createGuestOrderService = async (cartItems, shippingAddress, contact, paymentMethod = "cod") => {
    if (!cartItems || cartItems.length === 0) {
       throw new ApiError(400, "Cart is empty");
    }
@@ -189,6 +190,7 @@ const createGuestOrderService = async (cartItems, shippingAddress, contact) => {
       paymentStatus: "pending",
       shippingAddress,
       contact,
+      paymentMethod,
    });
 
    return order;

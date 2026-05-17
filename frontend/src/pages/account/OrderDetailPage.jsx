@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Package, MapPin, CheckCircle, Clock, ShoppingBag } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, Package, MapPin, CheckCircle, Clock, ShoppingBag, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 import api from '../../lib/axios';
 
 const fetchOrder = (id) =>
@@ -18,10 +19,24 @@ const STATUS_COLOR = {
 export default function OrderDetailPage() {
   const { id } = useParams();
 
+  const queryClient = useQueryClient();
+
   const { data: order, isLoading, isError } = useQuery({
     queryKey: ['my-order', id],
     queryFn: () => fetchOrder(id),
     enabled: !!id,
+  });
+
+  const cancelMut = useMutation({
+    mutationFn: () => api.put(`/orders/${id}/cancel`),
+    onSuccess: () => {
+      toast.success('Order cancelled successfully');
+      queryClient.invalidateQueries(['my-order', id]);
+      queryClient.invalidateQueries(['my-orders']);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Failed to cancel order');
+    },
   });
 
   if (isLoading) return (
@@ -144,6 +159,25 @@ export default function OrderDetailPage() {
                   {shippingAddr.state ? `, ${shippingAddr.state}` : ''}
                   {shippingAddr.country ? `, ${shippingAddr.country}` : ''}
                 </p>
+              </div>
+            )}
+
+            {order.status === 'pending' && (
+              <div className="ds-card p-5 sm:p-6">
+                <h2 className="text-[15px] font-bold text-white mb-3">Cancel Order</h2>
+                <p className="text-[13px] text-white/50 mb-4">You can cancel this order before it is processed or shipped.</p>
+                <button 
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+                      cancelMut.mutate();
+                    }
+                  }}
+                  disabled={cancelMut.isPending}
+                  className="w-full py-3.5 bg-[#ff3b57]/10 hover:bg-[#ff3b57]/20 border border-[#ff3b57]/30 text-[#ff5e7d] rounded-xl text-[13px] font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <X className="w-4 h-4" strokeWidth={2} />
+                  {cancelMut.isPending ? 'Cancelling...' : 'Cancel Order'}
+                </button>
               </div>
             )}
           </div>

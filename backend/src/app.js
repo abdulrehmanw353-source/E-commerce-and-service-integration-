@@ -24,6 +24,7 @@ import adminChatRouter from "./routes/admin.chat.routes.js";
 import technicianRouter from "./routes/technician.routes.js";
 import publicServiceRouter from "./routes/public.service.routes.js";
 import adminServiceRouter from "./routes/admin.service.routes.js";
+import paymentSettingsRouter from "./routes/paymentSettings.routes.js";
 
 // ------ CONFIGURATIONS
 
@@ -60,6 +61,7 @@ app.use("/api/v1/time-slots", timeSlotRouter);
 app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1/admin/chat", adminChatRouter);
 app.use("/api/v1/technicians", technicianRouter);
+app.use("/api/v1/payment-settings", paymentSettingsRouter);
 
 // ------ ERROR HANDLER MIDDLEWARE
 

@@ -61,6 +61,7 @@ import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminServicesPage from './pages/admin/AdminServicesPage';
 import AdminServiceCreatePage from './pages/admin/AdminServiceCreatePage';
 import AdminServiceEditPage from './pages/admin/AdminServiceEditPage';
+import AdminPaymentSettingsPage from './pages/admin/AdminPaymentSettingsPage';
 
 // Components / Layout
 import LoadingScreen from './components/ui/LoadingScreen';
@@ -143,6 +144,7 @@ function AppContent() {
         <Route path="technicians/new" element={<AdminTechnicianCreatePage />} />
         <Route path="technicians/:id/edit" element={<AdminTechnicianEditPage />} />
         <Route path="analytics" element={<AdminAnalyticsPage />} />
+        <Route path="payments" element={<AdminPaymentSettingsPage />} />
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="bookings/:id" element={<AdminBookingDetailPage />} />

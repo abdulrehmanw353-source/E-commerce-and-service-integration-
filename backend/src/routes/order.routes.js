@@ -12,6 +12,7 @@ import {
    createGuestOrder,
    getUserOrders,
    getSingleOrder,
+   cancelOrder,
 } from "../controllers/order.controller.js";
 
 // ------ CREATE ORDER (CHECKOUT)
@@ -29,6 +30,10 @@ router.get("/", verifyJWT, getUserOrders);
 // ------ GET SINGLE ORDER
 
 router.get("/:id", verifyJWT, getSingleOrder);
+
+// ------ CANCEL ORDER
+
+router.put("/:id/cancel", verifyJWT, cancelOrder);
 
 // ------ EXPORTING ROUTER
 

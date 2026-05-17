@@ -230,7 +230,11 @@ export default function AdminOrderDetailPage() {
               <span className="text-white/70">{items.length}</span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-white/40">Payment</span>
+              <span className="text-white/40">Method</span>
+              <span className="text-white/70 uppercase font-medium">{order.paymentMethod || 'cod'}</span>
+            </div>
+            <div className="flex justify-between text-[13px]">
+              <span className="text-white/40">Payment Status</span>
               <span className={`capitalize font-medium ${order.paymentStatus === 'paid' ? 'text-green-400' : 'text-yellow-400'}`}>
                 {order.paymentStatus ?? 'Pending'}
               </span>

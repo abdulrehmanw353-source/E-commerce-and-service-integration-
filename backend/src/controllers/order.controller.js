@@ -14,8 +14,8 @@ import {
 // ------ CREATE ORDER
 
 const createOrder = asyncHandler(async (req, res) => {
-   const { shippingAddress, contact } = req.body;
-   const order = await createOrderFromCartService(req.user._id, shippingAddress, contact);
+   const { shippingAddress, contact, paymentMethod } = req.body;
+   const order = await createOrderFromCartService(req.user._id, shippingAddress, contact, paymentMethod);
 
    return res
       .status(201)
@@ -65,7 +65,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 // ------ CREATE GUEST ORDER (NO AUTH)
 
 const createGuestOrder = asyncHandler(async (req, res) => {
-   const { shippingAddress, contact, items } = req.body;
+   const { shippingAddress, contact, items, paymentMethod } = req.body;
 
    if (!items || items.length === 0) {
       throw new ApiError(400, "Cart items are required");
@@ -77,13 +77,30 @@ const createGuestOrder = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Shipping address (street, city, country) is required");
    }
 
-   const order = await createGuestOrderService(items, shippingAddress, contact);
+   const order = await createGuestOrderService(items, shippingAddress, contact, paymentMethod);
 
    return res
       .status(201)
       .json(new ApiResponse(201, order, "Order placed successfully"));
 });
 
+// ------ CANCEL ORDER (CUSTOMER — only pending)
+
+const cancelOrder = asyncHandler(async (req, res) => {
+   const order = await getSingleOrderService(req.params.id, req.user._id);
+
+   if (order.status !== "pending") {
+      throw new ApiError(400, "Only pending orders can be cancelled");
+   }
+
+   order.status = "cancelled";
+   await order.save();
+
+   return res
+      .status(200)
+      .json(new ApiResponse(200, order, "Order cancelled successfully"));
+});
+
 // ------ EXPORTING CONTROLLERS
 
-export { createOrder, createGuestOrder, getUserOrders, getSingleOrder, updateOrderStatus };
+export { createOrder, createGuestOrder, cancelOrder, getUserOrders, getSingleOrder, updateOrderStatus };

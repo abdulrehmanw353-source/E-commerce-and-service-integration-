@@ -2,7 +2,7 @@ import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import {
   LayoutDashboard, ShoppingBag, Package, Users, Calendar,
-  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, ChevronUp, Layers
+  MessageSquare, LogOut, Zap, Clock, Wrench, BarChart3, ChevronUp, Layers, CreditCard
 } from 'lucide-react';
 import { useAdminAuthStore } from '../../store/adminAuthStore';
 import adminApi from '../../lib/adminAxios';
@@ -18,6 +18,7 @@ const navItems = [
   { label: 'Customers',   to: '/admin/customers',    icon: Users },
   { label: 'Technicians', to: '/admin/technicians',  icon: Wrench },
   { label: 'Analytics',   to: '/admin/analytics',    icon: BarChart3 },
+  { label: 'Payments',    to: '/admin/payments',     icon: CreditCard },
   { label: 'Support',     to: '/admin/chat',         icon: MessageSquare },
 ];
 
