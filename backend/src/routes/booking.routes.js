@@ -7,7 +7,7 @@ const router = Router();
 // ------ IMPORTING FROM FILES
 
 import verifyJWT from "../middlewares/auth.middleware.js";
-import upload from "../config/multer.js";
+import { uploadImages } from "../config/multer.js";
 import {
    createBooking,
    getCustomerBookings,
@@ -17,7 +17,7 @@ import {
 
 // ------ CREATE BOOKING (with image upload)
 
-router.post("/", verifyJWT, upload.array("images", 5), createBooking);
+router.post("/", verifyJWT, uploadImages("images", 5), createBooking);
 
 // ------ GET CUSTOMER BOOKINGS
 

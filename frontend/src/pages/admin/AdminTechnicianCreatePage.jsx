@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
+import { appendFormValues } from '../../utils/formData';
 
 const createTechnician = (payload) => adminApi.post('/technicians', payload).then((r) => r.data);
 
@@ -12,7 +13,6 @@ const emptyForm = {
   lastName: '',
   email: '',
   phoneNo: '',
-  cnicImage: '',
   expertise: '',
   isAvailable: true,
   address: { street: '', city: '', state: '', country: '' },
@@ -34,6 +34,18 @@ export default function AdminTechnicianCreatePage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [form, setForm] = useState(emptyForm);
+  const [cnicFile, setCnicFile] = useState(null);
+  const cnicPreview = useMemo(
+    () => (cnicFile ? URL.createObjectURL(cnicFile) : ''),
+    [cnicFile],
+  );
+
+  useEffect(
+    () => () => {
+      if (cnicPreview) URL.revokeObjectURL(cnicPreview);
+    },
+    [cnicPreview],
+  );
 
   const createMut = useMutation({
     mutationFn: createTechnician,
@@ -52,11 +64,13 @@ export default function AdminTechnicianCreatePage() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    createMut.mutate({
+    const formData = appendFormValues(new FormData(), {
       ...form,
       email: form.email?.trim().toLowerCase(),
       expertise,
     });
+    if (cnicFile) formData.append('cnicImage', cnicFile);
+    createMut.mutate(formData);
   };
 
   return (
@@ -94,8 +108,31 @@ export default function AdminTechnicianCreatePage() {
               <input value={form.phoneNo} onChange={(e) => setForm((s) => ({ ...s, phoneNo: e.target.value }))} className={INPUT} placeholder="Phone number" />
             </Field>
             <div className="md:col-span-2">
-              <Field label="CNIC Image URL">
-                <input value={form.cnicImage} onChange={(e) => setForm((s) => ({ ...s, cnicImage: e.target.value }))} className={INPUT} placeholder="https://..." />
+              <Field label="CNIC Image">
+                <label className="flex items-center justify-center gap-2 w-full px-4 py-4 border border-dashed border-[#7a5cff]/40 rounded-xl text-[13px] text-[#c8bcff] bg-[#7a5cff]/5 hover:bg-[#7a5cff]/10 cursor-pointer transition-colors">
+                  <Upload className="w-4 h-4" />
+                  Select Image
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    onChange={(event) => setCnicFile(event.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                </label>
+                {cnicPreview && (
+                  <div className="relative mt-3 w-36 aspect-[1.6] rounded-xl bg-white/[0.04] border border-white/[0.08] overflow-hidden">
+                    <img src={cnicPreview} alt="Selected CNIC" className="w-full h-full object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => setCnicFile(null)}
+                      className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/70 text-white/70 hover:text-red-300"
+                      aria-label="Remove CNIC image"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+                <p className="text-[11px] text-white/30 mt-2">JPG, PNG, or WebP. Maximum 5MB.</p>
               </Field>
             </div>
             <div className="md:col-span-2">
@@ -148,4 +185,3 @@ export default function AdminTechnicianCreatePage() {
     </div>
   );
 }
-

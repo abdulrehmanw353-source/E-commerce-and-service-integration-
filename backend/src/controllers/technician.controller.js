@@ -10,7 +10,7 @@ import {
 } from "../services/technician.service.js";
 
 const createTechnician = asyncHandler(async (req, res) => {
-   const technician = await createTechnicianService(req.body, req.user._id);
+   const technician = await createTechnicianService(req.body, req.user._id, req.file);
    return res.status(201).json(new ApiResponse(201, technician, "Technician created successfully"));
 });
 
@@ -25,7 +25,7 @@ const getSingleTechnician = asyncHandler(async (req, res) => {
 });
 
 const updateTechnician = asyncHandler(async (req, res) => {
-   const technician = await updateTechnicianService(req.params.id, req.body);
+   const technician = await updateTechnicianService(req.params.id, req.body, req.file);
    return res.status(200).json(new ApiResponse(200, technician, "Technician updated successfully"));
 });
 

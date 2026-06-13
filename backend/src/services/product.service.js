@@ -4,10 +4,15 @@ import mongoose from "mongoose";
 
 import Product from "../models/product.model.js";
 import ApiError from "../utils/ApiError.js";
+import { normalizeStringArray } from "../utils/formData.js";
+import {
+   deleteCloudinaryAssets,
+   uploadImagesToCloudinary,
+} from "./upload.service.js";
 
 // ------ CREATE & SAVE PRODUCT IN DB (ADMIN)
 
-const createProductService = async (payload, userId) => {
+const createProductService = async (payload, userId, files = []) => {
    // ------ optional: basic validation
    if (!payload.title || !payload.price || !payload.stock) {
       throw new ApiError(400, "Missing required product fields");
@@ -23,14 +28,25 @@ const createProductService = async (payload, userId) => {
       throw new ApiError(409, "Product already exist with this name");
    }
 
-   // ------ creating & saving product in DB
-   const product = await Product.create({
-      ...payload,
-      createdBy: userId,
-   });
+   if (!files.length) {
+      throw new ApiError(400, "At least one product image is required");
+   }
 
-   // ------ returning product
-   return product;
+   const uploadedAssets = await uploadImagesToCloudinary(files, "products");
+
+   try {
+      const productData = { ...payload };
+      delete productData.images;
+      delete productData.existingImages;
+      return await Product.create({
+         ...productData,
+         images: uploadedAssets.map((asset) => asset.url),
+         createdBy: userId,
+      });
+   } catch (error) {
+      await deleteCloudinaryAssets(uploadedAssets);
+      throw error;
+   }
 };
 
 // ------ GET PRODUCTS FROM DB (ADMIN)
@@ -98,7 +114,7 @@ const getSingleProductService = async (id) => {
 
 // ------ UPDATE PRODUCT IN DB (ADMIN)
 
-const updateProductService = async (id, payload) => {
+const updateProductService = async (id, payload, files = []) => {
    // ------ validate mongodb ID
    if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(400, "Invalid product ID");
@@ -111,13 +127,47 @@ const updateProductService = async (id, payload) => {
       throw new ApiError(404, "Product not found");
    }
 
+   const isImageUpdate =
+      payload.existingImages !== undefined || files.length > 0;
+   let retainedImages = product.images;
+
+   if (payload.existingImages !== undefined) {
+      const requestedImages = normalizeStringArray(
+         payload.existingImages,
+         "existingImages",
+      );
+      const currentImages = new Set(product.images);
+
+      if (requestedImages.some((url) => !currentImages.has(url))) {
+         throw new ApiError(400, "Invalid existing product image");
+      }
+
+      retainedImages = requestedImages;
+   }
+
+   const uploadedAssets = files.length
+      ? await uploadImagesToCloudinary(files, "products")
+      : [];
+   const nextImages = [
+      ...retainedImages,
+      ...uploadedAssets.map((asset) => asset.url),
+   ];
+
+   if (isImageUpdate && nextImages.length === 0) {
+      await deleteCloudinaryAssets(uploadedAssets);
+      throw new ApiError(400, "At least one product image is required");
+   }
+   if (nextImages.length > 10) {
+      await deleteCloudinaryAssets(uploadedAssets);
+      throw new ApiError(400, "A product can have at most 10 images");
+   }
+
    // ------ allowed fields only
    const allowedFields = [
       "title",
       "description",
       "price",
       "stock",
-      "images",
       "category",
       "brand",
    ];
@@ -129,8 +179,16 @@ const updateProductService = async (id, payload) => {
       }
    });
 
-   // ------ save updated product
-   await product.save();
+   if (isImageUpdate) {
+      product.images = nextImages;
+   }
+
+   try {
+      await product.save();
+   } catch (error) {
+      await deleteCloudinaryAssets(uploadedAssets);
+      throw error;
+   }
 
    // ------ returning product data
    return product;

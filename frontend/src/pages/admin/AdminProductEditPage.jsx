@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, ImageIcon, Plus, X, Trash2, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Upload, X, Trash2, ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
+import { appendFormValues } from '../../utils/formData';
 
 const schema = yup.object({
   title:       yup.string().min(3, 'Min 3 characters').required('Title is required'),
@@ -45,8 +46,18 @@ export default function AdminProductEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [imageUrls, setImageUrls] = useState(['']);
+  const [existingImages, setExistingImages] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
+  const imagePreviews = useMemo(
+    () => imageFiles.map((file) => URL.createObjectURL(file)),
+    [imageFiles],
+  );
+
+  useEffect(
+    () => () => imagePreviews.forEach((url) => URL.revokeObjectURL(url)),
+    [imagePreviews],
+  );
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-product', id],
@@ -69,7 +80,7 @@ export default function AdminProductEditPage() {
         description: data.description || '',
       });
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setImageUrls(data.images?.length ? data.images : ['']);
+      setExistingImages(data.images || []);
     }
   }, [data, reset]);
 
@@ -95,13 +106,25 @@ export default function AdminProductEditPage() {
   });
 
   const onSubmit = (formData) => {
-    const images = imageUrls.filter(u => u.trim());
-    updateMut.mutate({ ...formData, images });
+    if (existingImages.length + imageFiles.length === 0) {
+      toast.error('Keep or select at least one product image.');
+      return;
+    }
+
+    const body = appendFormValues(new FormData(), {
+      ...formData,
+      existingImages,
+    });
+    imageFiles.forEach((file) => body.append('images', file));
+    updateMut.mutate(body);
   };
 
-  const addImageField = () => setImageUrls(prev => [...prev, '']);
-  const removeImageField = (i) => setImageUrls(prev => prev.filter((_, idx) => idx !== i));
-  const updateImageUrl = (i, val) => setImageUrls(prev => prev.map((u, idx) => idx === i ? val : u));
+  const selectImages = (event) => {
+    const availableSlots = Math.max(0, 10 - existingImages.length - imageFiles.length);
+    const selected = Array.from(event.target.files || []).slice(0, availableSlots);
+    setImageFiles((current) => [...current, ...selected]);
+    event.target.value = '';
+  };
 
   if (isLoading) return (
     <div className="p-6 space-y-4 animate-pulse">
@@ -147,31 +170,50 @@ export default function AdminProductEditPage() {
             </FormSection>
 
             <FormSection title="Images">
-              <p className="text-[12px] text-white/35 -mt-2">First image is the primary display image.</p>
-              <div className="space-y-2.5">
-                {imageUrls.map((url, i) => (
-                  <div key={i} className="flex gap-2 items-center">
-                    <input type="url" value={url} onChange={e => updateImageUrl(i, e.target.value)}
-                      placeholder={`Image URL ${i + 1}`} className={`${INPUT} flex-1`} />
-                    {url.trim() && (
-                      <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex-shrink-0 overflow-hidden">
-                        <img src={url} alt="" onError={e => e.target.style.display='none'}
-                          className="w-full h-full object-contain" />
-                      </div>
-                    )}
-                    {imageUrls.length > 1 && (
-                      <button type="button" onClick={() => removeImageField(i)}
-                        className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all flex-shrink-0">
-                        <X className="w-4 h-4" strokeWidth={1.75} />
+              <p className="text-[12px] text-white/35 -mt-2">Keep existing images or add replacements. The first image remains the primary display image.</p>
+              <label className="flex items-center justify-center gap-2 w-full px-4 py-4 border border-dashed border-[#7a5cff]/40 rounded-xl text-[13px] text-[#c8bcff] bg-[#7a5cff]/5 hover:bg-[#7a5cff]/10 cursor-pointer transition-colors">
+                <Upload className="w-4 h-4" strokeWidth={2} />
+                Select Images
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={selectImages}
+                  disabled={existingImages.length + imageFiles.length >= 10}
+                  className="sr-only"
+                />
+              </label>
+              {(existingImages.length > 0 || imagePreviews.length > 0) && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {existingImages.map((url, index) => (
+                    <div key={url} className="relative aspect-square rounded-xl bg-white/[0.04] border border-white/[0.08] overflow-hidden">
+                      <img src={url} alt={`Product ${index + 1}`} className="w-full h-full object-contain p-2" />
+                      <button
+                        type="button"
+                        onClick={() => setExistingImages((current) => current.filter((_, itemIndex) => itemIndex !== index))}
+                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/70 text-white/70 hover:text-red-300"
+                        aria-label={`Remove existing image ${index + 1}`}
+                      >
+                        <X className="w-3.5 h-3.5" />
                       </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button type="button" onClick={addImageField}
-                className="flex items-center gap-2 text-[13px] text-[#0071E3] hover:opacity-80 transition-opacity mt-1">
-                <Plus className="w-4 h-4" strokeWidth={2} /> Add image URL
-              </button>
+                    </div>
+                  ))}
+                  {imagePreviews.map((url, index) => (
+                    <div key={url} className="relative aspect-square rounded-xl bg-white/[0.04] border border-[#7a5cff]/30 overflow-hidden">
+                      <img src={url} alt={`New product ${index + 1}`} className="w-full h-full object-contain p-2" />
+                      <button
+                        type="button"
+                        onClick={() => setImageFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}
+                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/70 text-white/70 hover:text-red-300"
+                        aria-label={`Remove new image ${index + 1}`}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-[11px] text-white/30">{existingImages.length + imageFiles.length}/10 images, 5MB maximum each.</p>
             </FormSection>
           </div>
 
@@ -211,11 +253,11 @@ export default function AdminProductEditPage() {
             <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-2xl p-4">
               <p className="text-[11px] font-semibold text-white/35 uppercase tracking-wider mb-3">Preview</p>
               <div className="aspect-square bg-white/[0.03] rounded-xl flex items-center justify-center overflow-hidden">
-                {imageUrls[0]?.trim()
-                  ? <img src={imageUrls[0]} alt="preview" className="w-full h-full object-contain p-2" />
+                {existingImages[0] || imagePreviews[0]
+                  ? <img src={existingImages[0] || imagePreviews[0]} alt="preview" className="w-full h-full object-contain p-2" />
                   : <div className="flex flex-col items-center gap-2">
                       <ImageIcon className="w-8 h-8 text-white/15" strokeWidth={1.5} />
-                      <p className="text-[11px] text-white/20">No image URL</p>
+                      <p className="text-[11px] text-white/20">No image selected</p>
                     </div>
                 }
               </div>

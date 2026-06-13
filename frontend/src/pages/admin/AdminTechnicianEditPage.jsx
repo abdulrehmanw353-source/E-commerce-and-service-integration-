@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Save, Wrench } from 'lucide-react';
+import { ArrowLeft, Save, Upload, Wrench, X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
+import { appendFormValues } from '../../utils/formData';
 
 const fetchTechnician = (id) => adminApi.get(`/technicians/${id}`).then((r) => r.data.data ?? r.data);
 const updateTechnician = ({ id, payload }) => adminApi.patch(`/technicians/${id}`, payload).then((r) => r.data);
@@ -36,6 +37,18 @@ export default function AdminTechnicianEditPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [form, setForm] = useState(emptyForm);
+  const [cnicFile, setCnicFile] = useState(null);
+  const cnicPreview = useMemo(
+    () => (cnicFile ? URL.createObjectURL(cnicFile) : ''),
+    [cnicFile],
+  );
+
+  useEffect(
+    () => () => {
+      if (cnicPreview) URL.revokeObjectURL(cnicPreview);
+    },
+    [cnicPreview],
+  );
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['admin-technician', id],
@@ -76,13 +89,18 @@ export default function AdminTechnicianEditPage() {
       .map((s) => s.trim())
       .filter(Boolean);
 
+    const technicianForm = { ...form };
+    delete technicianForm.cnicImage;
+    const formData = appendFormValues(new FormData(), {
+      ...technicianForm,
+      email: form.email?.trim().toLowerCase(),
+      expertise,
+    });
+    if (cnicFile) formData.append('cnicImage', cnicFile);
+
     updateMut.mutate({
       id,
-      payload: {
-        ...form,
-        email: form.email?.trim().toLowerCase(),
-        expertise,
-      },
+      payload: formData,
     });
   };
 
@@ -145,8 +163,33 @@ export default function AdminTechnicianEditPage() {
               <input value={form.phoneNo} onChange={(e) => setForm((s) => ({ ...s, phoneNo: e.target.value }))} className={INPUT} placeholder="Phone number" />
             </Field>
             <div className="md:col-span-2">
-              <Field label="CNIC Image URL">
-                <input value={form.cnicImage} onChange={(e) => setForm((s) => ({ ...s, cnicImage: e.target.value }))} className={INPUT} placeholder="https://..." />
+              <Field label="CNIC Image">
+                <label className="flex items-center justify-center gap-2 w-full px-4 py-4 border border-dashed border-[#7a5cff]/40 rounded-xl text-[13px] text-[#c8bcff] bg-[#7a5cff]/5 hover:bg-[#7a5cff]/10 cursor-pointer transition-colors">
+                  <Upload className="w-4 h-4" />
+                  {form.cnicImage ? 'Replace Image' : 'Select Image'}
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    onChange={(event) => setCnicFile(event.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                </label>
+                {(cnicPreview || form.cnicImage) && (
+                  <div className="relative mt-3 w-36 aspect-[1.6] rounded-xl bg-white/[0.04] border border-white/[0.08] overflow-hidden">
+                    <img src={cnicPreview || form.cnicImage} alt="Technician CNIC" className="w-full h-full object-contain" />
+                    {cnicPreview && (
+                      <button
+                        type="button"
+                        onClick={() => setCnicFile(null)}
+                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/70 text-white/70 hover:text-red-300"
+                        aria-label="Cancel replacement CNIC image"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                )}
+                <p className="text-[11px] text-white/30 mt-2">JPG, PNG, or WebP. Maximum 5MB.</p>
               </Field>
             </div>
             <div className="md:col-span-2">
@@ -199,4 +242,3 @@ export default function AdminTechnicianEditPage() {
     </div>
   );
 }
-

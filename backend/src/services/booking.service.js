@@ -4,7 +4,11 @@ import mongoose from "mongoose";
 
 import Booking from "../models/booking.model.js";
 import ApiError from "../utils/ApiError.js";
-import { uploadMultipleToCloudinary } from "../utils/cloudinary.upload.js";
+import { parseJsonField } from "../utils/formData.js";
+import {
+   deleteCloudinaryAssets,
+   uploadImagesToCloudinary,
+} from "./upload.service.js";
 
 import Technician from "../models/technician.model.js";
 import {
@@ -16,6 +20,11 @@ import ServiceSettings from "../models/serviceSettings.model.js";
 // ------ CREATE BOOKING SERVICE
 
 const createBookingService = async (userId, payload, files) => {
+   payload = {
+      ...payload,
+      location: parseJsonField(payload.location, "location", payload.location),
+   };
+
    // ------ validate required fields
    if (!payload.problemTitle || !payload.problemDescription) {
       throw new ApiError(400, "Problem title and description are required");
@@ -92,34 +101,40 @@ const createBookingService = async (userId, payload, files) => {
    }
 
    // ------ upload images to Cloudinary (if provided)
-   let imageUrls = [];
-
-   if (files && files.length > 0) {
-      imageUrls = await uploadMultipleToCloudinary(files, "bookings");
-   }
+   const uploadedAssets =
+      files && files.length > 0
+         ? await uploadImagesToCloudinary(files, "bookings")
+         : [];
+   const imageUrls = uploadedAssets.map((asset) => asset.url);
 
    // ------ get payment rule
    const serviceSettings = await ServiceSettings.getSettings();
    const paymentModeRule = serviceSettings.defaultPaymentModeRule || "pay_after_service_completion";
 
    // ------ create booking
-   const booking = await Booking.create({
-      customer: userId,
-      problemTitle: payload.problemTitle,
-      problemDescription: payload.problemDescription,
-      deviceType: payload.deviceType,
-      deviceBrand: payload.deviceBrand,
-      deviceModel: payload.deviceModel,
-      images: imageUrls,
-      preferredDate,
-      preferredTime: payload.preferredTime,
-      technician: assignedTech._id,
-      assignedTechnician: `${assignedTech.firstName} ${assignedTech.lastName || ""}`.trim(),
-      status: "pending",
-      paymentModeRule,
-      paymentMethod: payload.paymentMethod || "cod",
-      ...(payload.location ? { location: payload.location } : {}),
-   });
+   let booking;
+   try {
+      booking = await Booking.create({
+         customer: userId,
+         problemTitle: payload.problemTitle,
+         problemDescription: payload.problemDescription,
+         deviceType: payload.deviceType,
+         deviceBrand: payload.deviceBrand,
+         deviceModel: payload.deviceModel,
+         images: imageUrls,
+         preferredDate,
+         preferredTime: payload.preferredTime,
+         technician: assignedTech._id,
+         assignedTechnician: `${assignedTech.firstName} ${assignedTech.lastName || ""}`.trim(),
+         status: "pending",
+         paymentModeRule,
+         paymentMethod: payload.paymentMethod || "cod",
+         ...(payload.location ? { location: payload.location } : {}),
+      });
+   } catch (error) {
+      await deleteCloudinaryAssets(uploadedAssets);
+      throw error;
+   }
 
    await recomputeTechnicianLoad(assignedTech._id);
 

@@ -43,6 +43,10 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Temporary Multer uploads
+temp/*
+!temp/.gitkeep
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

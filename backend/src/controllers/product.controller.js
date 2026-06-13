@@ -14,7 +14,7 @@ import {
 
 const createProduct = asyncHandler(async (req, res) => {
    // ------ sending product data to product service
-   const product = await createProductService(req.body, req.user._id);
+   const product = await createProductService(req.body, req.user._id, req.files);
 
    // ------ returning response
    return res
@@ -50,7 +50,7 @@ const getSingleProduct = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
    // ------ updating product using product service
-   const product = await updateProductService(req.params.id, req.body);
+   const product = await updateProductService(req.params.id, req.body, req.files);
 
    // ------ returning response
    return res

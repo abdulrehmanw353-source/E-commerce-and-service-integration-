@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, ImageIcon, Plus, X, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Upload, X, ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import adminApi from '../../lib/adminAxios';
+import { appendFormValues } from '../../utils/formData';
 
 const schema = yup.object({
   title:       yup.string().min(3, 'Min 3 characters').required('Title is required'),
@@ -44,7 +45,16 @@ const INPUT = "w-full bg-[#1c2340] border border-[#7a5cff]/30 hover:border-[#9a8
 export default function AdminProductCreatePage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [imageUrls, setImageUrls] = useState(['']);
+  const [imageFiles, setImageFiles] = useState([]);
+  const imagePreviews = useMemo(
+    () => imageFiles.map((file) => URL.createObjectURL(file)),
+    [imageFiles],
+  );
+
+  useEffect(
+    () => () => imagePreviews.forEach((url) => URL.revokeObjectURL(url)),
+    [imagePreviews],
+  );
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -62,13 +72,25 @@ export default function AdminProductCreatePage() {
   });
 
   const onSubmit = (data) => {
-    const images = imageUrls.filter(u => u.trim());
-    createMut.mutate({ ...data, images });
+    if (!imageFiles.length) {
+      toast.error('Select at least one product image.');
+      return;
+    }
+
+    const formData = appendFormValues(new FormData(), data);
+    imageFiles.forEach((file) => formData.append('images', file));
+    createMut.mutate(formData);
   };
 
-  const addImageField = () => setImageUrls(prev => [...prev, '']);
-  const removeImageField = (i) => setImageUrls(prev => prev.filter((_, idx) => idx !== i));
-  const updateImageUrl = (i, val) => setImageUrls(prev => prev.map((u, idx) => idx === i ? val : u));
+  const selectImages = (event) => {
+    const selected = Array.from(event.target.files || []);
+    setImageFiles((current) => [...current, ...selected].slice(0, 10));
+    event.target.value = '';
+  };
+
+  const removeImage = (index) => {
+    setImageFiles((current) => current.filter((_, itemIndex) => itemIndex !== index));
+  };
 
   return (
     <div className="p-4 sm:p-6 w-full">
@@ -103,39 +125,36 @@ export default function AdminProductCreatePage() {
 
             {/* Images */}
             <FormSection title="Images">
-              <p className="text-[12px] text-white/35 -mt-2">Add image URLs. The first image is the primary display image.</p>
-              <div className="space-y-2.5">
-                {imageUrls.map((url, i) => (
-                  <div key={i} className="flex gap-2 items-start">
-                    <div className="flex-1 relative">
-                      <input
-                        type="url"
-                        value={url}
-                        onChange={e => updateImageUrl(i, e.target.value)}
-                        placeholder={`https://example.com/image-${i + 1}.jpg`}
-                        className={INPUT}
-                      />
-                    </div>
-                    {/* Preview thumbnail */}
-                    {url.trim() && (
-                      <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex-shrink-0 overflow-hidden">
-                        <img src={url} alt="" onError={e => e.target.style.display='none'}
-                          className="w-full h-full object-contain" />
-                      </div>
-                    )}
-                    {imageUrls.length > 1 && (
-                      <button type="button" onClick={() => removeImageField(i)}
-                        className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all flex-shrink-0">
-                        <X className="w-4 h-4" strokeWidth={1.75} />
+              <p className="text-[12px] text-white/35 -mt-2">Select up to 10 JPG, PNG, or WebP images. The first image is the primary display image.</p>
+              <label className="flex items-center justify-center gap-2 w-full px-4 py-4 border border-dashed border-[#7a5cff]/40 rounded-xl text-[13px] text-[#c8bcff] bg-[#7a5cff]/5 hover:bg-[#7a5cff]/10 cursor-pointer transition-colors">
+                <Upload className="w-4 h-4" strokeWidth={2} />
+                Select Images
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={selectImages}
+                  className="sr-only"
+                />
+              </label>
+              {imagePreviews.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {imagePreviews.map((url, index) => (
+                    <div key={url} className="relative aspect-square rounded-xl bg-white/[0.04] border border-white/[0.08] overflow-hidden">
+                      <img src={url} alt={`Selected product ${index + 1}`} className="w-full h-full object-contain p-2" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/70 text-white/70 hover:text-red-300"
+                        aria-label={`Remove image ${index + 1}`}
+                      >
+                        <X className="w-3.5 h-3.5" />
                       </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button type="button" onClick={addImageField}
-                className="flex items-center gap-2 text-[13px] text-[#0071E3] hover:opacity-80 transition-opacity mt-1">
-                <Plus className="w-4 h-4" strokeWidth={2} /> Add image URL
-              </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-[11px] text-white/30">{imageFiles.length}/10 images selected, 5MB maximum each.</p>
             </FormSection>
           </div>
 
@@ -178,11 +197,11 @@ export default function AdminProductCreatePage() {
             <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-2xl p-4">
               <p className="text-[11px] font-semibold text-white/35 uppercase tracking-wider mb-3">Preview</p>
               <div className="aspect-square bg-white/[0.03] rounded-xl flex items-center justify-center overflow-hidden">
-                {imageUrls[0]?.trim()
-                  ? <img src={imageUrls[0]} alt="preview" className="w-full h-full object-contain p-2" />
+                {imagePreviews[0]
+                  ? <img src={imagePreviews[0]} alt="preview" className="w-full h-full object-contain p-2" />
                   : <div className="flex flex-col items-center gap-2">
                       <ImageIcon className="w-8 h-8 text-white/15" strokeWidth={1.5} />
-                      <p className="text-[11px] text-white/20">Add image URL above</p>
+                      <p className="text-[11px] text-white/20">Select an image above</p>
                     </div>
                 }
               </div>

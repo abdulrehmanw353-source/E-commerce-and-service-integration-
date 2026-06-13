@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import Technician from "../models/technician.model.js";
 import Booking from "../models/booking.model.js";
 import ApiError from "../utils/ApiError.js";
+import { normalizeStringArray, parseJsonField } from "../utils/formData.js";
+import {
+   deleteCloudinaryAssets,
+   uploadImageToCloudinary,
+} from "./upload.service.js";
 
 const ACTIVE_BOOKING_STATUSES = ["pending", "approved", "in-progress"];
 
@@ -25,7 +30,7 @@ const recomputeTechnicianLoad = async (technicianId) => {
    return technician;
 };
 
-const createTechnicianService = async (payload, adminId) => {
+const createTechnicianService = async (payload, adminId, file) => {
    const required = ["firstName", "email", "phoneNo"];
    for (const field of required) {
       if (!payload[field]) throw new ApiError(400, `${field} is required`);
@@ -34,18 +39,23 @@ const createTechnicianService = async (payload, adminId) => {
    const exists = await Technician.findOne({ email: payload.email.toLowerCase() });
    if (exists) throw new ApiError(409, "Technician already exists with this email");
 
-   const tech = await Technician.create({
-      ...payload,
-      createdBy: adminId,
-      expertise: Array.isArray(payload.expertise)
-         ? payload.expertise
-         : (payload.expertise || "")
-              .split(",")
-              .map((e) => e.trim())
-              .filter(Boolean),
-   });
+   const uploadedAsset = file
+      ? await uploadImageToCloudinary(file, "technicians/cnic")
+      : null;
 
-   return tech;
+   try {
+      const { cnicImage: _cnicImage, ...technicianData } = payload;
+      return await Technician.create({
+         ...technicianData,
+         address: parseJsonField(payload.address, "address", undefined),
+         createdBy: adminId,
+         expertise: normalizeStringArray(payload.expertise || [], "expertise"),
+         ...(uploadedAsset ? { cnicImage: uploadedAsset.url } : {}),
+      });
+   } catch (error) {
+      await deleteCloudinaryAssets(uploadedAsset ? [uploadedAsset] : []);
+      throw error;
+   }
 };
 
 const getAllTechniciansService = async (query) => {
@@ -73,34 +83,46 @@ const getSingleTechnicianService = async (id) => {
    return technician;
 };
 
-const updateTechnicianService = async (id, payload) => {
+const updateTechnicianService = async (id, payload, file) => {
    if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid technician ID");
    const technician = await Technician.findById(id);
    if (!technician) throw new ApiError(404, "Technician not found");
 
-   const allowed = [
-      "firstName",
-      "lastName",
-      "email",
-      "phoneNo",
-      "cnicImage",
-      "address",
-      "expertise",
-      "isAvailable",
-   ];
-   for (const field of allowed) {
-      if (payload[field] !== undefined) technician[field] = payload[field];
-   }
+   const uploadedAsset = file
+      ? await uploadImageToCloudinary(file, "technicians/cnic")
+      : null;
+   try {
+      const allowed = [
+         "firstName",
+         "lastName",
+         "email",
+         "phoneNo",
+         "address",
+         "expertise",
+         "isAvailable",
+      ];
+      for (const field of allowed) {
+         if (payload[field] === undefined) continue;
 
-   if (typeof technician.expertise === "string") {
-      technician.expertise = technician.expertise
-         .split(",")
-         .map((e) => e.trim())
-         .filter(Boolean);
-   }
+         if (field === "address") {
+            technician[field] = parseJsonField(payload[field], field, {});
+         } else if (field === "expertise") {
+            technician[field] = normalizeStringArray(payload[field], field);
+         } else {
+            technician[field] = payload[field];
+         }
+      }
 
-   technician.status = deriveStatusFromTasks(technician.activeTasks, technician.isAvailable);
-   await technician.save();
+      if (uploadedAsset) {
+         technician.cnicImage = uploadedAsset.url;
+      }
+
+      technician.status = deriveStatusFromTasks(technician.activeTasks, technician.isAvailable);
+      await technician.save();
+   } catch (error) {
+      await deleteCloudinaryAssets(uploadedAsset ? [uploadedAsset] : []);
+      throw error;
+   }
    return technician;
 };
 

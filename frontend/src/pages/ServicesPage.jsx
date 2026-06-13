@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { ChevronRight, Laptop, Smartphone, Monitor, Tablet, Package, MapPin } from 'lucide-react';
+import { ChevronRight, Laptop, Smartphone, Monitor, Tablet, Package, MapPin, Upload, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
 import { useServices } from '../hooks/useServices';
 import LocationPicker from '../components/ui/LocationPicker';
+import { appendFormValues } from '../utils/formData';
 
 // ─── Schema ──────────────────────────────────────────────────
 const schema = yup.object({
@@ -50,12 +51,22 @@ export default function ServicesPage() {
   const { isAuthenticated } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
   const [bookingLocation, setBookingLocation] = useState(null);
+  const [bookingImages, setBookingImages] = useState([]);
+  const bookingImagePreviews = useMemo(
+    () => bookingImages.map((file) => URL.createObjectURL(file)),
+    [bookingImages],
+  );
+
+  useEffect(
+    () => () => bookingImagePreviews.forEach((url) => URL.revokeObjectURL(url)),
+    [bookingImagePreviews],
+  );
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [maxPrice, setMaxPrice] = useState(150);
 
   // ─── useForm MUST be declared before any useQuery that references `watch` ───
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { deviceType: '', paymentMethod: 'cod' },
   });
@@ -121,10 +132,12 @@ export default function ServicesPage() {
 
   const bookMut = useMutation({
     mutationFn: (body) => {
-      if (bookingLocation) {
-        body.location = bookingLocation;
-      }
-      return api.post('/bookings/', body).then(r => r.data);
+      const formData = appendFormValues(new FormData(), {
+        ...body,
+        ...(bookingLocation ? { location: bookingLocation } : {}),
+      });
+      bookingImages.forEach((file) => formData.append('images', file));
+      return api.post('/bookings/', formData).then(r => r.data);
     },
     onSuccess: (data) => {
       navigate('/booking-success', { state: { booking: data.data || data } });
@@ -273,6 +286,41 @@ export default function ServicesPage() {
                   <textarea rows={4} placeholder="Tell us what's happening with your device..."
                     {...register('problemDescription')}
                     className="w-full bg-[#1a1f33] border border-white/10 hover:border-white/20 rounded-xl px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-[#1a1f33] focus:border-[#7a5cff] focus:ring-4 focus:ring-[#7a5cff]/10 transition-all resize-none" />
+                </Field>
+
+                <Field label="Problem Images (optional)" hint="Select up to 5 JPG, PNG, or WebP images, 5MB maximum each">
+                  <label className="flex items-center justify-center gap-2 w-full px-4 py-4 border border-dashed border-[#7a5cff]/40 rounded-xl text-[13px] text-[#c8bcff] bg-[#7a5cff]/5 hover:bg-[#7a5cff]/10 cursor-pointer transition-colors">
+                    <Upload className="w-4 h-4" />
+                    Select Images
+                    <input
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={(event) => {
+                        const selected = Array.from(event.target.files || []);
+                        setBookingImages((current) => [...current, ...selected].slice(0, 5));
+                        event.target.value = '';
+                      }}
+                      className="sr-only"
+                    />
+                  </label>
+                  {bookingImagePreviews.length > 0 && (
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3">
+                      {bookingImagePreviews.map((url, index) => (
+                        <div key={url} className="relative aspect-square rounded-xl bg-white/[0.04] border border-white/[0.08] overflow-hidden">
+                          <img src={url} alt={`Problem ${index + 1}`} className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => setBookingImages((current) => current.filter((_, itemIndex) => itemIndex !== index))}
+                            className="absolute top-1 right-1 p-1 rounded-md bg-black/70 text-white/70 hover:text-red-300"
+                            aria-label={`Remove problem image ${index + 1}`}
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </Field>
 
                 {/* Preferred Date */}
